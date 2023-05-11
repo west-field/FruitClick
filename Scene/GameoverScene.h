@@ -1,0 +1,83 @@
+#pragma once
+#include "Secne.h"
+#include "../Util/Geometry.h"
+#include "../game.h"
+
+#include <array>
+
+
+/// <summary>
+/// ゲームオーバーシーン
+/// </summary>
+class GameoverScene : public Scene
+{
+public:
+    GameoverScene(SceneManager& manager);
+    virtual ~GameoverScene();
+
+    void Update(const InputState& input,  Mouse& mouse);
+    void Draw();
+private:
+    unsigned int m_fadeColor = 0xff0000;//フェードの色（赤
+
+    void FadeInUpdat(const InputState& input,  Mouse& mouse);
+    void FadeOutUpdat(const InputState& input,  Mouse& mouse);
+    void NormalUpdat(const InputState& input,  Mouse& mouse);
+    void MojiUpdate(const InputState& input,  Mouse& mouse);
+
+    void NormalDraw();
+    void MojiDraw();
+
+    void (GameoverScene::*m_updateFunc )(const InputState&,  Mouse&) ;
+    void (GameoverScene::*m_drawFunc )() ;
+
+    //文字
+    struct Moji
+    {
+        Position2 pos = {};
+        float moveY = 0.0f;
+        float add = 0.0f;
+    };
+    
+    static constexpr int kMojiNum = 9;
+    std::array<Moji, kMojiNum> m_moji;
+    const wchar_t* const kMoji[GameoverScene::kMojiNum] =
+    {
+        L"G",
+        L"a",
+        L"m",
+        L"e",
+        L" ",
+        L"O",
+        L"v",
+        L"e",
+        L"r",
+    };
+    int  m_soundVolume = 0;
+
+    static constexpr int kMenuFontSize = 50;//文字のサイズ
+    static constexpr int kOriginalPosX = Game::kScreenWidth / 3 + kMenuFontSize * 2;    //メニュー文字のx位置
+    static constexpr int kOriginalPosY = Game::kScreenHeight / 2 + kMenuFontSize * 2;    //メニュー文字のy位置
+    static constexpr int kMovedPosX = kOriginalPosX - kMenuFontSize;//メニュー文字の移動したx位置
+    //メニュー項目
+    enum MenuItem
+    {
+        menuGameEnd,	//ゲーム終了
+        menuRestart,	//リスタート
+
+        menuNum			//項目の数
+    };
+    //メニュー要素
+    struct MenuElement
+    {
+        int x;
+        int y;				//座標
+        unsigned int color;//色
+    };
+    MenuElement SelectMenu[menuNum] = {
+        { kMovedPosX, kOriginalPosY + kMenuFontSize * menuGameEnd,0xffa0aa  },
+        { kOriginalPosX, kOriginalPosY + kMenuFontSize * menuRestart + 5,0xaaa0ff}
+    };
+    int m_selectNum = 0;//選択しているメニュー項目
+};
+

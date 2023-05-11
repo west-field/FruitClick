@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{a180eea3-c52a-4667-bb90-a2aa34b105ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{d35762d1-0899-4052-bb1d-211ab6a79d3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{390e980c-d8f5-460a-94df-f43e56788e51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Fruit">
+      <UniqueIdentifier>{3123cb8d-f0c3-4ced-a31c-07abeb8ae6f6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="game.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="InputState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Character.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\FruitsFactory.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\FruitsType.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\HpBar.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Spawner.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\StraightSpawner.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Fruits\FruitsApple.h">
+      <Filter>Game\Fruit</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Fruits\FruitsBanana.h">
+      <Filter>Game\Fruit</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Fruits\FruitsBase.h">
+      <Filter>Game\Fruit</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Fruits\FruitsCherrie.h">
+      <Filter>Game\Fruit</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Fruits\FruitsKiwi.h">
+      <Filter>Game\Fruit</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Fruits\FruitsMelon.h">
+      <Filter>Game\Fruit</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Fruits\FruitsOrange.h">
+      <Filter>Game\Fruit</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Fruits\FruitsPineapple.h">
+      <Filter>Game\Fruit</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Fruits\FruitsStrawberry.h">
+      <Filter>Game\Fruit</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\DrawFunctions.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Geometry.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Info.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Mouse.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Mouse-FIC-PCROOM3B-13.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Sound.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\CharacterSelectScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\ConfirmationScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameclearScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameoverScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameplayingScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\KeyConfigScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\MonologueScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\PauseScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Secne.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SettingScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SoundSettingScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\TitleScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="InputState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Character.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\FruitsFactory.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\HpBar.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Spawner.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\StraightSpawner.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Fruits\FruitsApple.cpp">
+      <Filter>Game\Fruit</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Fruits\FruitsBanana.cpp">
+      <Filter>Game\Fruit</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Fruits\FruitsBase.cpp">
+      <Filter>Game\Fruit</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Fruits\FruitsCherrie.cpp">
+      <Filter>Game\Fruit</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Fruits\FruitsKiwi.cpp">
+      <Filter>Game\Fruit</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Fruits\FruitsMelon.cpp">
+      <Filter>Game\Fruit</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Fruits\FruitsOrange.cpp">
+      <Filter>Game\Fruit</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Fruits\FruitsPineapple.cpp">
+      <Filter>Game\Fruit</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Fruits\FruitsStrawberry.cpp">
+      <Filter>Game\Fruit</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\DrawFunctions.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Geometry.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Mouse.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Sound.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\CharacterSelectScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\ConfirmationScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameclearScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameoverScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameplayingScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\KeyConfigScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\MonologueScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\PauseScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Secne.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SettingScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SoundSettingScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\TitleScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
