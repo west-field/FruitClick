@@ -219,26 +219,21 @@ void CharacterSelectScene::MoveChar(const InputState& input, Mouse& mouse)
 		m_char[m_selectChar].type = CharAnimType::DoubleJump;
 		m_char[m_selectChar].idxX = 0;
 	}
-	else
-	{
-		m_char[m_selectChar].type = CharAnimType::Idle;
-		m_char[m_selectChar].idxX = 0;
-		isOk = true;
-	}
+	m_frameCount += 2;
 
-	if (m_frameCount++ >= kAnimSpeed)
+	if (m_frameCount >= kAnimSpeed)
 	{
 		m_frameCount = 0;
-		for (auto& charctor : m_char)
+		m_char[m_selectChar].idxX++;
+
+		int type = static_cast<int>(m_char[m_selectChar].type);
+
+		if (m_char[m_selectChar].idxX >= m_char[m_selectChar].w[type])
 		{
-			charctor.idxX++;
-
-			int type = static_cast<int>(charctor.type);
-
-			if (charctor.idxX >= charctor.w[type])
-			{
-				charctor.idxX -= charctor.w[type];
-			}
+			m_char[m_selectChar].idxX -= m_char[m_selectChar].w[type];
+			isOk = true;
+			m_char[m_selectChar].type = CharAnimType::Idle;
+			m_char[m_selectChar].idxX = 0;
 		}
 	}
 
