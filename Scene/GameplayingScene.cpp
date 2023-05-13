@@ -17,6 +17,7 @@
 #include "../Util/Mouse.h"
 
 #include "../Game/Character.h"
+#include "../Game/Stage.h"
 #include "../Game/FruitsFactory.h"
 #include "../Game/Fruits/FruitsBase.h"
 
@@ -32,7 +33,7 @@ namespace
 }
 
 GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
-	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat), m_bgH(-1)
+	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat)
 {
 	m_char = std::make_shared<Character>(selectChar);
 	m_fruitsFactory = std::make_shared<FruitsFactory>();
@@ -44,7 +45,11 @@ GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
 	Y = static_cast<int>(Y * kGearScale);
 	m_settingRect = { {static_cast<float>(Game::kScreenWidth - X / 2),static_cast<float>(Y / 2)}, {X,Y} };
 
+	m_stage = std::make_shared<Stage>();
+	m_stage->Load(L"Data/map.fmf");
+
 	m_bgH = my::MyLoadGraph(L"Data/Background/Gray.png");
+	m_scroll = 0;
 	//BGM
 	//m_BgmH = LoadSoundMem(L"Sound/BGM/Disital_Delta.mp3");
 	//m_bossBgm = LoadSoundMem(L"Sound/BGM/arabiantechno.mp3");
@@ -68,11 +73,11 @@ void GameplayingScene::Update(const InputState& input,  Mouse& mouse)
 void GameplayingScene::Draw()
 {
 	//îwåi
-	for (int x = kBgSize / 2; x < Game::kScreenWidth; x += kBgSize)
+	for (int x = -kBgSize / 2; x < Game::kScreenWidth; x += kBgSize)
 	{
-		for (int y = kBgSize / 2; y <= Game::kScreenHeight; y += kBgSize)
+		for (int y = -kBgSize / 2; y <= Game::kScreenHeight; y += kBgSize)
 		{
-			my::MyDrawRectRotaGraph(x, y, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_bgH, true, false);
+			my::MyDrawRectRotaGraph(x+m_scroll, y+ m_scroll, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_bgH, true, false);
 		}
 	}
 
@@ -109,6 +114,11 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 {
 	m_char->Update();
 	m_fruitsFactory->Update();
+	//îwåiÉXÉNÉçÅ[Éã
+	if (m_scroll++ >= static_cast<int>(kBgSize))
+	{
+		m_scroll -= static_cast<int>(kBgSize);
+	}
 
 	//ÉtÉãÅ[Écê∂ê¨
 	if (m_fruitsFrame++ >= kFruitsCreateFrame)

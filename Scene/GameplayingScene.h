@@ -10,6 +10,7 @@
 class Character;//キャラ
 class FruitsFactory;//フルーツ工場
 class Spawner;//フルーツ発生器
+class Stage;//ステージ
 
 /// <summary>
 /// ゲーム中シーン
@@ -56,7 +57,8 @@ private:
     int m_settingH = -1;//設定の画像
     Rect m_settingRect;//設定の位置
 
-
+    std::shared_ptr<Stage> m_stage;
     int m_bgH;
+    int m_scroll;//背景を動かす
 };
 
