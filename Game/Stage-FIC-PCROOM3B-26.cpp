@@ -7,14 +7,9 @@
 namespace
 {
 	constexpr int kBgSize = 64;
-
-	enum class LayerType
-	{
-		Map,//1:マップ
-	};
 }
 
-Stage::Stage() :m_mapWidth(0), m_mapHeight(0), m_spawnerNum(0)
+Stage::Stage(int handle) :m_mapWidth(0), m_mapHeight(0),m_handle(handle)
 {
 	
 }
@@ -71,23 +66,24 @@ void Stage::Load(const wchar_t* filePath)
 	}
 	//ファイルを閉じる
 	FileRead_close(handle);
-
-	for (int y = 0; y < m_mapHeight; y++)
-	{
-		for (int x = 0; x < m_mapWidth; x++)
-		{
-			int index = x + y * m_mapWidth;
-			if (m_mapData[static_cast<int>(LayerType::Map)][index] != 0)
-			{
-				m_spawnerNum++;
-			}
-		}
-	}
 }
 
 const MapData_t& Stage::GetMapData() const
 {
 	return m_mapData;
+}
+
+void Stage::DrawMap()
+{
+	for (int y = 0; y < m_mapHeight; y++)
+	{
+		for (int x = 0; x < m_mapWidth; x++)
+		{
+			int X = x * kBgSize;
+			int Y = y * kBgSize;
+			my::MyDrawRectRotaGraph(X, Y, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_handle, true, false);
+		}
+	}
 }
 
 const int Stage::GetChipId(int layerId, int chipX, int chipY) const
@@ -102,11 +98,6 @@ void Stage::GetMapSize(int& width, int& height)
 {
 	width = m_mapWidth;
 	height = m_mapHeight;
-}
-
-int Stage::GetMapSpawnerNum()
-{
-	return m_spawnerNum;
 }
 
 void Stage::GetMapPos(Position2& pos, int layerId, float posX, float posY)
