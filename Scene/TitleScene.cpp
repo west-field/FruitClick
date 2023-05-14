@@ -27,7 +27,8 @@ namespace
 
 
 TitleScene::TitleScene(SceneManager& manager) : Scene(manager),
-	m_updateFunc(&TitleScene::FadeInUpdat), m_selectNum(0), m_moveTitle(0), m_moveAdd(1), m_settingH(-1), m_bgH(-1), m_scroll(0)
+	m_updateFunc(&TitleScene::FadeInUpdat), m_selectNum(0), m_moveTitle(0),
+	m_moveAdd(1), m_settingH(-1),m_scroll(0)
 {
 	/*m_BgmH = LoadSoundMem(L"Sound/BGM/noranekonokuchibue.mp3");
 	ChangeVolumeSoundMem(0, m_BgmH);

@@ -4,15 +4,16 @@
 #include "../game.h"
 
 #include <array>
+#include <memory>
 
-
+class Character;
 /// <summary>
 /// ゲームオーバーシーン
 /// </summary>
 class GameoverScene : public Scene
 {
 public:
-    GameoverScene(SceneManager& manager);
+    GameoverScene(SceneManager& manager, std::shared_ptr<Character> character);
     virtual ~GameoverScene();
 
     void Update(const InputState& input,  Mouse& mouse);
@@ -31,34 +32,10 @@ private:
     void (GameoverScene::*m_updateFunc )(const InputState&,  Mouse&) ;
     void (GameoverScene::*m_drawFunc )() ;
 
-    //文字
-    struct Moji
-    {
-        Position2 pos = {};
-        float moveY = 0.0f;
-        float add = 0.0f;
-    };
-    
-    static constexpr int kMojiNum = 9;
-    std::array<Moji, kMojiNum> m_moji;
-    const wchar_t* const kMoji[GameoverScene::kMojiNum] =
-    {
-        L"G",
-        L"a",
-        L"m",
-        L"e",
-        L" ",
-        L"O",
-        L"v",
-        L"e",
-        L"r",
-    };
+    std::shared_ptr<Character> m_char;
+
     int  m_soundVolume = 0;
 
-    static constexpr int kMenuFontSize = 50;//文字のサイズ
-    static constexpr int kOriginalPosX = Game::kScreenWidth / 3 + kMenuFontSize * 2;    //メニュー文字のx位置
-    static constexpr int kOriginalPosY = Game::kScreenHeight / 2 + kMenuFontSize * 2;    //メニュー文字のy位置
-    static constexpr int kMovedPosX = kOriginalPosX - kMenuFontSize;//メニュー文字の移動したx位置
     //メニュー項目
     enum MenuItem
     {
@@ -73,11 +50,13 @@ private:
         int x;
         int y;				//座標
         unsigned int color;//色
+        int size;
     };
-    MenuElement SelectMenu[menuNum] = {
-        { kMovedPosX, kOriginalPosY + kMenuFontSize * menuGameEnd,0xffa0aa  },
-        { kOriginalPosX, kOriginalPosY + kMenuFontSize * menuRestart + 5,0xaaa0ff}
-    };
+    MenuElement SelectMenu[menuNum];
+
     int m_selectNum = 0;//選択しているメニュー項目
+
+    int m_bgH;
+    int m_scroll;//背景を動かす
 };
 

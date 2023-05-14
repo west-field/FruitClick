@@ -61,17 +61,13 @@ void Character::Update()
 
 	m_frame--;
 
-	if (m_frame == 0)
+	if (m_frame <= 0)
 	{
 		int type = static_cast<int>(m_animType);
 		if (m_idxX++ >= m_w[type]-1)
 		{
 			m_idxX -= m_w[type];
 		}
-	}
-
-	if (m_frame <= 0)
-	{
 		m_frame = kCharAnimSpeed;
 	}
 
@@ -93,6 +89,54 @@ void Character::Update()
 		m_rect.center.x = Game::kScreenWidth - w;
 		m_isLeft = !m_isLeft;
 		m_vecX *= -1.0f;
+	}
+}
+
+void Character::Update(bool isPlay)
+{
+	if (m_rect.center.x <= Game::kScreenWidth / 2 - kCharMoveSpeed)
+	{
+		m_rect.center.x += kCharMoveSpeed;
+		if (m_isLeft != false)
+		{
+			m_isLeft = !m_isLeft;
+		}
+	}
+	else if (m_rect.center.x >= Game::kScreenWidth / 2 + kCharMoveSpeed)
+	{
+		m_rect.center.x -= kCharMoveSpeed;
+		if (m_isLeft != true)
+		{
+			m_isLeft = !m_isLeft;
+		}
+	}
+	else if(m_animType != CharAnimType::DoubleJump)
+	{
+		m_animType = CharAnimType::DoubleJump;
+		m_idxX = 0;
+	}
+
+	m_frame--;
+	if (m_frame <= 0)
+	{
+		int type = static_cast<int>(m_animType);
+		if (m_idxX++ >= m_w[type] - 1)
+		{
+			if (type == static_cast<int>(CharAnimType::DoubleJump))
+			{
+				m_idxX = m_w[type] - 1;
+			}
+			else
+			{
+				m_idxX -= m_w[type];
+			}
+		}
+		m_frame = kCharAnimSpeed;
+	}
+	//0‚æ‚è‚à¬‚³‚©‚Á‚½‚ç0‚ð•Ô‚·
+	if (m_ultimateTimer != 0)
+	{
+		m_ultimateTimer = 0;
 	}
 }
 
@@ -169,4 +213,28 @@ void Character::Heal(int Heal)
 int Character::GetHp() const
 {
 	return m_hp->GetHp();
+}
+
+CharAnimType Character::GetAnimType() const
+{
+	return m_animType;
+}
+
+void Character::SetAnimType(CharAnimType type)
+{
+	m_animType = type;
+}
+
+int Character::GetIdx() const
+{
+	if (m_animType != CharAnimType::DoubleJump)
+	{
+		return -1;
+	}
+	return m_idxX;
+}
+
+int Character::GetAnimNum(CharAnimType type) const
+{
+	return  m_w[static_cast<int>(type)] - 1;
 }

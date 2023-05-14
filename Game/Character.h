@@ -16,9 +16,10 @@ public:
 
 	//更新
 	void Update();
+	void Update(bool isPlay);
 	//表示
 	void Draw();
-
+	//キャラクターロード
 	void CharacterLoad(const wchar_t* charName);
 
 	/// <summary>
@@ -43,7 +44,10 @@ public:
 	/// </summary>
 	/// <param name="Heal">回復量</param>
 	void Heal(int Heal);
-
+	/// <summary>
+	/// 現在のHPを取得する
+	/// </summary>
+	/// <returns>現在のHP</returns>
 	int GetHp()const;
 
 	/// <summary>
@@ -51,6 +55,20 @@ public:
 	/// </summary>
 	/// <returns>true:存在する false:存在しない</returns>
 	bool IsExist()const { return m_isExist; }
+
+	/// <summary>
+	/// 現在再生しているアニメーションタイプを取得する
+	/// </summary>
+	/// <returns>アニメーションタイプ</returns>
+	CharAnimType GetAnimType()const;
+	/// <summary>
+	/// 再生したいアニメーションタイプを指定する
+	/// </summary>
+	/// <param name="type">アニメーションタイプ</param>
+	void SetAnimType(CharAnimType type);
+
+	int GetIdx()const;
+	int GetAnimNum(CharAnimType type)const;
 private:
 	//キャラクタのアニメーション分だけ
 	int m_handle[static_cast<int>(CharAnimType::Max)] = {};

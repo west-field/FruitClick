@@ -12,15 +12,15 @@
 
 namespace
 {
-	static constexpr int pw_width = 400;
-	static constexpr int pw_height = 300;
-	static constexpr int pw_start_x = (Game::kScreenWidth - pw_width) / 2;
-	static constexpr int pw_start_y = (Game::kScreenHeight - pw_height) / 2;
+	 constexpr int pw_width = 400;
+	 constexpr int pw_height = 300;
+	 constexpr int pw_start_x = (Game::kScreenWidth - pw_width) / 2;
+	 constexpr int pw_start_y = (Game::kScreenHeight - pw_height) / 2;
 
-	static constexpr int kPosX = pw_start_x + 10;
-	static constexpr int kPosY = pw_start_y + 10;
+	 constexpr int kPosX = pw_start_x + 10;
+	 constexpr int kPosY = pw_start_y + 10;
 
-	static constexpr int kFontSize = 20;
+	 constexpr int kFontSize = 20;
 }
 
 SettingScene::SettingScene(SceneManager& manager,int soundH) : Scene(manager), m_soundH(soundH)
