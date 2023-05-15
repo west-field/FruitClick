@@ -25,6 +25,9 @@
     <Filter Include="Game\Fruit">
       <UniqueIdentifier>{3123cb8d-f0c3-4ced-a31c-07abeb8ae6f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Spawner">
+      <UniqueIdentifier>{664bb0bf-92ef-43dd-91d7-ff5d3eac718c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -43,12 +46,6 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Game\HpBar.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Spawner.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\StraightSpawner.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Game\Fruits\FruitsApple.h">
@@ -138,6 +135,12 @@
     <ClInclude Include="Game\Stage.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Spawner.h">
+      <Filter>Game\Spawner</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\StraightSpawner.h">
+      <Filter>Game\Spawner</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputState.cpp">
@@ -153,12 +156,6 @@
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Game\HpBar.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Spawner.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\StraightSpawner.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Game\Fruits\FruitsApple.cpp">
@@ -241,6 +238,12 @@
     </ClCompile>
     <ClCompile Include="Game\Stage.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Spawner.cpp">
+      <Filter>Game\Spawner</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\StraightSpawner.cpp">
+      <Filter>Game\Spawner</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
