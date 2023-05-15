@@ -12,4 +12,10 @@ Sprout Lands - UI Pack - Basic pack
 https://cupnooble.itch.io/sprout-lands-ui-pack
 https://cupnooble.itch.io/sprout-lands-asset-pack
 
-確認する画面
+フルーツを落としている人の表示
+ゲームクリア画面
+マウスクリックしたときにカーソルの周りに表示する
+ステージの追加
+何ステージまでクリアできたかを外部ファイルにして取得
+ゲームオーバーorゲームクリアした後、今までクリアできたステージ数を表示する
+音
