@@ -242,9 +242,10 @@ void GameplayingScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 
 void GameplayingScene::SpawnerUpdate()
 {
-	int rand = GetRand(static_cast<int>(FruitsSpawnId::StrawberryStraight));
-	Position2 pos = { static_cast<float>(Game::kScreenWidth / 2), static_cast<float>(Game::kScreenHeight / 2) };
-	FruitsCreate(static_cast<FruitsSpawnId>(rand), pos);
+	int fruitsSpawnIdRand = GetRand((static_cast<int>(FruitsSpawnId::Max) - 1));//ランダムで生成するフルーツの種類を決める
+	int rand = GetRand(100) / m_stage->GetMapSpawnerNum();//ランダムにスポナー生成位置を決める
+	Position2 pos = { static_cast<float>(rand * kBgSize), static_cast<float>(2 * kBgSize) };
+	FruitsCreate(static_cast<FruitsSpawnId>(fruitsSpawnIdRand), pos);
 
 	for (auto& spawner : m_spawners)
 	{

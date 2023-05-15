@@ -22,4 +22,6 @@ enum class FruitsSpawnId
 	OrangeStraight,		//まっすぐ落ちるオレンジ
 	PineappleStraight,	//まっすぐ落ちるパイナップル
 	StrawberryStraight,	//まっすぐ落ちるイチゴ
+
+	Max
 };
