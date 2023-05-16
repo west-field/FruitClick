@@ -8,7 +8,7 @@
 #include "../Game/Character.h"
 #include "SceneManager.h"
 #include "TitleScene.h"
-#include "CharacterSelectScene.h"
+#include "GameplayingScene.h"
 
 namespace
 {
@@ -96,7 +96,7 @@ void GameoverScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 
 void GameoverScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 {
-	m_char->Update(true);
+	m_char->Update(false);
 
 	if (m_char->GetIdx() == m_char->GetAnimNum(CharAnimType::DoubleJump))
 	{
@@ -183,8 +183,8 @@ void GameoverScene::MojiDraw()
 	DrawString(SelectMenu[menuGameEnd].x + 5, SelectMenu[menuGameEnd].y + 5, L"タイトルに戻る", 0x000000);
 	DrawString(SelectMenu[menuGameEnd].x, SelectMenu[menuGameEnd].y, L"タイトルに戻る", SelectMenu[menuGameEnd].color);
 	SetFontSize(SelectMenu[menuRestart].size);
-	DrawString(SelectMenu[menuRestart].x + 5, SelectMenu[menuRestart].y + 5, L"最初から", 0x000000);
-	DrawString(SelectMenu[menuRestart].x, SelectMenu[menuRestart].y, L"最初から", SelectMenu[menuRestart].color);
+	DrawString(SelectMenu[menuRestart].x + 5, SelectMenu[menuRestart].y + 5, L"もう一度", 0x000000);
+	DrawString(SelectMenu[menuRestart].x, SelectMenu[menuRestart].y, L"もう一度", SelectMenu[menuRestart].color);
 	SetFontSize(0);
 }
 
@@ -200,7 +200,7 @@ void GameoverScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 			m_manager.ChangeScene(new TitleScene(m_manager));
 			return;
 		case menuRestart:
-			m_manager.ChangeScene(new CharacterSelectScene(m_manager));
+			m_manager.ChangeScene(new GameplayingScene(m_manager,m_char->GetSelectChar()));
 			return;
 		default:
 			return;
