@@ -11,7 +11,7 @@ class HpBar;//HpBarクラス
 class Character
 {
 public:
-	Character(int selectChar);
+	Character(int selectChar,Position2 pos);
 	virtual ~Character();
 
 	//更新

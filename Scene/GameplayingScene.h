@@ -52,6 +52,7 @@ private:
     std::shared_ptr<FruitsFactory> m_fruitsFactory;//フルーツ工場
 
     std::list<std::shared_ptr<Spawner>> m_spawners;//フルーツ発生器
+
     int m_fruitsFrame = 0;//次にフルーツを作るまでの時間
     
     int m_settingH = -1;//設定の画像

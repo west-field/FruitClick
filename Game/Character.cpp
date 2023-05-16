@@ -22,7 +22,7 @@ namespace
 	constexpr int kMaxHp = 10;//キャラクターの最大HP
 }
 
-Character::Character(int selectChar):m_idxX(0),m_idxY(0)
+Character::Character(int selectChar,Position2 pos):m_idxX(0),m_idxY(0)
 {
 	const wchar_t* name[static_cast<int>(CharType::Max)] =
 	{
@@ -36,8 +36,7 @@ Character::Character(int selectChar):m_idxX(0),m_idxY(0)
 	int  sizeW = static_cast<int>(kCharSizeW * kCharSrawScale);
 	int  sizeH = static_cast<int>(kCharSizeH * kCharSrawScale);
 
-	m_rect = { {static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight - 100)},
-				{ sizeW - 30,sizeH - 35 } };
+	m_rect = { pos,{ sizeW - 30,sizeH - 35 } };
 	
 	m_animType = CharAnimType::Run;
 
@@ -186,8 +185,8 @@ void Character::CharacterLoad(const wchar_t* charName)
 		L"/Idle.png",
 		L"/Run.png",
 		L"/Jump.png",
-		L"/DoubleJump.png",
 		L"/Fall.png",
+		L"/DoubleJump.png",
 	};
 
 	std::wstring path;

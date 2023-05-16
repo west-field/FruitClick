@@ -35,7 +35,7 @@ namespace
 GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
 	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat)
 {
-	m_char = std::make_shared<Character>(selectChar);
+	m_char = std::make_shared<Character>(selectChar, Position2{ static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight - 100) });
 	m_fruitsFactory = std::make_shared<FruitsFactory>();
 	
 	m_settingH = my::MyLoadGraph(L"Data/Buttons/Settings.png");
@@ -135,13 +135,6 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 		for (auto& fruit : m_fruitsFactory->GetFruits())
 		{
 			if (!fruit->IsExist()) continue;//フルーツが存在するかどうか
-
-#if _DEBUG
-			if (fruit->GetRect().IsHit(Rect{ {mouse.GetPos()},{10,10}}))
-			{
-				DrawString(static_cast<int>(mouse.GetPos().x) - 60, static_cast<int>(mouse.GetPos().y), L"当たる", 0xffffff);
-			}
-#endif
 			//フルーツの位置にマウスがあるとき
 			if (fruit->GetRect().IsHit(Rect{ {mouse.GetPos()},{10,10} }))
 			{
@@ -243,9 +236,15 @@ void GameplayingScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 void GameplayingScene::SpawnerUpdate()
 {
 	int fruitsSpawnIdRand = GetRand((static_cast<int>(FruitsSpawnId::Max) - 1));//ランダムで生成するフルーツの種類を決める
-	int rand = GetRand(100) / m_stage->GetMapSpawnerNum();//ランダムにスポナー生成位置を決める
+	int rand = GetRand(100) % m_stage->GetMapSpawnerNum();//ランダムにスポナー生成位置を決める
+	assert(rand < m_stage->GetMapSpawnerNum());//スポナーの数よりも大きかったら止める
 	Position2 pos = { static_cast<float>(rand * kBgSize), static_cast<float>(2 * kBgSize) };
+
 	FruitsCreate(static_cast<FruitsSpawnId>(fruitsSpawnIdRand), pos);
+
+#ifdef _DEBUG
+	DrawBox(pos.x, pos.y, pos.x + 64, pos.y + 64, 0x000000, false);
+#endif
 
 	for (auto& spawner : m_spawners)
 	{
