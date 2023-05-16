@@ -110,10 +110,21 @@ void Character::Update(bool isPlay)
 			m_isLeft = !m_isLeft;
 		}
 	}
-	else if(m_animType != CharAnimType::DoubleJump)
+	else if(!isPlay)
 	{
-		m_animType = CharAnimType::DoubleJump;
-		m_idxX = 0;
+		if (m_animType != CharAnimType::DoubleJump)
+		{
+			m_animType = CharAnimType::DoubleJump;
+			m_idxX = 0;
+		}
+	}
+	else if (isPlay)
+	{
+		if (m_animType != CharAnimType::Run)
+		{
+			m_animType = CharAnimType::Run;
+			m_idxX = 0;
+		}
 	}
 
 	m_frame--;
@@ -122,9 +133,16 @@ void Character::Update(bool isPlay)
 		int type = static_cast<int>(m_animType);
 		if (m_idxX++ >= m_w[type] - 1)
 		{
-			if (type == static_cast<int>(CharAnimType::DoubleJump))
+			if (!isPlay)
 			{
-				m_idxX = m_w[type] - 1;
+				if (type == static_cast<int>(CharAnimType::DoubleJump))
+				{
+					m_idxX = m_w[type] - 1;
+				}
+				else
+				{
+					m_idxX -= m_w[type];
+				}
 			}
 			else
 			{

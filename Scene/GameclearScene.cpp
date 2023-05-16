@@ -7,6 +7,7 @@
 #include "../Util/DrawFunctions.h"
 #include "SceneManager.h"
 #include "TitleScene.h"
+#include "../Game/Character.h"
 
 
 namespace
@@ -24,19 +25,11 @@ namespace
 
 }
 
-GameclearScene::GameclearScene(SceneManager& manager) :
-	Scene(manager), m_updateFunc(&GameclearScene::FadeInUpdat),
-	m_drawFunc(&GameclearScene::NormalDraw) {
-	
-	float posX = (Game::kScreenWidth - kMojiNum * kMojiSize) / 2;
-	for (int i = 0; i < kMojiNum; i++)
-	{
-		m_moji[i].pos = { static_cast<float>(posX + i * kMojiSize) ,Game::kScreenHeight / 3 };
-		m_moji[i].moveY = i * -1.0f;
-		m_moji[i].add = 0.5f;
-	}
-	
+GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Character> character) :
+	Scene(manager), m_updateFunc(&GameclearScene::FadeInUpdat),m_char(character), m_scroll(0)
+{
 	//m_BgmH = LoadSoundMem(L"Sound/BGM/emerald.mp3");
+	m_bgH = my::MyLoadGraph(L"Data/Background/Gray.png");
 }
 
 GameclearScene::~GameclearScene()
@@ -47,12 +40,30 @@ GameclearScene::~GameclearScene()
 
 void GameclearScene::Update(const InputState& input,  Mouse& mouse)
 {
+	m_char->Update(true);
 	(this->*m_updateFunc)(input,mouse);
+	//îwåià⁄ìÆ
+	if (m_scroll++ >= static_cast<int>(kBgSize))
+	{
+		m_scroll -= static_cast<int>(kBgSize);
+	}
 }
 
 void GameclearScene::Draw()
 {
-	(this->*m_drawFunc)();
+	//îwåi
+	for (int x = -kBgSize / 2; x < Game::kScreenWidth; x += kBgSize)
+	{
+		for (int y = -kBgSize / 2; y <= Game::kScreenHeight; y += kBgSize)
+		{
+			my::MyDrawRectRotaGraph(x + m_scroll, y + m_scroll, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_bgH, true, false);
+		}
+	}
+
+	m_char->Draw();
+
+	DrawString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, L"ÉQÅ[ÉÄÉNÉäÉA", 0xffffff);
+
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -83,54 +94,11 @@ void GameclearScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 {
 	if (input.IsTriggered(InputType::slect))
 	{
-		m_updateFunc = &GameclearScene::MojiUpdate;
-		m_drawFunc = &GameclearScene::MojiDraw;
+		m_updateFunc = &GameclearScene::FadeOutUpdat;
+		m_fadeColor = 0x000000;
 		ChangeVolumeSoundMem(0, m_BgmH);
 		PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 		return;
 	}
 }
 
-void GameclearScene::MojiUpdate(const InputState& input,  Mouse& mouse)
-{
-	if (m_soundVolume++ >= SoundManager::GetInstance().GetBGMVolume())
-	{
-		m_soundVolume = SoundManager::GetInstance().GetBGMVolume();
-	}
-	ChangeVolumeSoundMem(m_soundVolume, m_BgmH);
-
-	for (auto& moji : m_moji)
-	{
-		if (moji.moveY > kMojiNum)
-		{
-			moji.add *= -1.0f;
-		}
-		else if (moji.moveY < -kMojiNum)
-		{
-			moji.add *= -1.0f;
-		}
-		moji.moveY += moji.add;
-	}
-
-	if (input.IsTriggered(InputType::slect))
-	{
-		m_updateFunc = &GameclearScene::FadeOutUpdat;
-		m_fadeColor = 0x000000;
-	}
-}
-
-void GameclearScene::NormalDraw()
-{
-	DrawString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, L"ÉQÅ[ÉÄÉNÉäÉA", 0xffffff);
-}
-
-void GameclearScene::MojiDraw()
-{
-	SetFontSize(kMojiSize);
-	for (int i = 0; i < kMojiNum; i++)
-	{
-		DrawStringF(m_moji[i].pos.x + 2, m_moji[i].pos.y + 2 + m_moji[i].moveY, kMoji[i], 0xffffff);
-		DrawStringF(m_moji[i].pos.x, m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xffaaaf);
-	}
-	SetFontSize(0);
-}

@@ -2,6 +2,9 @@
 #include "Secne.h"
 #include "../Util/Geometry.h"
 #include <array>
+#include <memory>
+
+class Character;
 
 /// <summary>
 /// ÉQÅ[ÉÄÉNÉäÉAÉVÅ[Éì
@@ -9,7 +12,7 @@
 class GameclearScene : public Scene
 {
 public:
-    GameclearScene(SceneManager& manager);
+    GameclearScene(SceneManager& manager, std::shared_ptr<Character> character);
     virtual ~GameclearScene();
 
     void Update(const InputState& input,  Mouse& mouse);
@@ -20,35 +23,14 @@ private:
     void FadeInUpdat(const InputState& input,  Mouse& mouse);
     void FadeOutUpdat(const InputState& input,  Mouse& mouse);
     void NormalUpdat(const InputState& input,  Mouse& mouse);
-    void MojiUpdate(const InputState& input,  Mouse& mouse);
-
-    void NormalDraw();
-    void MojiDraw();
 
     void (GameclearScene::* m_updateFunc)(const InputState&,  Mouse&);
-    void (GameclearScene::* m_drawFunc)();
 
-    struct Moji
-    {
-        Position2 pos = {};
-        float moveY = 0.0f;
-        float add = 0.0f;
-    };
-    static constexpr int kMojiNum = 10;
-    std::array<Moji, kMojiNum> m_moji;
-    const wchar_t* const kMoji[GameclearScene::kMojiNum] =
-    {
-        L"G",
-        L"a",
-        L"m",
-        L"e",
-        L" ",
-        L"C",
-        L"l",
-        L"e",
-        L"a",
-        L"r",
-    };
+    std::shared_ptr<Character> m_char;
+
     int m_soundVolume = 0;
+
+    int m_bgH;
+    int m_scroll;//îwåiÇìÆÇ©Ç∑
 };
 

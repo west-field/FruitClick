@@ -230,7 +230,7 @@ void GameplayingScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 		switch (m_crea)
 		{
 		case 0:
-			m_manager.ChangeScene(new GameclearScene(m_manager));
+			m_manager.ChangeScene(new GameclearScene(m_manager, m_char));
 			return;
 		case 1:
 			m_manager.ChangeScene(new GameoverScene(m_manager,m_char));
