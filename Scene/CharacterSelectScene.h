@@ -31,6 +31,13 @@ private:
 	//フェードアウトの時のUpdate関数
 	void FadeOutUpdat(const InputState& input,  Mouse& mouse);
 
+	/// <summary>
+	/// キャラの説明を表示する
+	/// </summary>
+	/// <param name="type">キャラタイプ</param>
+	/// <param name="color">色</param>
+	void DrawExplanationString(int type,int color);
+
 	//Update用メンバ関数ポインタ
 	void (CharacterSelectScene::* m_updateFunc)(const InputState& , Mouse& );
 

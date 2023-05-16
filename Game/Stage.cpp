@@ -119,3 +119,18 @@ void Stage::GetMapPos(Position2& pos, int layerId, float posX, float posY)
 	pos  = { static_cast<float>(x * kBgSize),static_cast<float>(y * kBgSize) };
 }
 
+void Stage::Draw()
+{
+	for (int y = 0; y < m_mapHeight; y++)
+	{
+		for (int x = 0; x < m_mapWidth; x++)
+		{
+			int index = x + y * m_mapWidth;
+			if (m_mapData[static_cast<int>(LayerType::Map)][index] == 0)	continue;
+			int X = x * kBgSize;
+			int Y = y * kBgSize;
+			DrawBox(X, Y, X + kBgSize, Y + kBgSize, 0x000000, false);
+		}
+	}
+}
+

@@ -12,6 +12,12 @@ Sprout Lands - UI Pack - Basic pack
 https://cupnooble.itch.io/sprout-lands-ui-pack
 https://cupnooble.itch.io/sprout-lands-asset-pack
 
+キャラによって性能が変わる
+MaskDude		HP
+NinjaFrog		speed
+PinkMan		当たり判定
+VirtualGuy		無敵時間
+
 フルーツを落としている人の表示
 ステージの追加
 何ステージまでクリアできたかを外部ファイルにして取得

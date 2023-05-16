@@ -49,6 +49,8 @@ public:
 	/// </summary>
 	/// <param name="pos"></param>
 	void GetMapPos(Position2& pos, int layerId, float posX, float posY);
+
+	void Draw();
 private:
 	MapData_t m_mapData;	//マップデータ
 	int m_mapWidth;			//マップの横幅

@@ -85,6 +85,7 @@ void GameplayingScene::Draw()
 	m_fruitsFactory->Draw();
 
 #ifdef _DEBUG
+	m_stage->Draw();
 	DrawString(0, 20, L"ゲームプレイングシーン", 0xffffff);
 	DrawFormatString(0, 100,0x000000, L"壊した数:%d", m_fruitsFactory->GetCount());
 #endif
@@ -238,12 +239,12 @@ void GameplayingScene::SpawnerUpdate()
 	int fruitsSpawnIdRand = GetRand((static_cast<int>(FruitsSpawnId::Max) - 1));//ランダムで生成するフルーツの種類を決める
 	int rand = GetRand(100) % m_stage->GetMapSpawnerNum();//ランダムにスポナー生成位置を決める
 	assert(rand < m_stage->GetMapSpawnerNum());//スポナーの数よりも大きかったら止める
-	Position2 pos = { static_cast<float>(rand * kBgSize), static_cast<float>(2 * kBgSize) };
+	Position2 pos = { static_cast<float>((rand + 2) * kBgSize) + kBgSize / 2, static_cast<float>(2 * kBgSize) };
 
 	FruitsCreate(static_cast<FruitsSpawnId>(fruitsSpawnIdRand), pos);
 
 #ifdef _DEBUG
-	DrawBox(pos.x, pos.y, pos.x + 64, pos.y + 64, 0x000000, false);
+	DrawBoxAA(pos.x, pos.y, pos.x + 64, pos.y + 64, 0x000000, false);
 #endif
 
 	for (auto& spawner : m_spawners)

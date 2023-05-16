@@ -33,17 +33,45 @@ Character::Character(int selectChar,Position2 pos):m_idxX(0),m_idxY(0)
 	};
 	CharacterLoad(name[selectChar]);
 
+	m_maxHp = kMaxHp;
+	m_moveSpeed = kCharMoveSpeed;
+	m_animSpeed = kCharAnimSpeed;
+	m_ultimateFrame = kUltimateFrame;
+
+	int hitW = 30;
+	int hitH = 35;
+
+	switch (selectChar)
+	{
+	case 1://HPが多い
+		m_maxHp += 5;
+		break;
+	case 2://スピードが早い
+		m_animSpeed -= 2;
+		m_moveSpeed += 0.5f;
+		break;
+	case 3://当たり判定が小さい
+		hitW += 5;
+		hitH += 5;
+		break;
+	case 4://無敵時間が長い
+		m_ultimateFrame += 10;
+		break;
+	default:
+		break;
+	}
+
 	int  sizeW = static_cast<int>(kCharSizeW * kCharSrawScale);
 	int  sizeH = static_cast<int>(kCharSizeH * kCharSrawScale);
 
-	m_rect = { pos,{ sizeW - 30,sizeH - 35 } };
+	m_rect = { pos,{ sizeW - hitW,sizeH - hitH } };
 	
 	m_animType = CharAnimType::Run;
 
 	m_hp = std::make_shared<HpBar>(Position2{0.0f,0.0f});
-	m_hp->MaxHp(kMaxHp);
+	m_hp->MaxHp(m_maxHp);
 
-	m_vecX = kCharMoveSpeed;
+	m_vecX = m_moveSpeed;
 }
 
 Character::~Character()
@@ -67,7 +95,7 @@ void Character::Update()
 		{
 			m_idxX -= m_w[type];
 		}
-		m_frame = kCharAnimSpeed;
+		m_frame = m_animSpeed;
 	}
 
 	//0よりも小さかったら0を返す
@@ -93,17 +121,17 @@ void Character::Update()
 
 void Character::Update(bool isPlay)
 {
-	if (m_rect.center.x <= Game::kScreenWidth / 2 - kCharMoveSpeed)
+	if (m_rect.center.x <= Game::kScreenWidth / 2 - m_moveSpeed)
 	{
-		m_rect.center.x += kCharMoveSpeed;
+		m_rect.center.x += m_moveSpeed;
 		if (m_isLeft != false)
 		{
 			m_isLeft = !m_isLeft;
 		}
 	}
-	else if (m_rect.center.x >= Game::kScreenWidth / 2 + kCharMoveSpeed)
+	else if (m_rect.center.x >= Game::kScreenWidth / 2 + m_moveSpeed)
 	{
-		m_rect.center.x -= kCharMoveSpeed;
+		m_rect.center.x -= m_moveSpeed;
 		if (m_isLeft != true)
 		{
 			m_isLeft = !m_isLeft;
@@ -148,7 +176,7 @@ void Character::Update(bool isPlay)
 				m_idxX -= m_w[type];
 			}
 		}
-		m_frame = kCharAnimSpeed;
+		m_frame = m_animSpeed;
 	}
 	//0よりも小さかったら0を返す
 	if (m_ultimateTimer != 0)
@@ -218,7 +246,7 @@ bool Character::IsCollidable() const
 
 void Character::Damage(int damage)
 {
-	m_ultimateTimer = kUltimateFrame;
+	m_ultimateTimer = m_ultimateFrame;
 	m_hp->Damage(damage);
 }
 

@@ -95,5 +95,11 @@ private:
 	int m_ultimateTimer = 0;//–³“GŽžŠÔ
 
 	std::shared_ptr<HpBar> m_hp;//HP
+
+	int m_maxHp;
+	float m_moveSpeed;
+	int m_animSpeed;
+	int m_ultimateFrame;
+
 };
 

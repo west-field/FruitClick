@@ -20,6 +20,8 @@ namespace
 
 	constexpr int kCharSize = 32;//キャラクタのサイズ
 	constexpr int kAnimSpeed = 5;//アニメーションスピード
+
+	constexpr int kFontSize = 30;
 }
 
 
@@ -58,7 +60,7 @@ CharacterSelectScene::CharacterSelectScene(SceneManager& manager) :
 	m_char[static_cast<int>(CharType::PinkMan)].handle[typeDoubleJump] = my::MyLoadGraph(L"Data/Characters/PinkMan/DoubleJump.png");
 	m_char[static_cast<int>(CharType::PinkMan)].handle[typeFall] = my::MyLoadGraph(L"Data/Characters/PinkMan/Fall.png");
 	m_char[static_cast<int>(CharType::PinkMan)].isLeft = false;
-	m_char[static_cast<int>(CharType::PinkMan)].rect.center = { screneSizeW / 2 ,Game::kScreenHeight - screneSizeH / 2 };
+	m_char[static_cast<int>(CharType::PinkMan)].rect.center = { screneSizeW / 2 ,Game::kScreenHeight - screneSizeH / 2 - kFontSize *2};
 
 	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeIdle] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/Idle.png");
 	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeRun] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/Run.png");
@@ -66,7 +68,7 @@ CharacterSelectScene::CharacterSelectScene(SceneManager& manager) :
 	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeDoubleJump] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/DoubleJump.png");
 	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeFall] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/Fall.png");
 	m_char[static_cast<int>(CharType::VirtualGuy)].isLeft = true;
-	m_char[static_cast<int>(CharType::VirtualGuy)].rect.center = { Game::kScreenWidth - screneSizeW / 2 ,Game::kScreenHeight - screneSizeH / 2 };
+	m_char[static_cast<int>(CharType::VirtualGuy)].rect.center = { Game::kScreenWidth - screneSizeW / 2 ,Game::kScreenHeight - screneSizeH / 2 - kFontSize * 2 };
 
 	int  size = static_cast<int>(kCharSize * kSizeScale);
 
@@ -137,13 +139,16 @@ void CharacterSelectScene::Draw()
 		my::MyDrawRectRotaGraph(charctor.rect.center.x, charctor.rect.center.y,
 			charctor.idxX * kCharSize, charctor.idxY * kCharSize, kCharSize, kCharSize,
 			kSizeScale, 0.0f, charctor.handle[type], true, charctor.isLeft);
-
+#ifdef _DEBUG
 		charctor.rect.Draw(0xffffff);
+#endif
 	}
 
-#ifdef _DEBUG
-	
-#endif
+	DrawExplanationString(static_cast<int>(CharType::MaskDude), 0xb34607);
+	DrawExplanationString(static_cast<int>(CharType::NinjaFrog), 0x136e1f);
+	DrawExplanationString(static_cast<int>(CharType::PinkMan), 0xdb309d);
+	DrawExplanationString(static_cast<int>(CharType::VirtualGuy), 0x09a8b0);
+
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -253,4 +258,21 @@ void CharacterSelectScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 		m_manager.ChangeScene(new GameplayingScene(m_manager, m_selectChar));
 		return;
 	}
+}
+
+void CharacterSelectScene::DrawExplanationString(int type, int color)
+{
+	const wchar_t* string[] =
+	{
+		L"HPが\n多いよ",
+		L"移動が\n速いよ",
+		L"当たり判定が\n小さいよ",
+		L"無敵時間が\n長いよ"
+	};
+	float x = m_char[type].rect.center.x - kCharSize * kSizeScale / 2;
+	float y = m_char[type].rect.center.y + kCharSize * kSizeScale / 2;
+
+	SetFontSize(kFontSize);
+	DrawStringF(x, y, string[type], color);
+	SetFontSize(0);
 }
