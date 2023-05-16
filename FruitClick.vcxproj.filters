@@ -87,9 +87,6 @@
     <ClInclude Include="Util\Mouse.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Util\Mouse-FIC-PCROOM3B-13.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="Util\Sound.h">
       <Filter>Util</Filter>
     </ClInclude>

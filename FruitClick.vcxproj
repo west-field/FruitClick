@@ -177,7 +177,6 @@
     <ClInclude Include="Util\DrawFunctions.h" />
     <ClInclude Include="Util\Geometry.h" />
     <ClInclude Include="Util\Info.h" />
-    <ClInclude Include="Util\Mouse-FIC-PCROOM3B-13.h" />
     <ClInclude Include="Util\Mouse.h" />
     <ClInclude Include="Util\Sound.h" />
   </ItemGroup>

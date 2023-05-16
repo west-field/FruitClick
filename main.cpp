@@ -39,9 +39,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 		MessageBox(NULL, L"フォント読込失敗", L"", MB_OK);
 	}
 	ChangeFont(L"PixelMplus10", DX_CHARSET_DEFAULT);
-
-	SetMouseDispFlag(false);//マウス表示設定　false:表示しない true:表示する
-
+#ifdef _DEBUG
+	SetMouseDispFlag(true);//マウス表示設定　false:表示しない true:表示する
+#else
+	SetMouseDispFlag(false);
+#endif
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	InputState input;

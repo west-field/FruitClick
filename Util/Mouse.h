@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Geometry.h"
+#include <list>
 
 class InputState;
 
@@ -39,10 +40,27 @@ public:
 
 	bool MouseSelect(float startX, float endX,float startY, float endY);
 
+	/// <summary>
+	/// クリックしたときに出す波紋を作成
+	/// </summary>
+	void ClickAnimCreate();
+
+	/// <summary>
+	/// クリックしたときに出す波紋の更新
+	/// </summary>
+	void ClickAnimUpdate();
 private:
     Rect m_rect;//マウスの位置
-    int m_mouseH = -1;//マウスの画像
+    int m_mouseH;//マウスの画像
 
+	struct Click
+	{
+		Position2 pos;
+		bool isClick;
+		int idx;
+	};
+	std::list<Click> m_click;
+	int m_clickH;
 
 	static constexpr int kLogNum = 16;
 	//入力ログ　0が最新の状態

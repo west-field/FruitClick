@@ -8,15 +8,16 @@ namespace
 {
 	constexpr int kClickImgWidth = 100;//画像サイズX
 	constexpr int kClickImgHeight = 100;//画像サイズY
-	constexpr float kClickDrawScale = 1.5f;//拡大率
+	constexpr float kClickDrawScale = 1.0f;//拡大率
 	constexpr int kClickAnimNum = 31;//アニメーション枚数
-	constexpr float  kClickAnimSpeed = 0.5f;//アニメーションスピード
+	constexpr int  kClickAnimSpeed = 1;//アニメーションスピード
 }
 
 Mouse::Mouse():mouseLog()
 {
 	m_rect = { {},{} };
 	m_mouseH = my::MyLoadGraph(L"Data/Cursor.png");
+	m_clickH = my::MyLoadGraph(L"Data/click.png");
 	MouseReset();
 }
 
@@ -37,17 +38,35 @@ void Mouse::Update(const InputState& input)
 	if (input.IsTriggered(InputType::slect)|| input.IsTriggered(InputType::prev))
 	{
 		mouseLog[0] = 1;
+		ClickAnimCreate();
 	}
 	else
 	{
 		mouseLog[0] = 0;
 	}
 
+	ClickAnimUpdate();
+
+
 	m_rect.center = GetPos();
 }
 
 void Mouse::Draw()
 {
+	for (auto& click : m_click)
+	{
+		if (click.isClick)
+		{
+			int animNum = static_cast<int>(click.idx / kClickAnimSpeed);
+			if (animNum >= kClickAnimNum)
+			{
+				animNum -= kClickAnimNum;
+			}
+			int imgX = animNum % 6 * kClickImgWidth;
+			int imgY = animNum / 6 * kClickImgHeight;
+			my::MyDrawRectRotaGraph(click.pos.x, click.pos.y, imgX, imgY, kClickImgWidth, kClickImgHeight, kClickDrawScale, 0.0f, m_clickH, true, false);
+		}
+	}
 	my::MyDrawGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), m_mouseH, true);
 #ifdef _DEBUG
 	DrawFormatStringF(m_rect.center.x, m_rect.center.y, 0xffffff, L"-----x%3f,y%3f", m_rect.center.x, m_rect.center.y);
@@ -56,7 +75,7 @@ void Mouse::Draw()
 
 void Mouse::MouseReset()
 {
-	SetMousePoint(Game::kScreenWidth / 2, Game::kScreenHeight / 2);
+	SetMousePoint(Game::kScreenWidth / 2, Game::kScreenHeight / 2);//ポインタを中心に移動させる
 }
 
 Position2 Mouse::GetPos()
@@ -121,5 +140,34 @@ bool Mouse::MouseSelect(float startX, float endX, float startY, float endY)
 
 	//マウスの位置が範囲内にある
 	return true;
+}
+
+void Mouse::ClickAnimCreate()
+{
+	Click click;
+	click.pos = m_rect.center;
+	click.isClick = true;
+	click.idx = 0;
+
+	m_click.push_back(click);
+}
+
+void Mouse::ClickAnimUpdate()
+{
+	for (auto& click : m_click)
+	{
+		if (!click.isClick)	continue;
+
+		if (click.idx++ >= kClickAnimNum * kClickAnimSpeed)
+		{
+			click.idx = 0;
+			click.isClick = false;
+		}
+	}
+
+	//いらなくなったものを削除
+	m_click.remove_if([](const Click click) {
+		return !click.isClick;
+		});
 }
 
