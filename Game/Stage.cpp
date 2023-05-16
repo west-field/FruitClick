@@ -118,3 +118,4 @@ void Stage::GetMapPos(Position2& pos, int layerId, float posX, float posY)
 	//マップチップの位置
 	pos  = { static_cast<float>(x * kBgSize),static_cast<float>(y * kBgSize) };
 }
+

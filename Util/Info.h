@@ -16,8 +16,8 @@ enum class CharAnimType
 	Idle,
 	Run,
 	Jump,
-	DoubleJump,
 	Fall,
+	DoubleJump,
 
 	Max
 };
