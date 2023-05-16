@@ -24,6 +24,8 @@ namespace
 
 Character::Character(int selectChar,Position2 pos):m_idxX(0),m_idxY(0)
 {
+	m_selectCharType = selectChar;
+
 	const wchar_t* name[static_cast<int>(CharType::Max)] =
 	{
 		L"MaskDude",
@@ -43,18 +45,18 @@ Character::Character(int selectChar,Position2 pos):m_idxX(0),m_idxY(0)
 
 	switch (selectChar)
 	{
-	case 1://HPが多い
+	case 0://HPが多い
 		m_maxHp += 5;
 		break;
-	case 2://スピードが早い
+	case 1://スピードが早い
 		m_animSpeed -= 2;
-		m_moveSpeed += 0.5f;
+		m_moveSpeed += 1.0f;
 		break;
-	case 3://当たり判定が小さい
-		hitW += 5;
-		hitH += 5;
+	case 2://当たり判定が小さい
+		hitW += 10;
+		hitH += 10;
 		break;
-	case 4://無敵時間が長い
+	case 3://無敵時間が長い
 		m_ultimateFrame += 10;
 		break;
 	default:
@@ -119,7 +121,7 @@ void Character::Update()
 	}
 }
 
-void Character::Update(bool isPlay)
+void Character::Update(bool isClear)
 {
 	if (m_rect.center.x <= Game::kScreenWidth / 2 - m_moveSpeed)
 	{
@@ -137,7 +139,7 @@ void Character::Update(bool isPlay)
 			m_isLeft = !m_isLeft;
 		}
 	}
-	else if(!isPlay)
+	else if(!isClear)
 	{
 		if (m_animType != CharAnimType::DoubleJump)
 		{
@@ -145,7 +147,7 @@ void Character::Update(bool isPlay)
 			m_idxX = 0;
 		}
 	}
-	else if (isPlay)
+	else if (isClear)
 	{
 		if (m_animType != CharAnimType::Run)
 		{
@@ -160,7 +162,7 @@ void Character::Update(bool isPlay)
 		int type = static_cast<int>(m_animType);
 		if (m_idxX++ >= m_w[type] - 1)
 		{
-			if (!isPlay)
+			if (!isClear)
 			{
 				if (type == static_cast<int>(CharAnimType::DoubleJump))
 				{

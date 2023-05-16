@@ -16,7 +16,7 @@ public:
 
 	//更新
 	void Update();
-	void Update(bool isPlay);
+	void Update(bool isClear);
 	//表示
 	void Draw();
 	//キャラクターロード
@@ -67,9 +67,25 @@ public:
 	/// <param name="type">アニメーションタイプ</param>
 	void SetAnimType(CharAnimType type);
 
+	/// <summary>
+	/// 選択したキャラクタータイプを返す
+	/// </summary>
+	/// <returns>選択したキャラクター</returns>
+	const int GetSelectChar()const { return m_selectCharType; }
+
+	/// <summary>
+	/// ダブルジャンプを指定している時、今のアニメーション枚数を返す
+	/// </summary>
+	/// <returns>現在指定しているアニメーション枚数</returns>
 	int GetIdx()const;
+	/// <summary>
+	/// 指定したアニメーションタイプの枚数を返す
+	/// </summary>
+	/// <param name="type">アニメーションタイプ</param>
+	/// <returns>アニメーション枚数</returns>
 	int GetAnimNum(CharAnimType type)const;
 private:
+	int m_selectCharType;
 	//キャラクタのアニメーション分だけ
 	int m_handle[static_cast<int>(CharAnimType::Max)] = {};
 
