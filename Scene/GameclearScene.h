@@ -59,7 +59,7 @@ private:
 
     int m_bgH;//背景
     int m_scroll;//背景を動かす
-    int m_count;//フルーツを壊した数
+    int m_point;//フルーツを壊した数
     int m_numFont;//数字画像
 };
 

@@ -13,7 +13,7 @@
 
 #include "../Util/DrawFunctions.h"
 
-FruitsFactory::FruitsFactory() : m_count(0)
+FruitsFactory::FruitsFactory() : m_point(0)
 {
 	m_handleMap[FruitsType::Apple] = my::MyLoadGraph(L"Data/Fruits/Apple.png");
 	m_handleMap[FruitsType::Banana] = my::MyLoadGraph(L"Data/Fruits/Bananas.png");
@@ -39,7 +39,7 @@ void FruitsFactory::Update()
 	{
 		if (fruit->IsDestroy())
 		{
-			m_count++;
+			m_point += fruit->GetPoint();
 		}
 	}
 

@@ -38,15 +38,15 @@ public:
 	std::list<std::shared_ptr<FruitsBase>>& GetFruits();
 
 	/// <summary>
-	/// フルーツをクリックで壊した数を取得する
+	/// クリックで壊したフルーツの得点を取得する
 	/// </summary>
-	/// <returns>フルーツを壊した数</returns>
-	int GetCount()const { return m_count; }
+	/// <returns>得点</returns>
+	int GetPoint()const { return m_point; }
 private:
 	std::list<std::shared_ptr<FruitsBase>> m_fruits;	//フルーツ
 
 	std::map<FruitsType, int>m_handleMap;//フルーツの画像ハンドル
 
-	int m_count;//フルーツを壊した数
+	int m_point;//得点
 };
 

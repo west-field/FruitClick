@@ -58,6 +58,6 @@ private:
 
     int m_bgH;
     int m_scroll;//”wŒi‚ğ“®‚©‚·
-    int m_count;//‰ó‚µ‚½”
+    int m_point;//‰ó‚µ‚½”
 };
 

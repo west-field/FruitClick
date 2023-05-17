@@ -27,7 +27,7 @@ namespace
 
 GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Character> character,int count) :
 	Scene(manager), m_updateFunc(&GameclearScene::FadeInUpdat), m_drawFunc (&GameclearScene::NormalDraw),
-	m_char(character), m_scroll(0),m_count(count)
+	m_char(character), m_scroll(0),m_point(count)
 {
 	m_selectNum = menuGameEnd;
 
@@ -85,7 +85,7 @@ void GameclearScene::Draw()
 
 	m_char->Draw();
 
-	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_count);
+	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_point);
 
 	(this->*m_drawFunc)();
 

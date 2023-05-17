@@ -12,8 +12,8 @@ namespace
 FruitsBase::FruitsBase(Position2 pos, int handle):
 	m_handle(-1), m_blend(0),
 	m_scale(0.0f), m_rect(), m_vec(),
-	m_isExist(true),m_flashingTimer(0),m_idxX(0),m_idxY(0),
-	m_jump(0),m_speed(0), m_isDestroy(false)
+	m_isExist(true),m_flashingTimer(0),m_idxX(0),
+	m_jump(0),m_speed(0), m_isDestroy(false), m_point(0)
 {
 	m_handle = handle;
 	
@@ -28,22 +28,25 @@ FruitsBase::~FruitsBase()
 void FruitsBase::Update()
 {
 	m_jump += kGravity;
+	//ã‚Éã‚ª‚é
 	if (m_jump >= m_speed * 2)
 	{
 		m_jump = m_speed * 2;
 	}
 	m_rect.center.y += m_jump;
 
-	if (m_flashingTimer-- <= 0)
+	if (m_flashingTimer-- <= 0)//UŒ‚‚ðŽó‚¯‚½‚Æ‚«
 	{
 		m_blend = 0;
 		m_flashingTimer = 0;
 	}
-
+	//”ÍˆÍŠO‚Éo‚½‚çÁ‚·
 	if (m_rect.center.y >= Game::kScreenHeight + m_rect.size.w)
 	{
 		m_isExist = false;
 	}
+
+	m_idxX = (m_idxX + 1) % (kAnimNum * kAnimSpeed);
 }
 
 const Rect& FruitsBase::GetRect() const

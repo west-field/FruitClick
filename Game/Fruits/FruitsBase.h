@@ -64,6 +64,12 @@ public:
 	/// </summary>
 	void SetDestroy() { m_isDestroy = true; }
 
+	/// <summary>
+	/// フルーツの得点を取得する
+	/// </summary>
+	/// <returns>得点</returns>
+	int GetPoint()const { return m_point; }
+
 	virtual std::shared_ptr<FruitsBase> Clone() = 0;
 protected:
 	int m_handle;//画像
@@ -80,14 +86,17 @@ protected:
 
 	int m_flashingTimer ;//点滅時間
 
-	int m_idxX ;
-	int m_idxY ;
+	static constexpr int kAnimNum = 17;
+	static constexpr int kAnimSpeed = 5;
+	int m_idxX ;//画像インデックス
 
-	float m_jump;
-	float m_speed;
+	float m_jump;//上に上がる
+	float m_speed;//落ちていく速度
 
-	std::shared_ptr<HpBar> m_hp;
+	std::shared_ptr<HpBar> m_hp;//フルーツのHp
 
 	bool m_isDestroy;//破壊されたか
+
+	int m_point;//得点
 };
 

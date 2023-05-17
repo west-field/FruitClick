@@ -89,12 +89,12 @@ void GameplayingScene::Draw()
 	m_char->Draw();
 	m_fruitsFactory->Draw();
 
-	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_fruitsFactory->GetCount());
+	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_fruitsFactory->GetPoint());
 
 #ifdef _DEBUG
 	m_stage->Draw();
 	DrawString(0, 20, L"ゲームプレイングシーン", 0xffffff);
-	DrawFormatString(0, 100,0x000000, L"壊した数:%d", m_fruitsFactory->GetCount());
+	DrawFormatString(0, 100,0x000000, L"壊した数:%d", m_fruitsFactory->GetPoint());
 #endif
 	//メニュー項目を描画
 	my::MyDrawRectRotaGraph(m_settingRect.center.x, m_settingRect.center.y,
@@ -219,7 +219,7 @@ void GameplayingScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 
 	if(++m_fadeTimer == kFadeInterval)
 	{
-		m_manager.ChangeScene(new GameclearScene(m_manager, m_char, m_fruitsFactory->GetCount()));
+		m_manager.ChangeScene(new GameclearScene(m_manager, m_char, m_fruitsFactory->GetPoint()));
 		return;
 	}
 }

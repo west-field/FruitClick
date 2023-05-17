@@ -27,6 +27,7 @@ FruitsBanana::FruitsBanana(Position2 pos, int handle):FruitsBase(pos,handle)
 	
 	m_jump = kJumpPower;
 	m_speed = kSpeed;
+	m_point = kBananaMaxHp;
 }
 
 FruitsBanana::~FruitsBanana()
@@ -35,11 +36,12 @@ FruitsBanana::~FruitsBanana()
 
 void FruitsBanana::Draw()
 {
+	int img = m_idxX / kAnimSpeed;
 	if (m_blend != 0)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_ADD, m_blend);
 	}
-	my::MyDrawRectRotaGraph(m_rect.center.x, m_rect.center.y, m_idxX * kSizeW, m_idxY * kSizeH, kSizeW, kSizeH, m_scale, 0.0f, m_handle, true, false);
+	my::MyDrawRectRotaGraph(m_rect.center.x, m_rect.center.y, img * kSizeW, 0, kSizeW, kSizeH, m_scale, 0.0f, m_handle, true, false);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 #ifdef _DEBUG
 	m_rect.Draw(0x0000ff);
