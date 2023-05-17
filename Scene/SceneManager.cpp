@@ -4,12 +4,7 @@
 void
 SceneManager::ChangeScene(Scene* scene)
 {
-	//シーンスタックが(empty)空ではなかったら
-	/*if (!m_scenes.empty())
-	{
-		delete m_scenes.front();
-		m_scenes.pop_front();
-	}*/
+	//今ある要素をすべて削除する
 	for (int i = static_cast<int>(m_scenes.size() - 1); i >= 0; i--)
 	{
 		delete m_scenes.front();
@@ -48,5 +43,15 @@ SceneManager::Draw()
 	for (int i = static_cast<int>(m_scenes.size() - 1); i >= 0; i--)
 	{
 		m_scenes[i]->Draw();
+	}
+}
+
+void SceneManager::End()
+{
+	//要素をすべて消す
+	for (int i = static_cast<int>(m_scenes.size() - 1); i >= 0; i--)
+	{
+		delete m_scenes.front();
+		m_scenes.pop_front();
 	}
 }

@@ -46,6 +46,11 @@ public:
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// –¾¦“I‚Éíœ‚·‚é
+	/// </summary>
+	void End();
+
 	void SetIsEnd() { m_isEnd = true; }
 	bool GetIsEnd() const { return m_isEnd; }
 	
