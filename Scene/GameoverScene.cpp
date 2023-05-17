@@ -17,9 +17,9 @@ namespace
 	 constexpr int kOriginalPosY = kMenuFontSize + kMenuFontSize;    //ƒƒjƒ…[•¶š‚ÌyˆÊ’u
 }
 
-GameoverScene::GameoverScene(SceneManager& manager, std::shared_ptr<Character> character) :
+GameoverScene::GameoverScene(SceneManager& manager, std::shared_ptr<Character> character,int count) :
 	Scene(manager), m_updateFunc(&GameoverScene::FadeInUpdat),
-	m_drawFunc(&GameoverScene::NormalDraw), m_scroll(0),m_char(character)
+	m_drawFunc(&GameoverScene::NormalDraw), m_scroll(0),m_char(character), m_count(count)
 {
 	m_selectNum = menuGameEnd;
 
@@ -74,6 +74,8 @@ GameoverScene::Draw()
 	}
 
 	m_char->Draw();
+
+	DrawFormatString(Game::kScreenWidth / 2, 50, 0x000000, L"%d", m_count);
 
 	(this->*m_drawFunc)();
 

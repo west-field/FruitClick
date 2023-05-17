@@ -87,7 +87,7 @@ void TitleScene::Draw()
 	m_settingRect.Draw(0xff00ff);
 #endif
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
-	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 

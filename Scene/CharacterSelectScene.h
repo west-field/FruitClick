@@ -21,7 +21,7 @@ public:
 	virtual void Draw() override;
 
 private:
-	unsigned int m_color = 0x000000;
+	unsigned int m_fadeColor = 0xe3e3e3;//フェードの色(白
 	//フェードインの時のUpdate関数
 	void FadeInUpdat(const InputState& input,  Mouse& mouse);
 	//通常状態の時のUpdate関数

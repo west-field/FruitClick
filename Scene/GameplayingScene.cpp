@@ -30,6 +30,9 @@ namespace
 	constexpr int kFruitsCreateFrame = 100;//フルーツを作る待ち時間
 
 	constexpr float kGearScale = 2.0f;//設定ボタン表示拡大率
+
+	constexpr int kFontWidth = 16;
+	constexpr int kFontHeight = 32;
 }
 
 GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
@@ -55,6 +58,7 @@ GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
 	//m_bossBgm = LoadSoundMem(L"Sound/BGM/arabiantechno.mp3");
 	//ChangeVolumeSoundMem(0, m_BgmH);
 	//PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
+	m_numFont = my::MyLoadGraph(L"Data/numfont.png");
 }
 
 GameplayingScene::~GameplayingScene()
@@ -63,6 +67,7 @@ GameplayingScene::~GameplayingScene()
 	DeleteSoundMem(m_bossBgm);
 	DeleteGraph(m_settingH);
 	DeleteGraph(m_bgH);
+	DeleteGraph(m_numFont);
 }
 
 void GameplayingScene::Update(const InputState& input,  Mouse& mouse)
@@ -83,6 +88,8 @@ void GameplayingScene::Draw()
 
 	m_char->Draw();
 	m_fruitsFactory->Draw();
+
+	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_fruitsFactory->GetCount());
 
 #ifdef _DEBUG
 	m_stage->Draw();
@@ -183,20 +190,11 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 		return;
 	}
 
-	//クリア
-	if (m_fruitsFactory->GetCount() >= 5)
+	//終了判定
+	if (m_char->GetHp() <= 0)
 	{
 		m_updateFunc = &GameplayingScene::FadeOutUpdat;
-		m_fadeColor = 0x000000;
-		m_crea = 0;
-		return;
-	}
-	//ゲームオーバー
-	else if (m_char->GetHp() <= 0)
-	{
-		m_updateFunc = &GameplayingScene::FadeOutUpdat;
-		m_fadeColor = 0xff0000;//フェード時の色を赤にする。
-		m_crea = 1;
+		m_fadeColor = 0xffffff;//フェード時の色を白にする。
 		return;
 	}
 
@@ -221,16 +219,8 @@ void GameplayingScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 
 	if(++m_fadeTimer == kFadeInterval)
 	{
-		switch (m_crea)
-		{
-		case 0:
-			m_manager.ChangeScene(new GameclearScene(m_manager, m_char));
-			return;
-		case 1:
-			m_manager.ChangeScene(new GameoverScene(m_manager,m_char));
-		default:
-			return;
-		}
+		m_manager.ChangeScene(new GameclearScene(m_manager, m_char, m_fruitsFactory->GetCount()));
+		return;
 	}
 }
 
@@ -327,6 +317,51 @@ void GameplayingScene::FruitsCreate(FruitsSpawnId id, const Position2 pos)
 		break;
 	default:
 		break;
+	}
+}
+
+void GameplayingScene::PointUpdate(int leftX, int y, int dispNum, int digit)
+{
+	int digitNum = 0;
+	int temp = dispNum;
+	int cutNum = 10;	// 表示桁数指定時に表示をおさめるために使用する
+
+	// 表示する数字の桁数数える
+	while (temp > 0)
+	{
+		digitNum++;
+		temp /= 10;
+		cutNum *= 10;
+	}
+	if (digitNum <= 0)
+	{
+		digitNum = 1;	// 0の場合は1桁表示する
+	}
+
+	// 表示桁数指定
+	temp = dispNum;
+	if (digit >= 0)
+	{
+		if (digitNum > digit)
+		{
+			// 下から指定桁数を表示するためはみ出し範囲を切り捨て
+			temp %= cutNum;
+		}
+		digitNum = digit;
+	}
+	// 一番下の桁から表示
+	int posX = leftX - kFontWidth;
+	int posY = y;
+	for (int i = 0; i < digitNum; i++)
+	{
+		int no = temp % 10;
+
+		DrawRectGraph(posX, posY,
+			no * 16, 0, 16, 32,
+			m_numFont, true);
+
+		temp /= 10;
+		posX -= 16;
 	}
 }
 

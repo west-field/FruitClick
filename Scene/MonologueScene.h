@@ -20,7 +20,7 @@ public:
 
 private:
 	int m_selectNum = 0;//選択しているメニュー項目
-	unsigned int m_color = 0x000000;
+	unsigned int m_fadeColor = 0xe3e3e3;
 	//フェードインの時のUpdate関数
 	void FadeInUpdat(const InputState& input,  Mouse& mouse);
 	//通常状態の時のUpdate関数

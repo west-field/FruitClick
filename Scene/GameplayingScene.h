@@ -37,15 +37,15 @@ private:
      /// </summary>
     void FruitsCreate(FruitsSpawnId id, const Position2 pos);
 
-    unsigned int m_fadeColor = 0x000000;//フェードの色（黒
+    void PointUpdate(int leftX, int y, int dispNum, int digit = -1);
+
+    unsigned int m_fadeColor = 0xe3e3e3;//フェードの色（白
     
     void (GameplayingScene::* m_updateFunc)(const InputState& ,  Mouse& );
 
     int m_bossBgm = -1;//ボス音楽
     
     int m_soundVolume = 0;//サウンドの音量
-    
-    int m_crea = 0;//クリア
 
     std::shared_ptr<Character> m_char;//キャラクタ
 
@@ -61,5 +61,6 @@ private:
     std::shared_ptr<Stage> m_stage;
     int m_bgH;
     int m_scroll;//背景を動かす
+    int m_numFont;//数字画像
 };
 

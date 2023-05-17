@@ -21,10 +21,13 @@ namespace
 	constexpr int kOriginalPosX = Game::kScreenWidth / 4 + kMenuFontSize * 2;    //メニュー文字のx位置
 	constexpr int kOriginalPosY = kMenuFontSize + kMenuFontSize;    //メニュー文字のy位置
 
+	constexpr int kFontWidth = 16;
+	constexpr int kFontHeight = 32;
 }
 
-GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Character> character) :
-	Scene(manager), m_updateFunc(&GameclearScene::FadeInUpdat), m_drawFunc (&GameclearScene::NormalDraw),m_char(character), m_scroll(0)
+GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Character> character,int count) :
+	Scene(manager), m_updateFunc(&GameclearScene::FadeInUpdat), m_drawFunc (&GameclearScene::NormalDraw),
+	m_char(character), m_scroll(0),m_count(count)
 {
 	m_selectNum = menuGameEnd;
 
@@ -47,11 +50,14 @@ GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Character>
 
 	//m_BgmH = LoadSoundMem(L"Sound/BGM/emerald.mp3");
 	m_bgH = my::MyLoadGraph(L"Data/Background/Gray.png");
+	m_numFont = my::MyLoadGraph(L"Data/numfont.png");
 }
 
 GameclearScene::~GameclearScene()
 {
 	DeleteSoundMem(m_BgmH);
+	DeleteGraph(m_bgH);
+	DeleteGraph(m_numFont);
 	SoundManager::GetInstance().StopBgm(SoundId::EnemyShot);
 }
 
@@ -78,6 +84,8 @@ void GameclearScene::Draw()
 	}
 
 	m_char->Draw();
+
+	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_count);
 
 	(this->*m_drawFunc)();
 
@@ -122,7 +130,6 @@ void GameclearScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 	{
 		m_updateFunc = &GameclearScene::MojiUpdate;
 		m_drawFunc = &GameclearScene::MojiDraw;
-		m_fadeColor = 0x000000;
 		ChangeVolumeSoundMem(0, m_BgmH);
 		PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 		return;
@@ -201,3 +208,47 @@ void GameclearScene::MojiDraw()
 	SetFontSize(0);
 }
 
+void GameclearScene::PointUpdate(int leftX, int y, int dispNum, int digit)
+{
+	int digitNum = 0;
+	int temp = dispNum;
+	int cutNum = 10;	// 表示桁数指定時に表示をおさめるために使用する
+
+	// 表示する数字の桁数数える
+	while (temp > 0)
+	{
+		digitNum++;
+		temp /= 10;
+		cutNum *= 10;
+	}
+	if (digitNum <= 0)
+	{
+		digitNum = 1;	// 0の場合は1桁表示する
+	}
+
+	// 表示桁数指定
+	temp = dispNum;
+	if (digit >= 0)
+	{
+		if (digitNum > digit)
+		{
+			// 下から指定桁数を表示するためはみ出し範囲を切り捨て
+			temp %= cutNum;
+		}
+		digitNum = digit;
+	}
+	// 一番下の桁から表示
+	int posX = leftX - kFontWidth;
+	int posY = y;
+	for (int i = 0; i < digitNum; i++)
+	{
+		int no = temp % 10;
+
+		DrawRectGraph(posX, posY,
+			no * 16, 0, 16, 32,
+			m_numFont, true);
+
+		temp /= 10;
+		posX -= 16;
+	}
+}

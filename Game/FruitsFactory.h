@@ -37,6 +37,10 @@ public:
 	/// <returns>エネミーすべて</returns>
 	std::list<std::shared_ptr<FruitsBase>>& GetFruits();
 
+	/// <summary>
+	/// フルーツをクリックで壊した数を取得する
+	/// </summary>
+	/// <returns>フルーツを壊した数</returns>
 	int GetCount()const { return m_count; }
 private:
 	std::list<std::shared_ptr<FruitsBase>> m_fruits;	//フルーツ

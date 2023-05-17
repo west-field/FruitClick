@@ -12,13 +12,13 @@ class Character;
 class GameclearScene : public Scene
 {
 public:
-    GameclearScene(SceneManager& manager, std::shared_ptr<Character> character);
+    GameclearScene(SceneManager& manager, std::shared_ptr<Character> character,int count);
     virtual ~GameclearScene();
 
     void Update(const InputState& input,  Mouse& mouse);
     void Draw();
 private:
-    unsigned int m_fadeColor = 0x000000;//フェードの色（黒
+    unsigned int m_fadeColor = 0xe3e3e3;//フェードの色（白
 
     void FadeInUpdat(const InputState& input,  Mouse& mouse);
     void FadeOutUpdat(const InputState& input,  Mouse& mouse);
@@ -28,6 +28,8 @@ private:
 
     void NormalDraw();
     void MojiDraw();
+
+    void PointUpdate(int leftX, int y, int dispNum, int digit = -1);
 
     void (GameclearScene::* m_updateFunc)(const InputState&,  Mouse&);
     void (GameclearScene::* m_drawFunc)();
@@ -55,7 +57,9 @@ private:
     MenuElement SelectMenu[menuNum];
     int m_selectNum = 0;//選択しているメニュー項目
 
-    int m_bgH;
+    int m_bgH;//背景
     int m_scroll;//背景を動かす
+    int m_count;//フルーツを壊した数
+    int m_numFont;//数字画像
 };
 

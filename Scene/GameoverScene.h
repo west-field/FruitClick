@@ -13,7 +13,7 @@ class Character;
 class GameoverScene : public Scene
 {
 public:
-    GameoverScene(SceneManager& manager, std::shared_ptr<Character> character);
+    GameoverScene(SceneManager& manager, std::shared_ptr<Character> character,int count);
     virtual ~GameoverScene();
 
     void Update(const InputState& input,  Mouse& mouse);
@@ -58,5 +58,6 @@ private:
 
     int m_bgH;
     int m_scroll;//”wŒi‚ğ“®‚©‚·
+    int m_count;//‰ó‚µ‚½”
 };
 
