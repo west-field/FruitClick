@@ -33,6 +33,8 @@ namespace
 
 	constexpr int kFontWidth = 16;
 	constexpr int kFontHeight = 32;
+
+	constexpr int kBlockSpeed = 5;
 }
 
 GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
@@ -41,15 +43,15 @@ GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
 	m_char = std::make_shared<Character>(selectChar, Position2{ static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight - 100) });
 	m_fruitsFactory = std::make_shared<FruitsFactory>();
 	
+	m_startTime = GetNowCount();//現在の経過時間を得る
+	m_fruitsFrame = kFruitsCreateFrame;
+
 	m_settingH = my::MyLoadGraph(L"Data/Buttons/Settings.png");
 	int X = 0, Y = 0;
 	GetGraphSize(m_settingH, &X, &Y);
 	X = static_cast<int>(X * kGearScale);
 	Y = static_cast<int>(Y * kGearScale);
 	m_settingRect = { {static_cast<float>(Game::kScreenWidth - X / 2),static_cast<float>(Y / 2)}, {X,Y} };
-
-	m_stage = std::make_shared<Stage>();
-	m_stage->Load(L"Data/map.fmf");
 
 	m_bgH = my::MyLoadGraph(L"Data/Background/Gray.png");
 	m_scroll = 0;
@@ -59,6 +61,21 @@ GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
 	//ChangeVolumeSoundMem(0, m_BgmH);
 	//PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 	m_numFont = my::MyLoadGraph(L"Data/numfont.png");
+
+	m_blocks[0].handle = my::MyLoadGraph(L"Data/block.png");
+	m_blocks[1].handle = my::MyLoadGraph(L"Data/blockHit.png");
+
+	m_blocks[0].animNum = 1;
+	m_blocks[1].animNum = 4;
+
+	for (auto& block : m_blocks)
+	{
+		block.sizeW = 28;
+		block.sizeH = 24;
+	}
+	m_count = 0;
+	m_type = 0;
+	m_idx = 0;
 }
 
 GameplayingScene::~GameplayingScene()
@@ -68,6 +85,11 @@ GameplayingScene::~GameplayingScene()
 	DeleteGraph(m_settingH);
 	DeleteGraph(m_bgH);
 	DeleteGraph(m_numFont);
+
+	for (auto& block : m_blocks)
+	{
+		DeleteGraph(block.handle);
+	}
 }
 
 void GameplayingScene::Update(const InputState& input,  Mouse& mouse)
@@ -86,13 +108,20 @@ void GameplayingScene::Draw()
 		}
 	}
 
+	int y = 2 * kBgSize;
+	for (int i = 0; i < 6; i++)
+	{
+		int x = (i + 2) * kBgSize + kBgSize / 2;
+		my::MyDrawRectRotaGraph(x, y, m_idx * m_blocks[m_type].sizeW, 0,
+			m_blocks[m_type].sizeW, m_blocks[m_type].sizeH, 2.0f, 0.0f, m_blocks[m_type].handle, true, false);
+	}
+
 	m_char->Draw();
 	m_fruitsFactory->Draw();
 
 	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_fruitsFactory->GetPoint());
 
 #ifdef _DEBUG
-	m_stage->Draw();
 	DrawString(0, 20, L"ゲームプレイングシーン", 0xffffff);
 	DrawFormatString(0, 100,0x000000, L"壊した数:%d", m_fruitsFactory->GetPoint());
 #endif
@@ -129,10 +158,33 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 	}
 
 	//フルーツ生成
-	if (m_fruitsFrame++ >= kFruitsCreateFrame)
+	if (m_fruitsFrame-- <= 0)
 	{		
-		m_fruitsFrame = 0;
+		int now = (GetNowCount() - m_startTime) / 1000;//経過時間
+
+		if (now > kFruitsCreateFrame - 5)
+		{
+			now = kFruitsCreateFrame - 5;
+		}
+
+		m_fruitsFrame = kFruitsCreateFrame - now;
 		SpawnerUpdate();
+	}
+
+	//箱
+	if (m_count-- <= 0)
+	{
+		if (m_idx++ >= m_blocks[m_type].animNum - 1)
+		{
+			m_idx -= m_blocks[m_type].animNum;
+			if (m_type == 1)
+			{
+				m_type = 0;
+				m_idx = 0;
+			}
+		}
+
+		m_count = kBlockSpeed;
 	}
 
 	//マウスとフルーツの当たり判定
@@ -227,11 +279,13 @@ void GameplayingScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 void GameplayingScene::SpawnerUpdate()
 {
 	int fruitsSpawnIdRand = GetRand((static_cast<int>(FruitsSpawnId::Max) - 1));//ランダムで生成するフルーツの種類を決める
-	int rand = GetRand(100) % m_stage->GetMapSpawnerNum();//ランダムにスポナー生成位置を決める
-	assert(rand < m_stage->GetMapSpawnerNum());//スポナーの数よりも大きかったら止める
+	int rand = GetRand(100) % 6;//ランダムにスポナー生成位置を決める
+	assert(rand < 6);//スポナーの数よりも大きかったら止める
 	Position2 pos = { static_cast<float>((rand + 2) * kBgSize) + kBgSize / 2, static_cast<float>(2 * kBgSize) };
 
 	FruitsCreate(static_cast<FruitsSpawnId>(fruitsSpawnIdRand), pos);
+	m_type = 1;
+	m_idx = 0;
 
 #ifdef _DEBUG
 	DrawBoxAA(pos.x, pos.y, pos.x + 64, pos.y + 64, 0x000000, false);

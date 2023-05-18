@@ -53,14 +53,28 @@ private:
 
     std::list<std::shared_ptr<Spawner>> m_spawners;//フルーツ発生器
 
+    int m_startTime;//ゲーム開始時間
     int m_fruitsFrame = 0;//次にフルーツを作るまでの時間
     
     int m_settingH = -1;//設定の画像
     Rect m_settingRect;//設定の位置
 
-    std::shared_ptr<Stage> m_stage;
-    int m_bgH;
+    int m_bgH;//背景ハンドル
     int m_scroll;//背景を動かす
     int m_numFont;//数字画像
+
+    //ブロック表示用構造体
+    struct Block
+    {
+        int handle;
+        int sizeW;
+        int sizeH;
+        int animNum;
+    };
+
+    Block m_blocks[2];//ブロックIdleとHit2つ分を持つ
+    int m_count;//経過時間
+    int m_type;//今表示するブロックタイプ
+    int m_idx;//ブロック表示のための変数
 };
 

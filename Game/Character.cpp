@@ -40,7 +40,7 @@ Character::Character(int selectChar,Position2 pos):m_idxX(0),m_idxY(0)
 	m_animSpeed = kCharAnimSpeed;
 	m_ultimateFrame = kUltimateFrame;
 
-	int hitW = 30;
+	int hitW = 35;
 	int hitH = 35;
 
 	switch (selectChar)
