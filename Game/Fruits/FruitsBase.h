@@ -78,6 +78,8 @@ protected:
 
 	float m_scale;//画像の拡大率
 
+	static constexpr int kSizeW = 32;//サイズX
+	static constexpr int kSizeH = 32;//サイズY
 	Rect m_rect;//矩形
 
 	Vector2 m_vec;//移動

@@ -6,14 +6,10 @@
 
 namespace
 {
-	constexpr int kSizeW = 32;//サイズX
-	constexpr int kSizeH = 32;//サイズX
-
-	constexpr float kScale = 5.0f;//拡大率
-
 	constexpr float kSpeed = 1.0f;//スピード
 
-	constexpr int kBananaMaxHp = 2;//フルーツの最大HP
+	constexpr int kBananaMaxHp = 5;//フルーツの最大HP
+	constexpr int kBananaPoint = 5;//得点
 
 	constexpr float kJumpPower = -16.0f;
 }
@@ -23,11 +19,10 @@ FruitsBanana::FruitsBanana(Position2 pos, int handle):FruitsBase(pos,handle)
 	m_rect.size = { kSizeW + 20,kSizeH + 20 };
 	m_vec.y = kSpeed;
 	m_hp->MaxHp(kBananaMaxHp);
-	m_scale = kScale;
 	
 	m_jump = kJumpPower;
 	m_speed = kSpeed;
-	m_point = kBananaMaxHp;
+	m_point = kBananaPoint;
 }
 
 FruitsBanana::~FruitsBanana()

@@ -7,14 +7,10 @@
 
 namespace
 {
-	constexpr int kSizeW = 32;//サイズX
-	constexpr int kSizeH = 32;//サイズX
-
-	constexpr float kScale = 5.0f;//拡大率
-
 	constexpr float kSpeed = 1.0f;//スピード
 
 	constexpr int kPineappleMaxHp = 4;//フルーツの最大HP
+	constexpr int kPineapplePoint = 8;//得点
 
 	constexpr float kJumpPower = -16.0f;
 }
@@ -24,11 +20,10 @@ FruitsPineapple::FruitsPineapple(Position2 pos, int handle) : FruitsBase(pos, ha
 	m_rect.size = { kSizeW + 20,kSizeH + 40 };
 	m_vec.y = kSpeed;
 	m_hp->MaxHp(kPineappleMaxHp);
-	m_scale = kScale;
 	
 	m_jump = kJumpPower;
 	m_speed = kSpeed;
-	m_point = kPineappleMaxHp;
+	m_point = kPineapplePoint;
 }
 
 FruitsPineapple::~FruitsPineapple()

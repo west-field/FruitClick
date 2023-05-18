@@ -5,6 +5,8 @@
 
 namespace
 {
+	constexpr float kScale = 5.0f;//拡大率
+
 	constexpr float kGravity = 2.0f;//重力
 	constexpr int kFlashingTime = 5;//点滅時間
 }
@@ -16,7 +18,7 @@ FruitsBase::FruitsBase(Position2 pos, int handle):
 	m_jump(0),m_speed(0), m_isDestroy(false), m_point(0)
 {
 	m_handle = handle;
-	
+	m_scale = kScale;
 	m_rect.center = pos;
 	m_hp = std::make_shared<HpBar>(Position2{});
 }
@@ -68,10 +70,10 @@ void FruitsBase::OnDamage(int i)
 	if (m_hp->GetHp() <= m_hp->GetMaxHp() / 2)
 	{
 		//フルーツのサイズを変更
-		float num = m_scale / m_hp->GetMaxHp();
+		float num = kScale / m_hp->GetMaxHp();//スケールを最大HPで割る=
 		m_scale = m_scale - num;
 		//当たり判定も対応のサイズに変更
-		int sizeh = static_cast<int>(m_rect.size.h / m_scale);
+		int sizeh = static_cast<int>(m_rect.size.h / m_scale);//今のサイズを拡大率で割る
 		int sizew = static_cast<int>(m_rect.size.w / m_scale);
 		m_rect.size.h -= sizeh;
 		m_rect.size.w -= sizew;
