@@ -10,24 +10,17 @@ namespace
 
 SoundManager::SoundManager()
 {
-	//LoadSoundConfig();
+	/*LoadSoundConfig();
 
-	/*LoadSoundFile(SoundId::Gameclear,L"gameclear.mp3");
-	LoadSoundFile(SoundId::Gameover,L"gameover.mp3");
-	
 	LoadSoundFile(SoundId::Cursor,L"Cursor.mp3");
-	LoadSoundFile(SoundId::Determinant,L"pushbotan.mp3");
-	LoadSoundFile(SoundId::BlockMove,L"blockMove.mp3");
-	LoadSoundFile(SoundId::MenuOpen,L"menuOpen.mp3");
-	LoadSoundFile(SoundId::PlayerJump,L"playerJump.wav");
-	LoadSoundFile(SoundId::EnemyJump,L"enemyJump.wav");
-	LoadSoundFile(SoundId::Recovery,L"recovery.mp3");
-	
-	LoadSoundFile(SoundId::PlayeyShot,L"playerShot.wav");
-	LoadSoundFile(SoundId::PlayeyHit,L"playerShotHit.wav");
-	LoadSoundFile(SoundId::EnemyShot,L"enemyShot.wav");
-	LoadSoundFile(SoundId::EnemyHit,L"playerShotHit.wav");
-	LoadSoundFile(SoundId::EnemyBurst,L"burst.wav");*/
+	LoadSoundFile(SoundId::Determinant,L"Cursor.mp3");
+	LoadSoundFile(SoundId::MenuOpen,L"Cursor.mp3");
+	LoadSoundFile(SoundId::MenuClose,L"Cursor.mp3");
+	LoadSoundFile(SoundId::Point,L"Cursor.mp3");
+	LoadSoundFile(SoundId::PlayerMove,L"Cursor.mp3");
+	LoadSoundFile(SoundId::Hit,L"Cursor.mp3");
+	LoadSoundFile(SoundId::FruitClick,L"Cursor.mp3");
+	LoadSoundFile(SoundId::FruitDelete,L"Cursor.mp3");*/
 }
 SoundManager::~SoundManager()
 {

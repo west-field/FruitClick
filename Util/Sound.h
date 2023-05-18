@@ -3,25 +3,18 @@
 
 enum class SoundId
 {
-	Gameclear,		//ゲームクリア音
-	Gameover,		//ゲームオーバー音
-
 	Cursor,			//カーソル移動音
 	Determinant,	//決定ボタン
-	BlockMove,		//ブロック接触音
 	MenuOpen,		//メニューを開く時の音
-	PlayerJump,		//プレイヤージャンプ音
-	EnemyJump,		//エネミージャンプ音
-	//ItemGet,		//アイテムゲット音 itemGet.wav
-	Recovery,		//回復音
-
-	//攻撃音
-	PlayeyShot,		//プレイヤーの弾発射音
-	PlayeyHit,	//プレイヤーが攻撃を受けた
-
-	EnemyShot,		//敵の弾発射音
-	EnemyHit,	//敵が攻撃を受けたときの音
-	EnemyBurst,	//敵が死んだときの音
+	MenuClose,		//メニューを閉じる時の音
+	
+	Point,			//得点取得音
+	
+	PlayerMove,		//プレイヤー移動音
+	Hit,			//接触音
+	
+	FruitClick,		//フルーツクリック音
+	FruitDelete,	//フルーツ破壊音
 
 	SoundId_Max
 };
