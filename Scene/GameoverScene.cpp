@@ -47,7 +47,7 @@ GameoverScene::GameoverScene(SceneManager& manager, std::shared_ptr<Character> c
 GameoverScene::~GameoverScene()
 {
 	DeleteSoundMem(m_BgmH);
-	SoundManager::GetInstance().StopBgm(SoundId::Gameover);
+	//SoundManager::GetInstance().StopBgm(SoundId::Gameover);
 }
 
 void
@@ -92,7 +92,7 @@ void GameoverScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 		m_updateFunc = &GameoverScene::NormalUpdat;
 		m_fadeColor = 0x000000;
 		m_fadeValue = 0;
-		SoundManager::GetInstance().Play(SoundId::Gameover);
+		//SoundManager::GetInstance().Play(SoundId::Gameover);
 	}
 }
 

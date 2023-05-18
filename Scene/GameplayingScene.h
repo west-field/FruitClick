@@ -61,6 +61,7 @@ private:
 
     int m_bgH;//背景ハンドル
     int m_scroll;//背景を動かす
+
     int m_numFont;//数字画像
 
     //ブロック表示用構造体

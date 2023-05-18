@@ -58,7 +58,7 @@ GameclearScene::~GameclearScene()
 	DeleteSoundMem(m_BgmH);
 	DeleteGraph(m_bgH);
 	DeleteGraph(m_numFont);
-	SoundManager::GetInstance().StopBgm(SoundId::EnemyShot);
+	//SoundManager::GetInstance().StopBgm(SoundId::EnemyShot);
 }
 
 void GameclearScene::Update(const InputState& input,  Mouse& mouse)
@@ -101,7 +101,7 @@ void GameclearScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 	{
 		m_updateFunc = &GameclearScene::NormalUpdat;
 		m_fadeValue = 0;
-		SoundManager::GetInstance().Play(SoundId::Gameclear);
+		//SoundManager::GetInstance().Play(SoundId::Gameclear);
 	}
 }
 void GameclearScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
