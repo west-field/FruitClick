@@ -17,7 +17,7 @@ namespace
 
 FruitsStrawberry::FruitsStrawberry(Position2 pos, int handle) : FruitsBase(pos, handle)
 {
-	m_rect.size = { kSizeW + 20,kSizeH + 20 };
+	m_rect.size = { kSizeW + 30,kSizeH + 30 };
 	m_vec.y = kSpeed;
 	m_hp->MaxHp(kStrawberryMaxHp);
 	
