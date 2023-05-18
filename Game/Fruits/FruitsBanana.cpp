@@ -8,7 +8,7 @@ namespace
 {
 	constexpr float kSpeed = 1.0f;//スピード
 
-	constexpr int kBananaMaxHp = 5;//フルーツの最大HP
+	constexpr int kBananaMaxHp = 3;//フルーツの最大HP
 	constexpr int kBananaPoint = 5;//得点
 
 	constexpr float kJumpPower = -16.0f;
