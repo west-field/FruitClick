@@ -38,6 +38,7 @@ private:
     void FruitsCreate(FruitsSpawnId id, const Position2 pos);
 
     void PointUpdate(int leftX, int y, int dispNum, int digit = -1);
+    void PointUpdate(float leftX, float y, int dispNum, int digit = -1);
 
     unsigned int m_fadeColor = 0xe3e3e3;//フェードの色（白
     
@@ -52,6 +53,19 @@ private:
     std::shared_ptr<FruitsFactory> m_fruitsFactory;//フルーツ工場
 
     std::list<std::shared_ptr<Spawner>> m_spawners;//フルーツ発生器
+    //ポイントを表示
+    struct Point
+    {
+        int point;//ポイント
+        Position2 pos;//表示位置
+        bool isExist;//存在
+        int count = 60;//表示時間
+        int fade = 255;//フェードアウト
+    };
+    std::list<Point> m_fruitsPoint;//フルーツのポイントを表示
+    int m_point;//現在のポイント
+    int m_pointAdd;//追加したいポイント
+    int m_pointCount;//ポイント
 
     int m_startTime;//ゲーム開始時間
     int m_fruitsFrame = 0;//次にフルーツを作るまでの時間

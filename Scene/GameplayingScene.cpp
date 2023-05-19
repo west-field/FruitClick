@@ -119,11 +119,18 @@ void GameplayingScene::Draw()
 	m_char->Draw();
 	m_fruitsFactory->Draw();
 
-	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_fruitsFactory->GetPoint());
+	for (auto& point : m_fruitsPoint)
+	{
+		if (!point.isExist)	continue;//存在しないときは処理をしない
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, point.fade);
+		PointUpdate(point.pos.x, point.pos.y, point.point);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+
+	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_point);
 
 #ifdef _DEBUG
 	DrawString(0, 20, L"ゲームプレイングシーン", 0xffffff);
-	DrawFormatString(0, 100,0x000000, L"壊した数:%d", m_fruitsFactory->GetPoint());
 #endif
 	//メニュー項目を描画
 	my::MyDrawRectRotaGraph(m_settingRect.center.x, m_settingRect.center.y,
@@ -149,6 +156,32 @@ void GameplayingScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 
 void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 {
+	for (auto& point : m_fruitsPoint)
+	{
+		if (!point.isExist)	continue;//存在しないときは処理をしない
+		point.fade -= 5;
+		point.pos.y -= 1.0f;//上に上がる
+		if (point.count-- <= 0)//カウントが0になった時
+		{
+			point.isExist = false;//存在を消す
+		}
+	}
+	//いらなくなったスポナーを削除
+	m_fruitsPoint.remove_if([](Point point) {
+		return !point.isExist;
+		});
+
+	if (m_pointCount-- <= 0)
+	{
+		if (m_pointAdd != 0)
+		{
+			m_pointAdd--;
+			m_point++;
+		}
+		m_pointCount = 5;
+	}
+	
+
 	m_char->Update();
 	m_fruitsFactory->Update();
 	//背景スクロール
@@ -198,12 +231,23 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 			//フルーツの位置にマウスがあるとき
 			if (fruit->GetRect().IsHit(Rect{ {mouse.GetPos()},{10,10} }))
 			{
+				SoundManager::GetInstance().Play(SoundId::FruitClick);
 				//フルーツにダメージ
 				fruit->OnDamage(1);
 				if (fruit->GetHp() <= 0)
 				{
+					SoundManager::GetInstance().Play(SoundId::FruitDelete);
 					fruit->SetDestroy();
-				}
+					//m_point += fruit->GetPoint();
+					m_pointAdd += fruit->GetPoint();
+					Point p =
+					{
+						fruit->GetPoint(),
+						fruit->GetRect().GetCenter(),
+						true
+					};
+					m_fruitsPoint.push_back(p);
+				}//ピンタレスト game UI
 				continue;
 			}
 		}
@@ -219,6 +263,7 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 		{
 			fruit->SetExist(false);
 			m_char->Damage(1);
+			SoundManager::GetInstance().Play(SoundId::Hit);
 			continue;
 		}
 	}
@@ -228,7 +273,7 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 	{
 		if (input.IsTriggered(InputType::slect))
 		{
-			SoundManager::GetInstance().Play(SoundId::MenuOpen);
+			SoundManager::GetInstance().Play(SoundId::Determinant);
 			int sound = m_BgmH;
 			m_manager.PushScene(new PauseScene(m_manager, sound));
 			return;
@@ -236,7 +281,7 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 	}
 	if (input.IsTriggered(InputType::pause))
 	{
-		SoundManager::GetInstance().Play(SoundId::MenuOpen);
+		SoundManager::GetInstance().Play(SoundId::Determinant);
 		int sound = m_BgmH;
 		m_manager.PushScene(new PauseScene(m_manager, sound));
 		return;
@@ -245,6 +290,10 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 	//終了判定
 	if (m_char->GetHp() <= 0)
 	{
+		if (m_pointAdd != 0)
+		{
+			m_point += m_pointAdd;
+		}
 		m_updateFunc = &GameplayingScene::FadeOutUpdat;
 		m_fadeColor = 0xffffff;//フェード時の色を白にする。
 		return;
@@ -271,7 +320,7 @@ void GameplayingScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 
 	if(++m_fadeTimer == kFadeInterval)
 	{
-		m_manager.ChangeScene(new GameclearScene(m_manager, m_char, m_fruitsFactory->GetPoint()));
+		m_manager.ChangeScene(new GameclearScene(m_manager, m_char, m_point));
 		return;
 	}
 }
@@ -411,6 +460,51 @@ void GameplayingScene::PointUpdate(int leftX, int y, int dispNum, int digit)
 		int no = temp % 10;
 
 		DrawRectGraph(posX, posY,
+			no * 16, 0, 16, 32,
+			m_numFont, true);
+
+		temp /= 10;
+		posX -= 16;
+	}
+}
+
+void GameplayingScene::PointUpdate(float leftX, float y, int dispNum, int digit)
+{
+	int digitNum = 0;
+	int temp = dispNum;
+	int cutNum = 10;	// 表示桁数指定時に表示をおさめるために使用する
+
+	// 表示する数字の桁数数える
+	while (temp > 0)
+	{
+		digitNum++;
+		temp /= 10;
+		cutNum *= 10;
+	}
+	if (digitNum <= 0)
+	{
+		digitNum = 1;	// 0の場合は1桁表示する
+	}
+
+	// 表示桁数指定
+	temp = dispNum;
+	if (digit >= 0)
+	{
+		if (digitNum > digit)
+		{
+			// 下から指定桁数を表示するためはみ出し範囲を切り捨て
+			temp %= cutNum;
+		}
+		digitNum = digit;
+	}
+	// 一番下の桁から表示
+	float posX = leftX - kFontWidth;
+	float posY = y;
+	for (int i = 0; i < digitNum; i++)
+	{
+		int no = temp % 10;
+
+		DrawRectGraphF(posX, posY,
 			no * 16, 0, 16, 32,
 			m_numFont, true);
 
