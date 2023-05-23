@@ -48,11 +48,13 @@ void SoundSettingScene::NormalUpdate(const InputState& input,  Mouse& mouse)
 	if (input.IsTriggered(InputType::down))
 	{
 		m_selectNum = (m_selectNum + 1) % num;
+		SoundManager::GetInstance().Play(SoundId::Cursor);
 		isPress = true;
 	}
 	else if (input.IsTriggered(InputType::up))
 	{
 		m_selectNum = (m_selectNum + (num - 1)) % num;
+		SoundManager::GetInstance().Play(SoundId::Cursor);
 		isPress = true;
 	}
 
@@ -60,25 +62,36 @@ void SoundSettingScene::NormalUpdate(const InputState& input,  Mouse& mouse)
 	if (mouse.MouseSelect(m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].x, m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].x + kSize*14,
 		m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].y, m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].y + kSize))
 	{
-		m_selectNum = static_cast<int>(SoundType::soundTypeBGM);
+		if (m_selectNum != static_cast<int>(SoundType::soundTypeBGM))
+		{
+			m_selectNum = static_cast<int>(SoundType::soundTypeBGM);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
 		isPress = true;
 	}
 	else if (mouse.MouseSelect(m_soundChange[static_cast<int>(SoundType::soundTypeSE)].x, m_soundChange[static_cast<int>(SoundType::soundTypeSE)].x + kSize*14,
 		m_soundChange[static_cast<int>(SoundType::soundTypeSE)].y, m_soundChange[static_cast<int>(SoundType::soundTypeSE)].y + kSize))
 	{
-		m_selectNum = static_cast<int>(SoundType::soundTypeSE);
+		if (m_selectNum != static_cast<int>(SoundType::soundTypeSE))
+		{
+			m_selectNum = static_cast<int>(SoundType::soundTypeSE);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
 		isPress = true;
 	}
 	else if (mouse.MouseSelect(m_soundChange[static_cast<int>(SoundType::soundTypeBack)].x, m_soundChange[static_cast<int>(SoundType::soundTypeBack)].x + kSize*2,
 		m_soundChange[static_cast<int>(SoundType::soundTypeBack)].y, m_soundChange[static_cast<int>(SoundType::soundTypeBack)].y + kSize))
 	{
-		m_selectNum = static_cast<int>(SoundType::soundTypeBack);
+		if (m_selectNum != static_cast<int>(SoundType::soundTypeBack))
+		{
+			m_selectNum = static_cast<int>(SoundType::soundTypeBack);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
 		isPress = true;
 	}
 
 	if (isPress)
 	{
-		SoundManager::GetInstance().Play(SoundId::Cursor);
 		for (int i = 0; i < num; i++)
 		{
 			if (i == m_selectNum)
@@ -97,18 +110,20 @@ void SoundSettingScene::NormalUpdate(const InputState& input,  Mouse& mouse)
 
 	if (input.IsTriggered(InputType::slect))
 	{
-		SoundManager::GetInstance().Play(SoundId::Determinant);
 		switch (m_selectNum)
 		{
 		case static_cast<int>(SoundType::soundTypeBGM):
+			SoundManager::GetInstance().Play(SoundId::Determinant);
 			m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].color = 0xffa000;
 			m_updateFunc = &SoundSettingScene::BGMVolumeChange;
 			return;
 		case static_cast<int>(SoundType::soundTypeSE):
+			SoundManager::GetInstance().Play(SoundId::Determinant);
 			m_soundChange[static_cast<int>(SoundType::soundTypeSE)].color = 0xffa000;
 			m_updateFunc = &SoundSettingScene::SEVolumeChange;
 			return;
 		case static_cast<int>(SoundType::soundTypeBack):
+			SoundManager::GetInstance().Play(SoundId::Back);
 			soundMgr.SaveSoundConfig();
 			m_manager.PopScene();
 			return;
@@ -119,7 +134,7 @@ void SoundSettingScene::NormalUpdate(const InputState& input,  Mouse& mouse)
 	if (input.IsTriggered(InputType::prev))
 	{
 		soundMgr.SaveSoundConfig();
-		SoundManager::GetInstance().Play(SoundId::Determinant);
+		SoundManager::GetInstance().Play(SoundId::Back);
 		m_selectNum = static_cast<int>(SoundType::soundTypeBack);
 		m_manager.PopScene();
 		return;
@@ -197,7 +212,7 @@ void SoundSettingScene::BGMVolumeChange(const InputState& input,  Mouse& mouse)
 
 	if (input.IsTriggered(InputType::slect) || input.IsTriggered(InputType::prev))
 	{
-		SoundManager::GetInstance().Play(SoundId::Determinant);
+		SoundManager::GetInstance().Play(SoundId::Back);
 		m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].color = 0xaaffaa;
 		m_updateFunc = &SoundSettingScene::NormalUpdate;
 		return;
@@ -279,7 +294,7 @@ void SoundSettingScene::SEVolumeChange(const InputState& input, Mouse& mouse)
 
 	if (input.IsTriggered(InputType::slect) || input.IsTriggered(InputType::prev))
 	{
-		SoundManager::GetInstance().Play(SoundId::Determinant);
+		SoundManager::GetInstance().Play(SoundId::Back);
 		m_soundChange[static_cast<int>(SoundType::soundTypeSE)].color = 0xaaffaa;
 		m_updateFunc = &SoundSettingScene::NormalUpdate;
 		return;

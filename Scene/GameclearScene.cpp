@@ -13,11 +13,7 @@
 
 namespace
 {
-	constexpr float kMoveNum = 2.0f;//プレイヤー移動スピード
-
-	constexpr int kMojiSize = 90;//文字の大きさ
-
-	constexpr int kMenuFontSize = 40;//文字のサイズ
+	constexpr int kMenuFontSize = 20;//文字のサイズ
 	constexpr int kOriginalPosX = Game::kScreenWidth / 4 + kMenuFontSize * 2;    //メニュー文字のx位置
 	constexpr int kOriginalPosY = kMenuFontSize + kMenuFontSize;    //メニュー文字のy位置
 
@@ -27,15 +23,16 @@ namespace
 
 GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Character> character,int count) :
 	Scene(manager), m_updateFunc(&GameclearScene::FadeInUpdat), m_drawFunc (&GameclearScene::NormalDraw),
-	m_char(character), m_scroll(0),m_point(count)
+	m_char(character), m_scroll(0), m_point(0),m_pointAdd(count), m_pointCount(0)
 {
 	m_selectNum = menuGameEnd;
 
-	SelectMenu[menuGameEnd].y = kOriginalPosY;
-	SelectMenu[menuRestart].y = kOriginalPosY + kMenuFontSize * 2;
+	SelectMenu[menuGameEnd].x = kMenuFontSize;
+	SelectMenu[menuRestart].x = Game::kScreenWidth / 2 + kMenuFontSize;
 
 	for (int i = 0; i < menuNum; i++)
 	{
+		SelectMenu[i].y = static_cast<int>(character->GetRect().GetCenter().y);
 		if (i == m_selectNum)
 		{
 			SelectMenu[i].color = 0xffa0aa;//色を変える
@@ -48,7 +45,9 @@ GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Character>
 		}
 	}
 
-	//m_BgmH = LoadSoundMem(L"Sound/BGM/emerald.mp3");
+	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/gameEnd.mp3");
+	ChangeVolumeSoundMem(0, m_BgmH);
+	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 	m_bgH = my::MyLoadGraph(L"Data/Background/Gray.png");
 	m_numFont = my::MyLoadGraph(L"Data/numfont.png");
 }
@@ -58,7 +57,6 @@ GameclearScene::~GameclearScene()
 	DeleteSoundMem(m_BgmH);
 	DeleteGraph(m_bgH);
 	DeleteGraph(m_numFont);
-	//SoundManager::GetInstance().StopBgm(SoundId::EnemyShot);
 }
 
 void GameclearScene::Update(const InputState& input,  Mouse& mouse)
@@ -96,12 +94,12 @@ void GameclearScene::Draw()
 
 void GameclearScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 {
-	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
+	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
+	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &GameclearScene::NormalUpdat;
 		m_fadeValue = 0;
-		//SoundManager::GetInstance().Play(SoundId::Gameclear);
 	}
 }
 void GameclearScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
@@ -126,12 +124,27 @@ void GameclearScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 
 void GameclearScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 {
-	if (input.IsTriggered(InputType::slect))
+	if (m_pointCount-- <= 0)
+	{
+		if (m_pointAdd != 0)
+		{
+			m_pointAdd--;
+			m_point++;
+			SoundManager::GetInstance().Play(SoundId::Point);
+		}
+		m_pointCount = 3;
+	}
+	if (m_pointAdd != 0 && input.IsTriggered(InputType::slect))
+	{
+		m_point += m_pointAdd;
+		m_pointAdd = 0;
+		return;
+	}
+
+	if (m_pointAdd == 0 && input.IsTriggered(InputType::slect))
 	{
 		m_updateFunc = &GameclearScene::MojiUpdate;
 		m_drawFunc = &GameclearScene::MojiDraw;
-		ChangeVolumeSoundMem(0, m_BgmH);
-		PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 		return;
 	}
 }
@@ -140,14 +153,16 @@ void GameclearScene::MojiUpdate(const InputState& input, Mouse& mouse)
 {
 	//メニュー
 	bool isPress = false;//キーが押されたかどうか
-	if (input.IsTriggered(InputType::down))
+	if (input.IsTriggered(InputType::down)|| input.IsTriggered(InputType::right))
 	{
 		m_selectNum = (m_selectNum + 1) % menuNum;//選択状態を一つ下げる
+		SoundManager::GetInstance().Play(SoundId::Cursor);
 		isPress = true;
 	}
-	else if (input.IsTriggered(InputType::up))
+	else if (input.IsTriggered(InputType::up)|| input.IsTriggered(InputType::left))
 	{
 		m_selectNum = (m_selectNum + (menuNum - 1)) % menuNum;//選択状態を一つ上げる
+		SoundManager::GetInstance().Play(SoundId::Cursor);
 		isPress = true;
 	}
 
@@ -155,19 +170,26 @@ void GameclearScene::MojiUpdate(const InputState& input, Mouse& mouse)
 	if (mouse.MouseSelect(SelectMenu[menuGameEnd].x, SelectMenu[menuGameEnd].x + kMenuFontSize * 7,
 		SelectMenu[menuGameEnd].y, SelectMenu[menuGameEnd].y + kMenuFontSize))
 	{
-		m_selectNum = static_cast<int>(menuGameEnd);
+		if (m_selectNum != static_cast<int>(menuGameEnd))
+		{
+			m_selectNum = static_cast<int>(menuGameEnd);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
 		isPress = true;
 	}
 	else if (mouse.MouseSelect(SelectMenu[menuRestart].x, SelectMenu[menuRestart].x + kMenuFontSize * 4,
 		SelectMenu[menuRestart].y, SelectMenu[menuRestart].y + kMenuFontSize))
 	{
-		m_selectNum = static_cast<int>(menuRestart);
+		if (m_selectNum != static_cast<int>(menuRestart))
+		{
+			m_selectNum = static_cast<int>(menuRestart);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
 		isPress = true;
 	}
 
 	if (isPress)
 	{
-		SoundManager::GetInstance().Play(SoundId::Cursor);
 		for (int i = 0; i < menuNum; i++)
 		{
 			if (i == m_selectNum)
@@ -194,7 +216,16 @@ void GameclearScene::MojiUpdate(const InputState& input, Mouse& mouse)
 
 void GameclearScene::NormalDraw()
 {
-	DrawString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, L"ゲームクリア", 0xffffff);
+	if (m_pointAdd == 0)
+	{
+		SetFontSize(kMenuFontSize);
+		DrawString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, L"クリック", 0xffffff);
+		SetFontSize(0);
+	}
+
+#ifdef _DEBUG
+	DrawString(0, Game::kScreenHeight / 2, L"ゲームクリア", 0xffffff);
+#endif
 }
 
 void GameclearScene::MojiDraw()

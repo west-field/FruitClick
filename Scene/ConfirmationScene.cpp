@@ -26,11 +26,11 @@ ConfirmationScene::ConfirmationScene(SceneManager& manager, const wchar_t* conf,
 {
 	m_conf += conf;
 
-	m_pauseMenu[static_cast<int>(Item::yes)].x = pw_start_x + 20; 
+	m_pauseMenu[static_cast<int>(Item::yes)].x = (pw_start_x + pw_width) - (pw_width / 2);
 	m_pauseMenu[static_cast<int>(Item::yes)].y = kPosY;
 	m_pauseMenu[static_cast<int>(Item::yes)].name = L"‚Í‚¢";
 		
-	m_pauseMenu[static_cast<int>(Item::no)].x = (pw_start_x + pw_width) - (pw_width / 2);
+	m_pauseMenu[static_cast<int>(Item::no)].x = pw_start_x + 20; 
 	m_pauseMenu[static_cast<int>(Item::no)].y = kPosY ;
 	m_pauseMenu[static_cast<int>(Item::no)].name = L"‚¢‚¢‚¦";
 
@@ -60,14 +60,16 @@ void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
 {
 	bool isSelect = false;
 	int pauseMax = static_cast<int>(Item::Max);
-	if (input.IsTriggered(InputType::down))
+	if (input.IsTriggered(InputType::down) || input.IsTriggered(InputType::left))
 	{
 		m_selectNum = (m_selectNum + 1) % pauseMax;
+		SoundManager::GetInstance().Play(SoundId::Cursor);
 		isSelect = true;
 	}
-	else if (input.IsTriggered(InputType::up))
+	else if (input.IsTriggered(InputType::up) || input.IsTriggered(InputType::right))
 	{
 		m_selectNum = (m_selectNum + (pauseMax - 1)) % pauseMax;
+		SoundManager::GetInstance().Play(SoundId::Cursor);
 		isSelect = true;
 	}
 
@@ -75,19 +77,26 @@ void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
 	if (mouse.MouseSelect(m_pauseMenu[static_cast<int>(Item::yes)].x, m_pauseMenu[static_cast<int>(Item::yes)].x + kFontSize*6,
 		m_pauseMenu[static_cast<int>(Item::yes)].y, m_pauseMenu[static_cast<int>(Item::yes)].y + kFontSize))
 	{
-		m_selectNum = static_cast<int>(Item::yes);
+		if (m_selectNum != static_cast<int>(Item::yes))
+		{
+			m_selectNum = static_cast<int>(Item::yes);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
 		isSelect = true;
 	}
 	else if (mouse.MouseSelect(m_pauseMenu[static_cast<int>(Item::no)].x, m_pauseMenu[static_cast<int>(Item::no)].x + kFontSize*2,
 		m_pauseMenu[static_cast<int>(Item::no)].y, m_pauseMenu[static_cast<int>(Item::no)].y + kFontSize))
 	{
-		m_selectNum = static_cast<int>(Item::no);
+		if (m_selectNum != static_cast<int>(Item::no))
+		{
+			m_selectNum = static_cast<int>(Item::no);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
 		isSelect = true;
 	}
 
 	if (isSelect)
 	{
-		SoundManager::GetInstance().Play(SoundId::Cursor);
 		for (int i = 0; i < pauseMax; i++)
 		{
 			if (i == m_selectNum)
@@ -105,10 +114,10 @@ void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
 
 	if (input.IsTriggered(InputType::slect))
 	{
-		SoundManager::GetInstance().Play(SoundId::Determinant);
 		switch (m_selectNum)
 		{
 		case static_cast<int>(Item::yes):
+			SoundManager::GetInstance().Play(SoundId::Determinant);
 			if (m_isEnd)
 			{
 				m_manager.SetIsEnd();
@@ -120,6 +129,7 @@ void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
 			StopSoundMem(m_soundH);
 			return;
 		case static_cast<int>(Item::no):
+			SoundManager::GetInstance().Play(SoundId::Back);
 			m_manager.PopScene();
 			return;
 		default:
@@ -128,7 +138,7 @@ void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
 	}
 	if (input.IsTriggered(InputType::prev))
 	{
-		SoundManager::GetInstance().Play(SoundId::Determinant);
+		SoundManager::GetInstance().Play(SoundId::Back);
 		m_selectNum = static_cast<int>(Item::no);
 		m_manager.PopScene();
 		return;

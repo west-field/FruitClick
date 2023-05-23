@@ -10,17 +10,20 @@ namespace
 
 SoundManager::SoundManager()
 {
-	/*LoadSoundConfig();
+	LoadSoundConfig();
+
 
 	LoadSoundFile(SoundId::Cursor,L"Cursor.mp3");
-	LoadSoundFile(SoundId::Determinant,L"Cursor.mp3");
-	LoadSoundFile(SoundId::MenuOpen,L"Cursor.mp3");
-	LoadSoundFile(SoundId::MenuClose,L"Cursor.mp3");
-	LoadSoundFile(SoundId::Point,L"Cursor.mp3");
-	LoadSoundFile(SoundId::PlayerMove,L"Cursor.mp3");
-	LoadSoundFile(SoundId::Hit,L"Cursor.mp3");
-	LoadSoundFile(SoundId::FruitClick,L"Cursor.mp3");
-	LoadSoundFile(SoundId::FruitDelete,L"Cursor.mp3");*/
+	LoadSoundFile(SoundId::Determinant,L"Determinant.mp3");
+	LoadSoundFile(SoundId::Back,L"Back.mp3");
+	
+	LoadSoundFile(SoundId::Point,L"Point.mp3");
+
+	LoadSoundFile(SoundId::PlayerMove,L"Move.mp3");
+	LoadSoundFile(SoundId::Hit,L"Hit.mp3");
+	
+	LoadSoundFile(SoundId::FruitClick,L"FruitClick.mp3");
+	LoadSoundFile(SoundId::FruitDelete,L"FruitDelete.mp3");
 }
 SoundManager::~SoundManager()
 {
@@ -28,7 +31,7 @@ SoundManager::~SoundManager()
 
 int SoundManager::LoadSoundFile(SoundId id, const wchar_t* fileName)
 {
-	std::wstring path = L"Sound/SE/";
+	std::wstring path = L"Data/Sound/SE/";
 	path += fileName;
 	int handle = LoadSoundMem(path.c_str());
 

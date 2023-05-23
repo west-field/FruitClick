@@ -39,7 +39,7 @@ void FruitsFactory::Update()
 	{
 		if (fruit->IsDestroy())
 		{
-			m_point += fruit->GetPoint();
+			m_point = fruit->GetPoint();
 		}
 	}
 

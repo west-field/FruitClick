@@ -30,16 +30,18 @@ TitleScene::TitleScene(SceneManager& manager) : Scene(manager),
 	m_updateFunc(&TitleScene::FadeInUpdat), m_selectNum(0), m_moveTitle(0),
 	m_moveAdd(1), m_settingH(-1),m_scroll(0)
 {
-	/*m_BgmH = LoadSoundMem(L"Sound/BGM/noranekonokuchibue.mp3");
+	//BGM
+	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/title.mp3");
 	ChangeVolumeSoundMem(0, m_BgmH);
-	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);*/
+	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
+	//設定グラフィック
 	m_settingH = my::MyLoadGraph(L"Data/Buttons/Settings.png");
 	int X = 0, Y = 0;
 	GetGraphSize(m_settingH, &X, &Y);
 	X = static_cast<int>(X * kGearScale);
 	Y = static_cast<int>(Y * kGearScale);
 	m_settingRect = { {static_cast<float>(Game::kScreenWidth - X / 2),static_cast<float>(Y/2)}, {X,Y} };
-
+	//背景
 	m_bgH = my::MyLoadGraph(L"Data/Background/Gray.png");
 }
 
@@ -126,7 +128,6 @@ void TitleScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 	if (input.IsTriggered(InputType::slect))
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
-		
 		if (m_selectNum == static_cast<int>(MenuItem::menuConfig))
 		{
 			m_manager.PushScene(new SettingScene(m_manager,m_BgmH));
@@ -157,8 +158,6 @@ void TitleScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue,m_BgmH);
 	if (++m_fadeTimer == kFadeInterval)
 	{
-		//現在選択中の状態によって処理を分岐
-		//m_manager.ChangeScene(new MonologueScene(m_manager));
 		m_manager.ChangeScene(new CharacterSelectScene(m_manager));
 		return;
 	}

@@ -5,8 +5,7 @@ enum class SoundId
 {
 	Cursor,			//カーソル移動音
 	Determinant,	//決定ボタン
-	MenuOpen,		//メニューを開く時の音
-	MenuClose,		//メニューを閉じる時の音
+	Back,			//戻るボタン
 	
 	Point,			//得点取得音
 	

@@ -71,42 +71,59 @@ void PauseScene::Update(const InputState& input, Mouse& mouse)
 	if (input.IsTriggered(InputType::down))
 	{
 		m_selectNum = (m_selectNum + 1) % num;
+		SoundManager::GetInstance().Play(SoundId::Cursor);
 		isPress = true;
 	}
 	else if (input.IsTriggered(InputType::up))
 	{
 		m_selectNum = (m_selectNum + (num - 1)) % num;
+		SoundManager::GetInstance().Play(SoundId::Cursor);
 		isPress = true;
 	}
 
 	if (mouse.MouseSelect(m_pauseMenu[static_cast<int>(Item::pauseSound)].x, m_pauseMenu[static_cast<int>(Item::pauseSound)].x + kFontSize*6,
 		m_pauseMenu[static_cast<int>(Item::pauseSound)].y, m_pauseMenu[static_cast<int>(Item::pauseSound)].y + kFontSize))
 	{
-		m_selectNum = static_cast<int>(Item::pauseSound);
+		if (m_selectNum != static_cast<int>(Item::pauseSound))
+		{
+			m_selectNum = static_cast<int>(Item::pauseSound);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
 		isPress = true;
 	}
 	else if (mouse.MouseSelect(m_pauseMenu[static_cast<int>(Item::pauseBack)].x, m_pauseMenu[static_cast<int>(Item::pauseBack)].x + kFontSize*2,
 		m_pauseMenu[static_cast<int>(Item::pauseBack)].y, m_pauseMenu[static_cast<int>(Item::pauseBack)].y + kFontSize))
 	{
-		m_selectNum = static_cast<int>(Item::pauseBack);
+		if (m_selectNum != static_cast<int>(Item::pauseBack))
+		{
+			m_selectNum = static_cast<int>(Item::pauseBack);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
 		isPress = true;
 	}
 	else if (mouse.MouseSelect(m_pauseMenu[static_cast<int>(Item::pauseTitle)].x, m_pauseMenu[static_cast<int>(Item::pauseTitle)].x + kFontSize*6,
 		m_pauseMenu[static_cast<int>(Item::pauseTitle)].y, m_pauseMenu[static_cast<int>(Item::pauseTitle)].y + kFontSize))
 	{
-		m_selectNum = static_cast<int>(Item::pauseTitle);
+		if (m_selectNum != static_cast<int>(Item::pauseTitle))
+		{
+			m_selectNum = static_cast<int>(Item::pauseTitle);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
 		isPress = true;
 	}
 	else if (mouse.MouseSelect(m_pauseMenu[static_cast<int>(Item::pauseGameEnd)].x, m_pauseMenu[static_cast<int>(Item::pauseGameEnd)].x + kFontSize * 5,
 		m_pauseMenu[static_cast<int>(Item::pauseGameEnd)].y, m_pauseMenu[static_cast<int>(Item::pauseGameEnd)].y + kFontSize))
 	{
-		m_selectNum = static_cast<int>(Item::pauseGameEnd);
+		if (m_selectNum != static_cast<int>(Item::pauseGameEnd))
+		{
+			m_selectNum = static_cast<int>(Item::pauseGameEnd);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
 		isPress = true;
 	}
 
 	if (isPress)
 	{
-		SoundManager::GetInstance().Play(SoundId::Cursor);
 		for (int i = 0; i < num; i++)
 		{
 			if (i == m_selectNum)
@@ -124,19 +141,22 @@ void PauseScene::Update(const InputState& input, Mouse& mouse)
 
 	if (input.IsTriggered(InputType::slect))
 	{
-		SoundManager::GetInstance().Play(SoundId::Determinant);
 		switch (m_selectNum)
 		{
 		case static_cast<int>(Item::pauseSound):
+			SoundManager::GetInstance().Play(SoundId::Determinant);
 			m_manager.PushScene(new SoundSettingScene(m_manager,m_soundH));
 			return;
 		case static_cast<int>(Item::pauseBack):
+			SoundManager::GetInstance().Play(SoundId::Back);
 			m_manager.PopScene();
 			return;
 		case static_cast<int>(Item::pauseTitle):
+			SoundManager::GetInstance().Play(SoundId::Determinant);
 			m_manager.PushScene(new ConfirmationScene(m_manager, L"タイトルに戻りますか",false, m_soundH));
 			return;
 		case static_cast<int>(Item::pauseGameEnd):
+			SoundManager::GetInstance().Play(SoundId::Determinant);
 			m_manager.PushScene(new ConfirmationScene(m_manager, L"ゲームを終了しますか", true, m_soundH));
 			return;
 		default:
@@ -145,7 +165,7 @@ void PauseScene::Update(const InputState& input, Mouse& mouse)
 	}
 	if (input.IsTriggered(InputType::prev))
 	{
-		SoundManager::GetInstance().Play(SoundId::Determinant);
+		SoundManager::GetInstance().Play(SoundId::Back);
 		m_selectNum = static_cast<int>(Item::pauseBack);
 		m_manager.PopScene();
 		return;

@@ -26,7 +26,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	{
 		return -1;
 	}
-	//auto& soundManager = SoundManager::GetInstance();
+	auto& soundManager = SoundManager::GetInstance();
 
 	//フォントを読み込む
 	LPCWSTR font_path = L"Data/Font/PixelMplus10-Regular.ttf"; //　読み込むフォントファイルのパス

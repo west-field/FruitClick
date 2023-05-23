@@ -60,6 +60,9 @@ private:
     int m_bgH;//”wŒi
     int m_scroll;//”wŒi‚ğ“®‚©‚·
     int m_point;//ƒtƒ‹[ƒc‚ğ‰ó‚µ‚½”
+    int m_pointAdd;
+    int m_pointCount;
+
     int m_numFont;//”š‰æ‘œ
 };
 

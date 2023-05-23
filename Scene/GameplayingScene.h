@@ -43,8 +43,6 @@ private:
     unsigned int m_fadeColor = 0xe3e3e3;//フェードの色（白
     
     void (GameplayingScene::* m_updateFunc)(const InputState& ,  Mouse& );
-
-    int m_bossBgm = -1;//ボス音楽
     
     int m_soundVolume = 0;//サウンドの音量
 

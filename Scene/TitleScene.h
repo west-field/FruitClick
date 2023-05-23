@@ -44,13 +44,12 @@ private:
 	
 	int m_selectNum;//選択しているメニュー項目
 
-	int  m_moveTitle;
-	int m_moveAdd;
+	int  m_moveTitle;//文字を移動させる
+	int m_moveAdd;//文字を移動させる距離
 
-	int m_settingH ;
-	Rect m_settingRect;
+	int m_settingH ;//設定のグラフィック
+	Rect m_settingRect;//設定の矩形
 
-
-	int m_bgH;
+	int m_bgH;//背景
 	int m_scroll;//背景を動かす
 };

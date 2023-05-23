@@ -56,10 +56,10 @@ GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
 	m_bgH = my::MyLoadGraph(L"Data/Background/Gray.png");
 	m_scroll = 0;
 	//BGM
-	//m_BgmH = LoadSoundMem(L"Sound/BGM/Disital_Delta.mp3");
-	//m_bossBgm = LoadSoundMem(L"Sound/BGM/arabiantechno.mp3");
-	//ChangeVolumeSoundMem(0, m_BgmH);
-	//PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
+	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/gameMain.mp3");
+	ChangeVolumeSoundMem(0, m_BgmH);
+	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
+
 	m_numFont = my::MyLoadGraph(L"Data/numfont.png");
 
 	m_blocks[0].handle = my::MyLoadGraph(L"Data/block.png");
@@ -81,7 +81,6 @@ GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
 GameplayingScene::~GameplayingScene()
 {
 	DeleteSoundMem(m_BgmH);
-	DeleteSoundMem(m_bossBgm);
 	DeleteGraph(m_settingH);
 	DeleteGraph(m_bgH);
 	DeleteGraph(m_numFont);
@@ -177,6 +176,7 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 		{
 			m_pointAdd--;
 			m_point++;
+			SoundManager::GetInstance().Play(SoundId::Point);
 		}
 		m_pointCount = 5;
 	}
@@ -236,7 +236,6 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 				fruit->OnDamage(1);
 				if (fruit->GetHp() <= 0)
 				{
-					SoundManager::GetInstance().Play(SoundId::FruitDelete);
 					fruit->SetDestroy();
 					//m_point += fruit->GetPoint();
 					m_pointAdd += fruit->GetPoint();
@@ -316,7 +315,6 @@ void GameplayingScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
-	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_bossBgm);
 
 	if(++m_fadeTimer == kFadeInterval)
 	{

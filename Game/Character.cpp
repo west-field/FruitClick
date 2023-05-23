@@ -1,7 +1,7 @@
 #include "Character.h"
 #include <DxLib.h>
 #include <string>
-
+#include "../Util/Sound.h"
 #include "../Util/DrawFunctions.h"
 #include "../Game/HpBar.h"
 #include "../game.h"
@@ -98,6 +98,10 @@ void Character::Update()
 			m_idxX -= m_w[type];
 		}
 		m_frame = m_animSpeed;
+		if (m_idxX % 6 == 0) 
+		{
+			SoundManager::GetInstance().Play(SoundId::PlayerMove);
+		}
 	}
 
 	//0ÇÊÇËÇ‡è¨Ç≥Ç©Ç¡ÇΩÇÁ0Çï‘Ç∑
