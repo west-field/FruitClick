@@ -18,5 +18,6 @@ NinjaFrog		speed
 PinkMan		当たり判定
 VirtualGuy		無敵時間
 
-Hpを表示
+設定画面の文字を絵に変える
+　→当たり判定をRectでとる
 ゲームエンドの時のメニューに背景をつける

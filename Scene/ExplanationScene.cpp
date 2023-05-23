@@ -1,4 +1,4 @@
-#include "MonologueScene.h"
+#include "ExplanationScene.h"
 #include <DxLib.h>
 
 #include "../game.h"
@@ -8,7 +8,7 @@
 #include "../Util/DrawFunctions.h"
 
 #include "SceneManager.h"
-#include "CharacterSelectScene.h"
+#include "GameplayingScene.h"
 
 namespace
 {
@@ -24,30 +24,30 @@ namespace
 	constexpr int kFrameSpeed = 10;		//アニメーションスピード
 }
 
-MonologueScene::MonologueScene(SceneManager& manager) : Scene(manager),
-m_updateFunc(&MonologueScene::FadeInUpdat)
+ExplanationScene::ExplanationScene(SceneManager& manager,int selectChar) : Scene(manager),
+m_updateFunc(&ExplanationScene::FadeInUpdat), m_selectChar(selectChar)
 {
 	/*m_BgmH = LoadSoundMem(L"Sound/BGM/noranekonokuchibue.mp3");
 	ChangeVolumeSoundMem(0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);*/
 }
 
-MonologueScene::~MonologueScene()
+ExplanationScene::~ExplanationScene()
 {
 	DeleteSoundMem(m_BgmH);
 }
 
 void
-MonologueScene::Update(const InputState& input,  Mouse& mouse)
+ExplanationScene::Update(const InputState& input,  Mouse& mouse)
 {
 	//◇メンバ関数ポインタを呼び出す　演算子　->*
 	(this->*m_updateFunc)(input,mouse);
 }
 
-void MonologueScene::Draw()
+void ExplanationScene::Draw()
 {
 
-	DrawString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, L"モノローグ", 0xffffff);
+	DrawString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, L"説明", 0xffffff);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
@@ -55,34 +55,34 @@ void MonologueScene::Draw()
 }
 
 
-void MonologueScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
+void ExplanationScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 {
 	//◇どんどん明るくなる
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue,m_BgmH);
 	if (--m_fadeTimer == 0)
 	{
-		m_updateFunc = &MonologueScene::NormalUpdat;
+		m_updateFunc = &ExplanationScene::NormalUpdat;
 		m_fadeValue = 0;
 	}
 }
 
-void MonologueScene::NormalUpdat(const InputState& input,  Mouse& mouse)
+void ExplanationScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 {
 	if (input.IsPressed(InputType::slect))
 	{
-		m_updateFunc = &MonologueScene::FadeOutUpdat;
+		m_updateFunc = &ExplanationScene::FadeOutUpdat;
 		return;
 	}
 }
 
-void MonologueScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
+void ExplanationScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue,m_BgmH);
 	if (++m_fadeTimer == kFadeInterval)
 	{
-		m_manager.ChangeScene(new CharacterSelectScene(m_manager));
+		m_manager.ChangeScene(new GameplayingScene(m_manager, m_selectChar));
 		return;
 	}
 }

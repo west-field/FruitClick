@@ -11,7 +11,7 @@
 
 #include "SceneManager.h"
 #include "GameplayingScene.h"
-#include "MonologueScene.h"
+#include "ExplanationScene.h"
 #include "SettingScene.h"
 
 namespace
@@ -22,11 +22,18 @@ namespace
 	constexpr int kAnimSpeed = 5;//アニメーションスピード
 
 	constexpr int kFontSize = 30;
+
+	static constexpr int pw_width = 400;
+	static constexpr int pw_height = 300;
+	static constexpr int pw_start_x = (Game::kScreenWidth - pw_width) / 2;
+	static constexpr int pw_start_y = (Game::kScreenHeight - pw_height) / 2;
+	static constexpr int kPosY = (pw_start_y + pw_height) - (pw_height / 2);
 }
 
 
 CharacterSelectScene::CharacterSelectScene(SceneManager& manager) : 
-	Scene(manager), m_updateFunc(&CharacterSelectScene::FadeInUpdat),m_frameCount(0), m_selectChar(), m_bgH(-1),m_scroll(0)
+	Scene(manager), m_updateFunc(&CharacterSelectScene::FadeInUpdat), m_drawFunc(&CharacterSelectScene::NormalDraw),m_frameCount(0), m_selectChar(), 
+	m_bgH(-1),m_scroll(0), isExpo(false)
 {
 	//キャラクター初期化
 	int typeIdle = static_cast<int>(CharAnimType::Idle);
@@ -94,6 +101,30 @@ CharacterSelectScene::CharacterSelectScene(SceneManager& manager) :
 	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/charSelect.mp3");
 	ChangeVolumeSoundMem(0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
+
+	m_select = static_cast<int>(Item::No);
+
+	m_menu[static_cast<int>(Item::Yes)].x = (pw_start_x + pw_width) - (pw_width / 2);
+	m_menu[static_cast<int>(Item::Yes)].y = kPosY ;
+	m_menu[static_cast<int>(Item::Yes)].name = L"はい";
+
+	m_menu[static_cast<int>(Item::No)].x = pw_start_x + 20;
+	m_menu[static_cast<int>(Item::No)].y = kPosY;
+	m_menu[static_cast<int>(Item::No)].name = L"いいえ";
+
+	for (int i = 0; i < static_cast<int>(Item::Max); i++)
+	{
+		if (i == m_select)
+		{
+			m_menu[i].size = kFontSize * 2;
+			m_menu[i].color = 0xaaffaa;
+		}
+		else
+		{
+			m_menu[i].size = kFontSize;
+			m_menu[i].color = 0xffffff;
+		}
+	}
 }
 
 CharacterSelectScene::~CharacterSelectScene()
@@ -144,10 +175,7 @@ void CharacterSelectScene::Draw()
 #endif
 	}
 
-	DrawExplanationString(static_cast<int>(CharType::MaskDude), 0xb34607);
-	DrawExplanationString(static_cast<int>(CharType::NinjaFrog), 0x136e1f);
-	DrawExplanationString(static_cast<int>(CharType::PinkMan), 0xdb309d);
-	DrawExplanationString(static_cast<int>(CharType::VirtualGuy), 0x09a8b0);
+	(this->*m_drawFunc)();
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
@@ -244,7 +272,76 @@ void CharacterSelectScene::MoveChar(const InputState& input, Mouse& mouse)
 
 	if (isOk) 
 	{
-		m_updateFunc = &CharacterSelectScene::FadeOutUpdat; 
+		//どのシーンに行くかを選択する
+		m_updateFunc = &CharacterSelectScene::SelectScene;
+		m_drawFunc = &CharacterSelectScene::SelectSceneDraw;
+	}
+}
+
+void CharacterSelectScene::SelectScene(const InputState& input, Mouse& mouse)
+{
+	bool isSelect = false;
+	int pauseMax = static_cast<int>(Item::Max);
+	if (input.IsTriggered(InputType::down) || input.IsTriggered(InputType::left))
+	{
+		m_select = (m_select + 1) % pauseMax;
+		SoundManager::GetInstance().Play(SoundId::Cursor);
+		isSelect = true;
+	}
+	else if (input.IsTriggered(InputType::up) || input.IsTriggered(InputType::right))
+	{
+		m_select = (m_select + (pauseMax - 1)) % pauseMax;
+		SoundManager::GetInstance().Play(SoundId::Cursor);
+		isSelect = true;
+	}
+
+	//マウスで選択
+	if (mouse.MouseSelect(m_menu[static_cast<int>(Item::Yes)].x, m_menu[static_cast<int>(Item::Yes)].x + kFontSize * 6,
+		m_menu[static_cast<int>(Item::Yes)].y, m_menu[static_cast<int>(Item::Yes)].y + kFontSize))
+	{
+		if (m_select != static_cast<int>(Item::Yes))
+		{
+			m_select = static_cast<int>(Item::Yes);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
+		isSelect = true;
+	}
+	else if (mouse.MouseSelect(m_menu[static_cast<int>(Item::No)].x, m_menu[static_cast<int>(Item::No)].x + kFontSize * 2,
+		m_menu[static_cast<int>(Item::No)].y, m_menu[static_cast<int>(Item::No)].y + kFontSize))
+	{
+		if (m_select != static_cast<int>(Item::No))
+		{
+			m_select = static_cast<int>(Item::No);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
+		isSelect = true;
+	}
+
+	if (isSelect)
+	{
+		for (int i = 0; i < pauseMax; i++)
+		{
+			if (i == m_select)
+			{
+				m_menu[i].size = kFontSize * 2;
+				m_menu[i].color = 0xaaffaa;
+			}
+			else
+			{
+				m_menu[i].size = kFontSize;
+				m_menu[i].color = 0xffffff;
+			}
+		}
+	}
+
+
+	if (input.IsTriggered(InputType::slect))
+	{
+		m_updateFunc = &CharacterSelectScene::FadeOutUpdat;
+		if (m_select == static_cast<int>(Item::Yes))
+		{
+			isExpo = true;
+		}
 	}
 }
 
@@ -254,10 +351,46 @@ void CharacterSelectScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue,m_BgmH);
 	if (++m_fadeTimer == kFadeInterval)
 	{
-		//ゲームシーンに変更する
-		m_manager.ChangeScene(new GameplayingScene(m_manager, m_selectChar));
+		//説明シーンかゲームプレイングシーンに変える
+		if (isExpo)
+		{
+			m_manager.ChangeScene(new ExplanationScene(m_manager, m_selectChar));
+		}
+		else
+		{
+			m_manager.ChangeScene(new GameplayingScene(m_manager, m_selectChar));
+		}
 		return;
 	}
+}
+
+void CharacterSelectScene::NormalDraw()
+{
+	DrawExplanationString(static_cast<int>(CharType::MaskDude), 0xb34607);
+	DrawExplanationString(static_cast<int>(CharType::NinjaFrog), 0x136e1f);
+	DrawExplanationString(static_cast<int>(CharType::PinkMan), 0xdb309d);
+	DrawExplanationString(static_cast<int>(CharType::VirtualGuy), 0x09a8b0);
+}
+
+void CharacterSelectScene::SelectSceneDraw()
+{
+	SetDrawBlendMode(DX_BLENDMODE_MULA, 196);
+	//ウィンドウセロファン
+	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0x000000, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	SetFontSize(kFontSize);
+	DrawString(pw_start_x + 10, pw_start_y + 10, L"説明を聞きますか？", 0xffff88);
+	
+	for (auto& menu : m_menu)
+	{
+		SetFontSize(menu.size);
+		DrawString(menu.x, menu.y, menu.name, menu.color);
+	}
+
+	SetFontSize(0);
+	//ウィンドウ枠線
+	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0xffffff, false);
 }
 
 void CharacterSelectScene::DrawExplanationString(int type, int color)
@@ -266,7 +399,7 @@ void CharacterSelectScene::DrawExplanationString(int type, int color)
 	{
 		L"HPが\n多いよ",
 		L"移動が\n速いよ",
-		L"当たり判定が\n小さいよ",
+		L"フルーツに\n当たりにくいよ",
 		L"無敵時間が\n長いよ"
 	};
 	float x = m_char[type].rect.center.x - kCharSize * kSizeScale / 2;

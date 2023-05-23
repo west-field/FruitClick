@@ -46,7 +46,7 @@ GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
 	m_startTime = GetNowCount();//現在の経過時間を得る
 	m_fruitsFrame = kFruitsCreateFrame;
 
-	m_settingH = my::MyLoadGraph(L"Data/Buttons/Settings.png");
+	m_settingH = my::MyLoadGraph(L"Data/UI/Settings.png");
 	int X = 0, Y = 0;
 	GetGraphSize(m_settingH, &X, &Y);
 	X = static_cast<int>(X * kGearScale);
@@ -115,8 +115,8 @@ void GameplayingScene::Draw()
 			m_blocks[m_type].sizeW, m_blocks[m_type].sizeH, 2.0f, 0.0f, m_blocks[m_type].handle, true, false);
 	}
 
-	m_char->Draw();
 	m_fruitsFactory->Draw();
+	m_char->Draw(true);
 
 	for (auto& point : m_fruitsPoint)
 	{
@@ -256,13 +256,14 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 	for (auto& fruit : m_fruitsFactory->GetFruits())
 	{
 		if (!fruit->IsExist()) continue;//存在しない場合
-		if (!fruit->IsCollidable()) continue;//当たるかどうかの判定
 
 		if (fruit->GetRect().IsHit(m_char->GetRect()))
 		{
+			//どんな時でもフルーツがキャラクタに当たったら消える
 			fruit->SetExist(false);
+			
+			if (!m_char->IsCollidable())	continue;//無敵時間の時は当たらない
 			m_char->Damage(1);
-			SoundManager::GetInstance().Play(SoundId::Hit);
 			continue;
 		}
 	}

@@ -73,7 +73,7 @@ GameoverScene::Draw()
 		}
 	}
 
-	m_char->Draw();
+	m_char->Draw(false);
 
 	DrawFormatString(Game::kScreenWidth / 2, 50, 0x000000, L"%d", m_point);
 

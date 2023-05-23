@@ -11,7 +11,6 @@
 
 #include "SceneManager.h"
 #include "CharacterSelectScene.h"
-#include "MonologueScene.h"
 #include "SettingScene.h"
 
 namespace
@@ -35,7 +34,7 @@ TitleScene::TitleScene(SceneManager& manager) : Scene(manager),
 	ChangeVolumeSoundMem(0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 	//設定グラフィック
-	m_settingH = my::MyLoadGraph(L"Data/Buttons/Settings.png");
+	m_settingH = my::MyLoadGraph(L"Data/UI/Settings.png");
 	int X = 0, Y = 0;
 	GetGraphSize(m_settingH, &X, &Y);
 	X = static_cast<int>(X * kGearScale);

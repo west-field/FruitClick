@@ -81,9 +81,9 @@ void GameclearScene::Draw()
 		}
 	}
 
-	m_char->Draw();
+	m_char->Draw(false);
 
-	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_point);
+	PointUpdate(Game::kScreenWidth / 2, Game::kScreenHeight / 2, m_point);
 
 	(this->*m_drawFunc)();
 
@@ -138,10 +138,9 @@ void GameclearScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 	{
 		m_point += m_pointAdd;
 		m_pointAdd = 0;
-		return;
 	}
 
-	if (m_pointAdd == 0 && input.IsTriggered(InputType::slect))
+	if (m_pointAdd == 0)
 	{
 		m_updateFunc = &GameclearScene::MojiUpdate;
 		m_drawFunc = &GameclearScene::MojiDraw;
@@ -216,13 +215,6 @@ void GameclearScene::MojiUpdate(const InputState& input, Mouse& mouse)
 
 void GameclearScene::NormalDraw()
 {
-	if (m_pointAdd == 0)
-	{
-		SetFontSize(kMenuFontSize);
-		DrawString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, L"クリック", 0xffffff);
-		SetFontSize(0);
-	}
-
 #ifdef _DEBUG
 	DrawString(0, Game::kScreenHeight / 2, L"ゲームクリア", 0xffffff);
 #endif
@@ -269,17 +261,16 @@ void GameclearScene::PointUpdate(int leftX, int y, int dispNum, int digit)
 		digitNum = digit;
 	}
 	// 一番下の桁から表示
-	int posX = leftX - kFontWidth;
+	int posX = leftX - static_cast<int>( kFontWidth * 1.5f);
 	int posY = y;
 	for (int i = 0; i < digitNum; i++)
 	{
 		int no = temp % 10;
 
-		DrawRectGraph(posX, posY,
-			no * 16, 0, 16, 32,
-			m_numFont, true);
+		my::MyDrawRectRotaGraph(posX, posY,
+			no * kFontWidth, 0, kFontWidth, kFontHeight, 1.5f, 0.0f, m_numFont, true, false);
 
 		temp /= 10;
-		posX -= 16;
+		posX -= static_cast<int>(kFontWidth * 1.5f);
 	}
 }

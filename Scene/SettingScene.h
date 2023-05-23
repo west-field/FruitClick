@@ -33,9 +33,9 @@ private:
 		int size;
 	};
 	
-	Element m_pauseMenu[static_cast<int>(Item::pauseMax)];
-	int m_selectNum = static_cast<int>(Item::pauseBack);
+	Element m_pauseMenu[static_cast<int>(Item::pauseMax)];//ƒƒjƒ…[
+	int m_selectNum = static_cast<int>(Item::pauseBack);//‘I‘ğ‚µ‚Ä‚¢‚é
 
-	int m_soundH;
+	int m_soundH;//BGM
 };
 

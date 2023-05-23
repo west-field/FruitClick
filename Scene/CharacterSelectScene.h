@@ -28,8 +28,15 @@ private:
 	void NormalUpdat(const InputState& input,  Mouse& mouse);
 	//選択した後のキャラクターの動き
 	void MoveChar(const InputState& input, Mouse& mouse);
+	//どのシーンに変更するかを決める
+	void SelectScene(const InputState& input, Mouse& mouse);
 	//フェードアウトの時のUpdate関数
 	void FadeOutUpdat(const InputState& input,  Mouse& mouse);
+
+	//通常
+	void NormalDraw();
+	//どのシーンに変更するか
+	void SelectSceneDraw();
 
 	/// <summary>
 	/// キャラの説明を表示する
@@ -40,11 +47,11 @@ private:
 
 	//Update用メンバ関数ポインタ
 	void (CharacterSelectScene::* m_updateFunc)(const InputState& , Mouse& );
+	void (CharacterSelectScene::* m_drawFunc)();
 
 	static constexpr int kMenuFontSize = 50;//文字のサイズ
-	
-	int m_selectNum = 0;//選択しているキャラクタ
 
+	//キャラクタの要素
 	struct CharctorInfo
 	{
 		int handle[static_cast<int>(CharAnimType::Max)] = {};
@@ -62,15 +69,32 @@ private:
 		bool isLeft = false;//左をむいているかどうか
 	};
 
-	//キャラクタ
-	CharctorInfo m_char[static_cast<int>(CharType::Max)];
 
-	//次の画像に移動するまでのフレーム
-	int m_frameCount;
+	CharctorInfo m_char[static_cast<int>(CharType::Max)];	//キャラクタ
 
-	//決定したキャラクタ
-	int m_selectChar;
+	int m_frameCount;	//次の画像に移動するまでのフレーム
 
-	int m_bgH;
+	int m_selectCharNum = 0;//選択しているキャラクタ
+
+	int m_selectChar;	//決定したキャラクタ
+
+	int m_bgH;//背景
 	int m_scroll;//背景を動かす
+
+	bool isExpo;//説明シーンに行くかどうか
+	struct Element
+	{
+		int x, y;//座標
+		int color;//色
+		const wchar_t* name;//名前
+		int size;
+	};
+	enum class Item
+	{
+		Yes,
+		No,
+		Max
+	};
+	Element m_menu[static_cast<int>(Item::Max)];
+	int m_select;
 };

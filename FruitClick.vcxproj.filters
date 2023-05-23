@@ -108,7 +108,7 @@
     <ClInclude Include="Scene\KeyConfigScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\MonologueScene.h">
+    <ClInclude Include="Scene\ExplanationScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\PauseScene.h">
@@ -212,7 +212,7 @@
     <ClCompile Include="Scene\KeyConfigScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\MonologueScene.cpp">
+    <ClCompile Include="Scene\ExplanationScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\PauseScene.cpp">
