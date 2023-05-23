@@ -18,7 +18,7 @@ public:
 	void Update();
 	void Update(bool isClear);
 	//表示
-	void Draw();
+	void Draw(bool isHp);
 	//キャラクターロード
 	void CharacterLoad(const wchar_t* charName);
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "../Util/Geometry.h"
+#include <list>
 
 /// <summary>
 /// HP
@@ -13,22 +14,23 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="handle">画像ハンドル</param>
-	void Init(int handle);
+	void Init();
 	
 	/// <summary>
 	/// 最大HPを指定する
 	/// </summary>
 	/// <param name="maxHp">最大HP</param>
 	void MaxHp(int maxHp);
+
+	/// <summary>
+	/// 表示するハートのタイプを設定
+	/// </summary>
+	void SetHeat();
+
 	/// <summary>
 	/// 更新プレイヤー
 	/// </summary>
 	void UpdatePlayer();
-	/// <summary>
-	/// 更新エネミー
-	/// </summary>
-	void UpdateBoss();
 	/// <summary>
 	/// 表示
 	/// </summary>
@@ -64,6 +66,24 @@ private:
 	int m_MaxHp;//最大HP
 	int m_Hp;//現在のHP
 	int m_HpHandle;	//HPの画像
+	int m_heatFull;//ハートフル
+	int m_heatHalf;//ハートハーフ
+
+	enum class HeatType
+	{
+		Full,
+		Half,
+	};
+
+	struct Heat
+	{
+		HeatType type;
+		int posAddX;
+		int posAddY;
+		bool isExist;
+	};
+
+	std::list<Heat> m_heatHandle;
 
 	Rect m_rect;
 

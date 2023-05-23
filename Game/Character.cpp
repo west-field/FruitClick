@@ -46,7 +46,7 @@ Character::Character(int selectChar,Position2 pos):m_idxX(0),m_idxY(0)
 	switch (selectChar)
 	{
 	case 0://HPが多い
-		m_maxHp += 5;
+		m_maxHp += 2;
 		break;
 	case 1://スピードが早い
 		m_animSpeed -= 2;
@@ -70,7 +70,8 @@ Character::Character(int selectChar,Position2 pos):m_idxX(0),m_idxY(0)
 	
 	m_animType = CharAnimType::Run;
 
-	m_hp = std::make_shared<HpBar>(Position2{0.0f,0.0f});
+	m_hp = std::make_shared<HpBar>(Position2{0.0f,Game::kScreenHeight});
+	m_hp->Init();
 	m_hp->MaxHp(m_maxHp);
 
 	m_vecX = m_moveSpeed;
@@ -191,8 +192,12 @@ void Character::Update(bool isClear)
 	}
 }
 
-void Character::Draw()
+void Character::Draw(bool isHp)
 {
+	if (isHp)
+	{
+		m_hp->Draw();
+	}
 	if ((m_ultimateTimer / 10) % 2 == 1)
 	{
 		return;
@@ -247,13 +252,15 @@ const Rect& Character::GetRect() const
 
 bool Character::IsCollidable() const
 {
-	return m_ultimateTimer == 0;
+	return (m_ultimateTimer == 0);
 }
 
 void Character::Damage(int damage)
 {
 	m_ultimateTimer = m_ultimateFrame;
 	m_hp->Damage(damage);
+	m_hp->UpdatePlayer();
+	SoundManager::GetInstance().Play(SoundId::Hit);
 }
 
 void Character::Heal(int Heal)
