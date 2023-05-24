@@ -96,7 +96,7 @@
     <ClInclude Include="Scene\ConfirmationScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\GameclearScene.h">
+    <ClInclude Include="Scene\GameendScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\GameoverScene.h">
@@ -200,7 +200,7 @@
     <ClCompile Include="Scene\ConfirmationScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\GameclearScene.cpp">
+    <ClCompile Include="Scene\GameendScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\GameoverScene.cpp">

@@ -162,7 +162,7 @@
     <ClInclude Include="InputState.h" />
     <ClInclude Include="Scene\CharacterSelectScene.h" />
     <ClInclude Include="Scene\ConfirmationScene.h" />
-    <ClInclude Include="Scene\GameclearScene.h" />
+    <ClInclude Include="Scene\GameendScene.h" />
     <ClInclude Include="Scene\GameoverScene.h" />
     <ClInclude Include="Scene\GameplayingScene.h" />
     <ClInclude Include="Scene\KeyConfigScene.h" />
@@ -199,7 +199,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scene\CharacterSelectScene.cpp" />
     <ClCompile Include="Scene\ConfirmationScene.cpp" />
-    <ClCompile Include="Scene\GameclearScene.cpp" />
+    <ClCompile Include="Scene\GameendScene.cpp" />
     <ClCompile Include="Scene\GameoverScene.cpp" />
     <ClCompile Include="Scene\GameplayingScene.cpp" />
     <ClCompile Include="Scene\KeyConfigScene.cpp" />

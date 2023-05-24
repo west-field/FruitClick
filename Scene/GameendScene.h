@@ -7,13 +7,13 @@
 class Character;
 
 /// <summary>
-/// ゲームクリアシーン
+/// ゲーム終了シーン
 /// </summary>
-class GameclearScene : public Scene
+class GameendScene : public Scene
 {
 public:
-    GameclearScene(SceneManager& manager, std::shared_ptr<Character> character,int count);
-    virtual ~GameclearScene();
+    GameendScene(SceneManager& manager, std::shared_ptr<Character> character,int count);
+    virtual ~GameendScene();
 
     void Update(const InputState& input,  Mouse& mouse);
     void Draw();
@@ -31,8 +31,8 @@ private:
 
     void PointUpdate(int leftX, int y, int dispNum, int digit = -1);
 
-    void (GameclearScene::* m_updateFunc)(const InputState&,  Mouse&);
-    void (GameclearScene::* m_drawFunc)();
+    void (GameendScene::* m_updateFunc)(const InputState&,  Mouse&);
+    void (GameendScene::* m_drawFunc)();
 
     std::shared_ptr<Character> m_char;
 

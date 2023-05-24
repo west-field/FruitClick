@@ -8,7 +8,7 @@
 #include "TitleScene.h"
 #include "PauseScene.h"
 #include "GameoverScene.h"
-#include "GameclearScene.h"
+#include "GameendScene.h"
 
 #include "../game.h"
 #include "../InputState.h"
@@ -319,7 +319,7 @@ void GameplayingScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 
 	if(++m_fadeTimer == kFadeInterval)
 	{
-		m_manager.ChangeScene(new GameclearScene(m_manager, m_char, m_point));
+		m_manager.ChangeScene(new GameendScene(m_manager, m_char, m_point));
 		return;
 	}
 }

@@ -1,4 +1,4 @@
-#include "GameclearScene.h"
+#include "GameendScene.h"
 #include <DxLib.h>
 #include "../game.h"
 #include "../Util/Sound.h"
@@ -21,8 +21,8 @@ namespace
 	constexpr int kFontHeight = 32;
 }
 
-GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Character> character,int count) :
-	Scene(manager), m_updateFunc(&GameclearScene::FadeInUpdat), m_drawFunc (&GameclearScene::NormalDraw),
+GameendScene::GameendScene(SceneManager& manager, std::shared_ptr<Character> character,int count) :
+	Scene(manager), m_updateFunc(&GameendScene::FadeInUpdat), m_drawFunc (&GameendScene::NormalDraw),
 	m_char(character), m_scroll(0), m_point(0),m_pointAdd(count), m_pointCount(0)
 {
 	m_selectNum = menuGameEnd;
@@ -52,14 +52,14 @@ GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Character>
 	m_numFont = my::MyLoadGraph(L"Data/numfont.png");
 }
 
-GameclearScene::~GameclearScene()
+GameendScene::~GameendScene()
 {
 	DeleteSoundMem(m_BgmH);
 	DeleteGraph(m_bgH);
 	DeleteGraph(m_numFont);
 }
 
-void GameclearScene::Update(const InputState& input,  Mouse& mouse)
+void GameendScene::Update(const InputState& input,  Mouse& mouse)
 {
 	m_char->Update(true);
 	(this->*m_updateFunc)(input,mouse);
@@ -70,7 +70,7 @@ void GameclearScene::Update(const InputState& input,  Mouse& mouse)
 	}
 }
 
-void GameclearScene::Draw()
+void GameendScene::Draw()
 {
 	//背景
 	for (int x = -kBgSize / 2; x < Game::kScreenWidth; x += kBgSize)
@@ -92,17 +92,17 @@ void GameclearScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
-void GameclearScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
+void GameendScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
 	if (--m_fadeTimer == 0)
 	{
-		m_updateFunc = &GameclearScene::NormalUpdat;
+		m_updateFunc = &GameendScene::NormalUpdat;
 		m_fadeValue = 0;
 	}
 }
-void GameclearScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
+void GameendScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
@@ -122,7 +122,7 @@ void GameclearScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 	}
 }
 
-void GameclearScene::NormalUpdat(const InputState& input,  Mouse& mouse)
+void GameendScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 {
 	if (m_pointCount-- <= 0)
 	{
@@ -142,13 +142,13 @@ void GameclearScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 
 	if (m_pointAdd == 0)
 	{
-		m_updateFunc = &GameclearScene::MojiUpdate;
-		m_drawFunc = &GameclearScene::MojiDraw;
+		m_updateFunc = &GameendScene::MojiUpdate;
+		m_drawFunc = &GameendScene::MojiDraw;
 		return;
 	}
 }
 
-void GameclearScene::MojiUpdate(const InputState& input, Mouse& mouse)
+void GameendScene::MojiUpdate(const InputState& input, Mouse& mouse)
 {
 	//メニュー
 	bool isPress = false;//キーが押されたかどうか
@@ -209,18 +209,18 @@ void GameclearScene::MojiUpdate(const InputState& input, Mouse& mouse)
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
 
-		m_updateFunc = &GameclearScene::FadeOutUpdat;
+		m_updateFunc = &GameendScene::FadeOutUpdat;
 	}
 }
 
-void GameclearScene::NormalDraw()
+void GameendScene::NormalDraw()
 {
 #ifdef _DEBUG
 	DrawString(0, Game::kScreenHeight / 2, L"ゲームクリア", 0xffffff);
 #endif
 }
 
-void GameclearScene::MojiDraw()
+void GameendScene::MojiDraw()
 {
 	SetFontSize(SelectMenu[menuGameEnd].size);
 	DrawString(SelectMenu[menuGameEnd].x + 5, SelectMenu[menuGameEnd].y + 5, L"タイトルに戻る", 0x000000);
@@ -231,7 +231,7 @@ void GameclearScene::MojiDraw()
 	SetFontSize(0);
 }
 
-void GameclearScene::PointUpdate(int leftX, int y, int dispNum, int digit)
+void GameendScene::PointUpdate(int leftX, int y, int dispNum, int digit)
 {
 	int digitNum = 0;
 	int temp = dispNum;
