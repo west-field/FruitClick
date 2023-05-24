@@ -195,9 +195,9 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 	{		
 		int now = (GetNowCount() - m_startTime) / 1000;//Œo‰ßŽžŠÔ
 
-		if (now > kFruitsCreateFrame - 5)
+		if (now > kFruitsCreateFrame - 10)
 		{
-			now = kFruitsCreateFrame - 5;
+			now = kFruitsCreateFrame - 10;
 		}
 
 		m_fruitsFrame = kFruitsCreateFrame - now;
