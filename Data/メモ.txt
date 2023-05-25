@@ -12,12 +12,20 @@ Sprout Lands - UI Pack - Basic pack
 https://cupnooble.itch.io/sprout-lands-ui-pack
 https://cupnooble.itch.io/sprout-lands-asset-pack
 
+RavenmoreIconPack_2019_Beta
+https://ravenmore.itch.io/fantasy-icon-pack
+
 キャラによって性能が変わる
 MaskDude		HP
 NinjaFrog		speed
 PinkMan		当たり判定
 VirtualGuy		無敵時間
 
-設定画面の文字を絵に変える
+縦3
+横3
+一番下は2
+
+設定画面の文字を絵に変える？
 　→当たり判定をRectでとる
-ゲームエンドの時のメニューに背景をつける
+ゲームエンドの時のメニューに背景をつける？
+選択範囲を決め、その範囲外の時は処理をしないようにする。
