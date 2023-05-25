@@ -52,7 +52,7 @@ private:
         int x;
         int y;				//座標
         unsigned int color;//色
-        int size;
+        int fontSize;
     };
     MenuElement SelectMenu[menuNum];
     int m_selectNum = 0;//選択しているメニュー項目

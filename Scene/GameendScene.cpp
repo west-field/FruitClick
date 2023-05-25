@@ -36,19 +36,19 @@ GameendScene::GameendScene(SceneManager& manager, std::shared_ptr<Character> cha
 		if (i == m_selectNum)
 		{
 			SelectMenu[i].color = 0xffa0aa;//色を変える
-			SelectMenu[i].size = kMenuFontSize * 2;//大きさを変える
+			SelectMenu[i].fontSize = kMenuFontSize * 2;//大きさを変える
 		}
 		else
 		{
 			SelectMenu[i].color = 0xaaa0ff;//元の色に戻す
-			SelectMenu[i].size = kMenuFontSize;//大きさを変える
+			SelectMenu[i].fontSize = kMenuFontSize;//大きさを変える
 		}
 	}
 
 	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/gameEnd.mp3");
 	ChangeVolumeSoundMem(0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
-	m_bgH = my::MyLoadGraph(L"Data/Background/Gray.png");
+	m_bgH = my::MyLoadGraph(L"Data/Background/Brown.png");
 	m_numFont = my::MyLoadGraph(L"Data/numfont.png");
 }
 
@@ -77,7 +77,7 @@ void GameendScene::Draw()
 	{
 		for (int y = -kBgSize / 2; y <= Game::kScreenHeight; y += kBgSize)
 		{
-			my::MyDrawRectRotaGraph(x + m_scroll, y + m_scroll, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_bgH, true, false);
+			my::MyDrawRectRotaGraph(x , y + m_scroll, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_bgH, true, false);
 		}
 	}
 
@@ -194,12 +194,12 @@ void GameendScene::MojiUpdate(const InputState& input, Mouse& mouse)
 			if (i == m_selectNum)
 			{
 				SelectMenu[i].color = 0xffa0aa;//色を変える
-				SelectMenu[i].size = kMenuFontSize * 2;//大きさを変える
+				SelectMenu[i].fontSize = kMenuFontSize * 2;//大きさを変える
 			}
 			else
 			{
 				SelectMenu[i].color = 0xaaa0ff;//元の色に戻す
-				SelectMenu[i].size = kMenuFontSize;//大きさを変える
+				SelectMenu[i].fontSize = kMenuFontSize;//大きさを変える
 			}
 		}
 	}
@@ -222,10 +222,10 @@ void GameendScene::NormalDraw()
 
 void GameendScene::MojiDraw()
 {
-	SetFontSize(SelectMenu[menuGameEnd].size);
+	SetFontSize(SelectMenu[menuGameEnd].fontSize);
 	DrawString(SelectMenu[menuGameEnd].x + 5, SelectMenu[menuGameEnd].y + 5, L"タイトルに戻る", 0x000000);
 	DrawString(SelectMenu[menuGameEnd].x, SelectMenu[menuGameEnd].y, L"タイトルに戻る", SelectMenu[menuGameEnd].color);
-	SetFontSize(SelectMenu[menuRestart].size);
+	SetFontSize(SelectMenu[menuRestart].fontSize);
 	DrawString(SelectMenu[menuRestart].x + 5, SelectMenu[menuRestart].y + 5, L"もう一度", 0x000000);
 	DrawString(SelectMenu[menuRestart].x, SelectMenu[menuRestart].y, L"もう一度", SelectMenu[menuRestart].color);
 	SetFontSize(0);

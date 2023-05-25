@@ -41,7 +41,7 @@ TitleScene::TitleScene(SceneManager& manager) : Scene(manager),
 	Y = static_cast<int>(Y * kGearScale);
 	m_settingRect = { {static_cast<float>(Game::kScreenWidth - X / 2),static_cast<float>(Y/2)}, {X,Y} };
 	//îwåi
-	m_bgH = my::MyLoadGraph(L"Data/Background/Gray.png");
+	m_bgH = my::MyLoadGraph(L"Data/Background/Yellow.png");
 }
 
 TitleScene::~TitleScene()
@@ -70,7 +70,7 @@ void TitleScene::Draw()
 	{
 		for (int y = -kBgSize/2; y <= Game::kScreenHeight; y += kBgSize)
 		{
-			my::MyDrawRectRotaGraph(x+ m_scroll, y+ m_scroll, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_bgH, true, false);
+			my::MyDrawRectRotaGraph(x, y+ m_scroll, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_bgH, true, false);
 		}
 	}
 
@@ -108,7 +108,7 @@ void TitleScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 {
 	
 	m_moveTitle += m_moveAdd;
-	if (m_moveTitle >= kMenuFontSize || m_moveTitle <= 0)
+	if (m_moveTitle >= 60 || m_moveTitle <= 0)
 	{
 		m_moveAdd *= -1;
 	}

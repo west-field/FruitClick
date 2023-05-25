@@ -96,9 +96,9 @@ CharacterSelectScene::CharacterSelectScene(SceneManager& manager) :
 		charctor.idxY = 0;
 	}
 
-	m_bgH = my::MyLoadGraph(L"Data/Background/Gray.png");
+	m_bgH = my::MyLoadGraph(L"Data/Background/Purple.png");
 
-	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/charSelect.mp3");
+	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/title.mp3");
 	ChangeVolumeSoundMem(0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 
