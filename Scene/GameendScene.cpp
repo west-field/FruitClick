@@ -7,9 +7,9 @@
 #include "../Util/DrawFunctions.h"
 #include "SceneManager.h"
 #include "TitleScene.h"
-#include "../Game/Character.h"
 #include "GameplayingScene.h"
-
+#include "../Game/Character.h"
+#include "../Game/Score.h"
 
 namespace
 {
@@ -50,6 +50,9 @@ GameendScene::GameendScene(SceneManager& manager, std::shared_ptr<Character> cha
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 	m_bgH = my::MyLoadGraph(L"Data/Background/Brown.png");
 	m_numFont = my::MyLoadGraph(L"Data/numfont.png");
+
+	m_score = std::make_shared<Score>();
+	m_score->Load();
 }
 
 GameendScene::~GameendScene()
@@ -142,6 +145,7 @@ void GameendScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 
 	if (m_pointAdd == 0)
 	{
+		m_score->Comparison(m_point);
 		m_updateFunc = &GameendScene::MojiUpdate;
 		m_drawFunc = &GameendScene::MojiDraw;
 		return;
@@ -222,6 +226,8 @@ void GameendScene::NormalDraw()
 
 void GameendScene::MojiDraw()
 {
+	m_score->Draw();
+
 	SetFontSize(SelectMenu[menuGameEnd].fontSize);
 	DrawString(SelectMenu[menuGameEnd].x + 5, SelectMenu[menuGameEnd].y + 5, L"タイトルに戻る", 0x000000);
 	DrawString(SelectMenu[menuGameEnd].x, SelectMenu[menuGameEnd].y, L"タイトルに戻る", SelectMenu[menuGameEnd].color);

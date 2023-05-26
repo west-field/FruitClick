@@ -26,11 +26,11 @@ ConfirmationScene::ConfirmationScene(SceneManager& manager, const wchar_t* conf,
 {
 	m_conf += conf;
 
-	m_pauseMenu[static_cast<int>(Item::yes)].x = (pw_start_x + pw_width) - (pw_width / 2);
+	m_pauseMenu[static_cast<int>(Item::yes)].x = pw_start_x + 20; 
 	m_pauseMenu[static_cast<int>(Item::yes)].y = kPosY;
 	m_pauseMenu[static_cast<int>(Item::yes)].name = L"‚Í‚¢";
 		
-	m_pauseMenu[static_cast<int>(Item::no)].x = pw_start_x + 20; 
+	m_pauseMenu[static_cast<int>(Item::no)].x = (pw_start_x + pw_width) - (pw_width / 2);
 	m_pauseMenu[static_cast<int>(Item::no)].y = kPosY ;
 	m_pauseMenu[static_cast<int>(Item::no)].name = L"‚¢‚¢‚¦";
 

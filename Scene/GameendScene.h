@@ -5,6 +5,7 @@
 #include <memory>
 
 class Character;
+class Score;
 
 /// <summary>
 /// ゲーム終了シーン
@@ -64,5 +65,6 @@ private:
     int m_pointCount;
 
     int m_numFont;//数字画像
+    std::shared_ptr<Score> m_score;
 };
 

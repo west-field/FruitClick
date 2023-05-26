@@ -138,6 +138,9 @@
     <ClInclude Include="Game\StraightSpawner.h">
       <Filter>Game\Spawner</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Score.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputState.cpp">
@@ -241,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="Game\StraightSpawner.cpp">
       <Filter>Game\Spawner</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Score.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
