@@ -10,7 +10,7 @@ namespace
 	static constexpr int pw_width = 400;
 	static constexpr int pw_height = 300;
 	static constexpr int pw_start_x = (Game::kScreenWidth - pw_width) / 2;
-	static constexpr int pw_start_y = (Game::kScreenHeight - pw_height) / 2;
+	static constexpr int pw_start_y = (Game::kScreenHeight - pw_height) / 4;
 
 	static constexpr int kPosX = pw_start_x + 10;
 	static constexpr int kPosY = pw_start_y + 10;
@@ -36,7 +36,7 @@ void Score::Draw()
 	
 	SetFontSize(kFontSize * 2);
 	DrawString(pw_start_x + 10, pw_start_y + 10, L"ランキング", 0xffff88);//メッセージ
-	int y = kFontSize * 2;
+	int y = kFontSize * 2 + 10;
 	for (auto& score : m_header)
 	{
 		DrawFormatString(kPosX, kPosY + y, 0xffffff, L"%d位：%d点", static_cast<int>(score.rank) + 1, score.point);
