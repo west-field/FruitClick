@@ -23,11 +23,18 @@ public:
 	/// </summary>
 	void Comparison(int score);
 
+	bool IsSave()const { return m_isSave; }
+private:
 	/// <summary>
 	/// 得点データを書き込む
 	/// </summary>
 	void Save();
-private:
+
+	/// <summary>
+	/// ランキングを初期化する
+	/// </summary>
+	void PointInit();
+
 	int m_point;//自分のポイント
 
 	enum class Rank
@@ -52,5 +59,7 @@ private:
 		int point;
 	};
 	Header m_header[static_cast<int>(Rank::Max)];
+
+	bool m_isSave = false;//情報を変更したかどうか
 };
 

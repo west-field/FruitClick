@@ -7,20 +7,21 @@ namespace
 {
 	const char* path = "Data/score.info";
 
-	static constexpr int pw_width = 400;
-	static constexpr int pw_height = 300;
-	static constexpr int pw_start_x = (Game::kScreenWidth - pw_width) / 2;
-	static constexpr int pw_start_y = (Game::kScreenHeight - pw_height) / 4;
+	constexpr int add = 5;
+	constexpr int pw_width = 400;
+	constexpr int pw_height = 300 + add * 5;
+	constexpr int pw_start_x = (Game::kScreenWidth - pw_width) / 2;//左
+	constexpr int pw_start_y = (Game::kScreenHeight - pw_height) / 5;//上
 
-	static constexpr int kPosX = pw_start_x + 10;
-	static constexpr int kPosY = pw_start_y + 10;
+	constexpr int kPosX = pw_start_x + 10;
+	constexpr int kPosY = pw_start_y + 10;
 
-	static constexpr int kFontSize = 20;
+	constexpr int kFontSize = 20;
 }
 
-Score::Score():m_point(), m_header()
+Score::Score():m_point(), m_header(), m_isSave(false)
 {
-
+	//PointInit();//ランキング初期化
 }
 
 Score::~Score()
@@ -35,12 +36,23 @@ void Score::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	
 	SetFontSize(kFontSize * 2);
-	DrawString(pw_start_x + 10, pw_start_y + 10, L"ランキング", 0xffff88);//メッセージ
+	int X = kPosX + ((kFontSize * 2) * 2);
+	DrawString(X, kPosY, L"ランキング", 0xffff88);//メッセージ
 	int y = kFontSize * 2 + 10;
+	int color = 0xffffff;
 	for (auto& score : m_header)
 	{
-		DrawFormatString(kPosX, kPosY + y, 0xffffff, L"%d位：%d点", static_cast<int>(score.rank) + 1, score.point);
-		y += kFontSize * 2;
+		color = 0xffffff;
+		if (m_isSave && score.point == m_point)
+		{
+			color = 0xEEE8AA;
+		}
+		DrawFormatString(X, kPosY + y, color, L"%d位：%d点", static_cast<int>(score.rank) + 1, score.point);
+		y += kFontSize * 2 + add;
+	}
+	if (!m_isSave)
+	{
+		DrawFormatString(kPosX+ (kFontSize), kPosY + y, 0xEEE8AA, L"ランキング外:%d点", m_point);
 	}
 	SetFontSize(0);
 	
@@ -59,12 +71,12 @@ void Score::Load()
 
 void Score::Comparison(int score)
 {
-	bool isChange = false;//情報を変更したかどうか
-
+	if (m_point != score) { m_point = score; }
+	m_isSave = false;
 	//今回のポイントが一番下の取得したデータの得点よりも大きいとき
 	if (score >= m_header[static_cast<int>(Rank::Max) - 1].point)
 	{
-		isChange = true;
+		m_isSave = true;
 		m_header[static_cast<int>(Rank::Max) - 1].point = score;
 	}
 	else
@@ -87,7 +99,7 @@ void Score::Comparison(int score)
 		}
 	}
 	//情報を変更した場合
-	if (isChange)
+	if (m_isSave)
 	{
 		Save();//得点データを書き込む
 	}
@@ -101,5 +113,26 @@ void Score::Save()
 
 	fwrite(&m_header, sizeof(m_header), 1, fp);//情報を書き込み
 
+	fclose(fp);
+}
+
+void Score::PointInit()
+{
+	FILE* fp = nullptr;
+	fopen_s(&fp, path, "wb");
+	assert(fp);//ファイルを開けなかったら止める
+	//初期化
+	Header header[static_cast<int>(Rank::Max)];
+	header[static_cast<int>(Rank::First)].rank = Rank::First;
+	header[static_cast<int>(Rank::First)].point = 250;
+	header[static_cast<int>(Rank::Second)].rank = Rank::Second;
+	header[static_cast<int>(Rank::Second)].point = 200;
+	header[static_cast<int>(Rank::Third)].rank = Rank::Third;
+	header[static_cast<int>(Rank::Third)].point = 150;
+	header[static_cast<int>(Rank::Fourth)].rank = Rank::Fourth;
+	header[static_cast<int>(Rank::Fourth)].point = 100;
+	header[static_cast<int>(Rank::Fifth)].rank = Rank::Fifth;
+	header[static_cast<int>(Rank::Fifth)].point = 50;
+	fwrite(&header, sizeof(header), 1, fp);
 	fclose(fp);
 }
