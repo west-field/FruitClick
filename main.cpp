@@ -50,9 +50,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	Mouse mouse;
 	SceneManager sceneManeger;
 	sceneManeger.ChangeScene(new TitleScene(sceneManeger));
-
-	bool isTriggerWindouMode = false;//ALTとENTERを押しているか
-	bool isWindouwMode = Game::kWindowMode;//ウィンドウモードを変更する
+	sceneManeger.SetIsWindouMode(Game::kWindowMode);
 
 	while (ProcessMessage() != -1)
 	{
@@ -65,25 +63,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
 		sceneManeger.Update(input,mouse);
 		sceneManeger.Draw();
-
-		if (CheckHitKey(KEY_INPUT_LALT))
-		{
-			if (CheckHitKey(KEY_INPUT_F))
-			{
-				if (!isTriggerWindouMode)
-				{
-					isWindouwMode = !isWindouwMode;
-					ChangeWindowMode(isWindouwMode);
-					SetDrawScreen(DX_SCREEN_BACK);//描画先を再定義
-				}
-				isTriggerWindouMode = true;
-			}
-			else
-			{
-				SetDrawScreen(DX_SCREEN_BACK);//描画先を再定義
-				isTriggerWindouMode = false;
-			}
-		}
 
 		mouse.Draw();
 
