@@ -31,16 +31,20 @@ PauseScene::PauseScene(SceneManager& manager,int soundH) : Scene(manager), m_sou
 	m_pauseMenu[static_cast<int>(Item::pauseSound)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseSound) + 1) + 10;
 	m_pauseMenu[static_cast<int>(Item::pauseSound)].name = L"音量せってい";
 
+	m_pauseMenu[static_cast<int>(Item::pauseFullscreen)].x = kPosX + 10;
+	m_pauseMenu[static_cast<int>(Item::pauseFullscreen)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseFullscreen) + 1) + 20;
+	m_pauseMenu[static_cast<int>(Item::pauseFullscreen)].name = L"フルスクリーン変更";
+
 	m_pauseMenu[static_cast<int>(Item::pauseBack)].x = kPosX + 10;
-	m_pauseMenu[static_cast<int>(Item::pauseBack)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseBack) + 1) + 20;
+	m_pauseMenu[static_cast<int>(Item::pauseBack)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseBack) + 1) + 30;
 	m_pauseMenu[static_cast<int>(Item::pauseBack)].name = L"閉じる";
 
 	m_pauseMenu[static_cast<int>(Item::pauseTitle)].x = kPosX + 10;
-	m_pauseMenu[static_cast<int>(Item::pauseTitle)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseTitle) + 1) + 30;
+	m_pauseMenu[static_cast<int>(Item::pauseTitle)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseTitle) + 1) + 40;
 	m_pauseMenu[static_cast<int>(Item::pauseTitle)].name = L"タイトル戻る";
 
 	m_pauseMenu[static_cast<int>(Item::pauseGameEnd)].x = kPosX + 10;
-	m_pauseMenu[static_cast<int>(Item::pauseGameEnd)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseGameEnd) + 1) + 40;
+	m_pauseMenu[static_cast<int>(Item::pauseGameEnd)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseGameEnd) + 1) + 50;
 	m_pauseMenu[static_cast<int>(Item::pauseGameEnd)].name = L"ゲーム終了";
 
 	int num = static_cast<int>(Item::pauseMax);
@@ -87,6 +91,16 @@ void PauseScene::Update(const InputState& input, Mouse& mouse)
 		if (m_selectNum != static_cast<int>(Item::pauseSound))
 		{
 			m_selectNum = static_cast<int>(Item::pauseSound);
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+		}
+		isPress = true;
+	}
+	else if (mouse.MouseSelect(m_pauseMenu[static_cast<int>(Item::pauseFullscreen)].x, m_pauseMenu[static_cast<int>(Item::pauseFullscreen)].x + kFontSize*9,
+		m_pauseMenu[static_cast<int>(Item::pauseFullscreen)].y, m_pauseMenu[static_cast<int>(Item::pauseFullscreen)].y + kFontSize))
+	{
+		if (m_selectNum != static_cast<int>(Item::pauseFullscreen))
+		{
+			m_selectNum = static_cast<int>(Item::pauseFullscreen);
 			SoundManager::GetInstance().Play(SoundId::Cursor);
 		}
 		isPress = true;
@@ -147,17 +161,21 @@ void PauseScene::Update(const InputState& input, Mouse& mouse)
 			SoundManager::GetInstance().Play(SoundId::Determinant);
 			m_manager.PushScene(new SoundSettingScene(m_manager,m_soundH));
 			return;
+		case static_cast<int>(Item::pauseFullscreen):
+			SoundManager::GetInstance().Play(SoundId::Determinant);
+			m_manager.PushScene(new ConfirmationScene(m_manager, L"フルスクリーン変更しますか", SelectType::Scene, m_soundH));
+			return;
 		case static_cast<int>(Item::pauseBack):
 			SoundManager::GetInstance().Play(SoundId::Back);
 			m_manager.PopScene();
 			return;
 		case static_cast<int>(Item::pauseTitle):
 			SoundManager::GetInstance().Play(SoundId::Determinant);
-			m_manager.PushScene(new ConfirmationScene(m_manager, L"タイトルに戻りますか",false, m_soundH));
+			m_manager.PushScene(new ConfirmationScene(m_manager, L"タイトルに戻りますか",SelectType::BackTitle, m_soundH));
 			return;
 		case static_cast<int>(Item::pauseGameEnd):
 			SoundManager::GetInstance().Play(SoundId::Determinant);
-			m_manager.PushScene(new ConfirmationScene(m_manager, L"ゲームを終了しますか", true, m_soundH));
+			m_manager.PushScene(new ConfirmationScene(m_manager, L"ゲームを終了しますか", SelectType::End, m_soundH));
 			return;
 		default:
 			break;

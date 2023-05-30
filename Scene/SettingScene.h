@@ -19,6 +19,7 @@ private:
 	enum class Item
 	{
 		pauseSound,//‰¹—Êİ’è
+		pauseFullScene,//‰æ–Ê•\¦‚ğØ‚è‘Ö‚¦‚é
 		pauseBack,//–ß‚é
 		pauseGameEnd,	//ƒQ[ƒ€I—¹
 

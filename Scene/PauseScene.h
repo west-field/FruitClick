@@ -19,6 +19,7 @@ private:
 	enum class Item
 	{
 		pauseSound,//音量設定
+		pauseFullscreen,//画面表示を切り替える
 		pauseBack,//戻る
 		pauseTitle,//タイトルに戻る
 		pauseGameEnd,//ゲームを終わる

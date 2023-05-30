@@ -17,6 +17,8 @@ private:
 	std::deque<Scene*> m_scenes;
 	//ゲームを終了させる
 	bool m_isEnd = false;
+	//ゲーム画面モード
+	bool m_isWindouwMode;
 public:
 	/// <summary>
 	/// シーンの切り替えを行う
@@ -53,6 +55,8 @@ public:
 
 	void SetIsEnd() { m_isEnd = true; }
 	bool GetIsEnd() const { return m_isEnd; }
-	
+
+	bool GetIsWindouMode()const { return m_isWindouwMode; }
+	void SetIsWindouMode(bool isWindou) { m_isWindouwMode = isWindou; }
 };
 

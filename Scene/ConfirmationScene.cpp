@@ -21,16 +21,16 @@ namespace
 	static constexpr int kFontSize = 20;
 }
 
-ConfirmationScene::ConfirmationScene(SceneManager& manager, const wchar_t* conf, bool isEnd,int soundH) : 
-	Scene(manager), m_isEnd(isEnd), m_soundH(soundH)
+ConfirmationScene::ConfirmationScene(SceneManager& manager, const wchar_t* conf, SelectType type,int soundH) :
+	Scene(manager), m_type(type), m_soundH(soundH)
 {
 	m_conf += conf;
 
-	m_pauseMenu[static_cast<int>(Item::yes)].x = pw_start_x + 20; 
+	m_pauseMenu[static_cast<int>(Item::yes)].x = (pw_start_x + pw_width) - (pw_width / 2);
 	m_pauseMenu[static_cast<int>(Item::yes)].y = kPosY;
 	m_pauseMenu[static_cast<int>(Item::yes)].name = L"はい";
 		
-	m_pauseMenu[static_cast<int>(Item::no)].x = (pw_start_x + pw_width) - (pw_width / 2);
+	m_pauseMenu[static_cast<int>(Item::no)].x = pw_start_x + 20; 
 	m_pauseMenu[static_cast<int>(Item::no)].y = kPosY ;
 	m_pauseMenu[static_cast<int>(Item::no)].name = L"いいえ";
 
@@ -49,6 +49,7 @@ ConfirmationScene::ConfirmationScene(SceneManager& manager, const wchar_t* conf,
 			m_pauseMenu[i].color = 0x000000;
 		}
 	}
+	m_isWindouwMode = m_manager.GetIsWindouMode();
 }
 
 ConfirmationScene::~ConfirmationScene()
@@ -118,14 +119,21 @@ void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
 		{
 		case static_cast<int>(Item::yes):
 			SoundManager::GetInstance().Play(SoundId::Determinant);
-			if (m_isEnd)
+			if (m_type == SelectType::End)
 			{
 				m_manager.SetIsEnd();
 			}
-			else
+			else if(m_type == SelectType::BackTitle)
 			{
 				m_manager.ChangeScene(new TitleScene(m_manager));
 			}
+			else if(m_type == SelectType::Scene)
+			{
+				FullSceneChange();
+				m_manager.PopScene();
+				return;
+			}
+
 			StopSoundMem(m_soundH);
 			return;
 		case static_cast<int>(Item::no):
@@ -160,4 +168,13 @@ void ConfirmationScene::Draw()
 		SetFontSize(0);
 	//ウィンドウ枠線
 	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0x000000, false);
+}
+
+void ConfirmationScene::FullSceneChange()
+{
+	
+	m_isWindouwMode = !m_isWindouwMode;
+	ChangeWindowMode(m_isWindouwMode);
+	m_manager.SetIsWindouMode(m_isWindouwMode);
+	SetDrawScreen(DX_SCREEN_BACK);//描画先を再定義
 }
