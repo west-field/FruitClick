@@ -48,13 +48,11 @@ void SoundSettingScene::NormalUpdate(const InputState& input,  Mouse& mouse)
 	if (input.IsTriggered(InputType::down))
 	{
 		m_selectNum = (m_selectNum + 1) % num;
-		SoundManager::GetInstance().Play(SoundId::Cursor);
 		isPress = true;
 	}
 	else if (input.IsTriggered(InputType::up))
 	{
 		m_selectNum = (m_selectNum + (num - 1)) % num;
-		SoundManager::GetInstance().Play(SoundId::Cursor);
 		isPress = true;
 	}
 
@@ -65,7 +63,6 @@ void SoundSettingScene::NormalUpdate(const InputState& input,  Mouse& mouse)
 		if (m_selectNum != static_cast<int>(SoundType::soundTypeBGM))
 		{
 			m_selectNum = static_cast<int>(SoundType::soundTypeBGM);
-			SoundManager::GetInstance().Play(SoundId::Cursor);
 		}
 		isPress = true;
 	}
@@ -75,7 +72,6 @@ void SoundSettingScene::NormalUpdate(const InputState& input,  Mouse& mouse)
 		if (m_selectNum != static_cast<int>(SoundType::soundTypeSE))
 		{
 			m_selectNum = static_cast<int>(SoundType::soundTypeSE);
-			SoundManager::GetInstance().Play(SoundId::Cursor);
 		}
 		isPress = true;
 	}
@@ -85,7 +81,6 @@ void SoundSettingScene::NormalUpdate(const InputState& input,  Mouse& mouse)
 		if (m_selectNum != static_cast<int>(SoundType::soundTypeBack))
 		{
 			m_selectNum = static_cast<int>(SoundType::soundTypeBack);
-			SoundManager::GetInstance().Play(SoundId::Cursor);
 		}
 		isPress = true;
 	}
@@ -160,6 +155,7 @@ void SoundSettingScene::BGMVolumeChange(const InputState& input,  Mouse& mouse)
 			{
 				soundVolume = 255;
 			}
+			SoundManager::GetInstance().Play(SoundId::Cursor);
 			soundMgr.SetBGMVolume(soundVolume, m_soundH);
 		}
 		if (m_puressTime % 10 == 0)
@@ -185,6 +181,7 @@ void SoundSettingScene::BGMVolumeChange(const InputState& input,  Mouse& mouse)
 			{
 				soundVolume = 0;
 			}
+			SoundManager::GetInstance().Play(SoundId::Cursor);
 			soundMgr.SetBGMVolume(soundVolume, m_soundH);
 		}
 		if (m_puressTime % 10 == 0)
@@ -199,6 +196,10 @@ void SoundSettingScene::BGMVolumeChange(const InputState& input,  Mouse& mouse)
 	//マウスのホイールで音量を変える
 	int Rot = 0;
 	Rot += GetMouseWheelRotVol();
+	if (Rot != 0)
+	{
+		SoundManager::GetInstance().Play(SoundId::Cursor);
+	}
 	soundVolume = soundMgr.GetBGMVolume() + Rot;
 	if (soundVolume >= 255)
 	{
@@ -281,6 +282,10 @@ void SoundSettingScene::SEVolumeChange(const InputState& input, Mouse& mouse)
 	//マウスのホイールで音量を変える
 	int Rot = 0;
 	Rot += GetMouseWheelRotVol();
+	if (Rot != 0)
+	{
+		SoundManager::GetInstance().Play(SoundId::Cursor);
+	}
 	soundVolume = soundMgr.GetSEVolume() + Rot;
 	if (soundVolume >= 255)
 	{

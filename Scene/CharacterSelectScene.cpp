@@ -280,7 +280,6 @@ void CharacterSelectScene::SelectScene(const InputState& input, Mouse& mouse)
 		if (m_select != static_cast<int>(Item::Yes))
 		{
 			m_select = static_cast<int>(Item::Yes);
-			SoundManager::GetInstance().Play(SoundId::Cursor);
 		}
 		isSelect = true;
 	}
@@ -290,7 +289,6 @@ void CharacterSelectScene::SelectScene(const InputState& input, Mouse& mouse)
 		if (m_select != static_cast<int>(Item::No))
 		{
 			m_select = static_cast<int>(Item::No);
-			SoundManager::GetInstance().Play(SoundId::Cursor);
 		}
 		isSelect = true;
 	}

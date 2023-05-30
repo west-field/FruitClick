@@ -76,7 +76,6 @@ void PauseScene::Update(const InputState& input, Mouse& mouse)
 			if (m_selectNum != i)
 			{
 				m_selectNum = i;
-				SoundManager::GetInstance().Play(SoundId::Cursor);
 			}
 			isSelect = true;
 			break;

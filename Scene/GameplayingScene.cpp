@@ -165,6 +165,7 @@ void GameplayingScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &GameplayingScene::CountDownUpdate;
+		SoundManager::GetInstance().Play(SoundId::Count);
 		m_fadeValue = 0;
 		return;
 	}
@@ -173,11 +174,21 @@ void GameplayingScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 void GameplayingScene::CountDownUpdate(const InputState& input, Mouse& mouse)
 {
 	m_count--;
+	
 	if (m_count == 0)
 	{
 		m_count = 0;
 		m_updateFunc = &GameplayingScene::NormalUpdat;
 		m_isCount = false;
+		return;
+	}
+	if (m_count == 60)
+	{
+		SoundManager::GetInstance().Play(SoundId::Start);
+	}
+	else if (m_count % 60 == 0)
+	{
+		SoundManager::GetInstance().Play(SoundId::Count);
 	}
 }
 

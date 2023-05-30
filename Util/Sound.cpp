@@ -17,6 +17,8 @@ SoundManager::SoundManager()
 	LoadSoundFile(SoundId::Determinant,L"Determinant.mp3");
 	LoadSoundFile(SoundId::Back,L"Back.mp3");
 	
+	LoadSoundFile(SoundId::Count,L"Count.mp3");
+	LoadSoundFile(SoundId::Start,L"Start.mp3");
 	LoadSoundFile(SoundId::Point,L"Point.mp3");
 
 	LoadSoundFile(SoundId::PlayerMove,L"Move.mp3");

@@ -29,7 +29,7 @@ private:
 	};
 
 	Element m_pauseMenu[static_cast<int>(Item::pauseMax)];
-	int m_selectNum = static_cast<int>(Item::pauseBack);
+	int m_selectNum;
 
 	int m_soundH;
 };

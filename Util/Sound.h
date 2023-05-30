@@ -7,6 +7,8 @@ enum class SoundId
 	Determinant,	//決定ボタン
 	Back,			//戻るボタン
 	
+	Count,			//カウントダウン音
+	Start,			//スタート音
 	Point,			//得点取得音
 	
 	PlayerMove,		//プレイヤー移動音
