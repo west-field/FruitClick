@@ -307,13 +307,6 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 			return;
 		}
 	}
-	if (input.IsTriggered(InputType::pause))
-	{
-		SoundManager::GetInstance().Play(SoundId::Determinant);
-		int sound = m_BgmH;
-		m_manager.PushScene(new PauseScene(m_manager, sound));
-		return;
-	}
 
 	//I—¹”»’è
 	if (m_char->GetHp() <= 0)
@@ -331,13 +324,18 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 
 	if (mouse.IsPressLeft())
 	{
-		if (input.IsPressed(InputType::prev))
+		if (input.IsPressed(InputType::pause))
 		{
 			m_char->Damage(1);
 		}
 	}
-
 #endif
+
+	if (input.IsTriggered(InputType::pause))
+	{
+		m_manager.PushScene(new PauseScene(m_manager, m_BgmH));
+		return;
+	}
 }
 
 void GameplayingScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)

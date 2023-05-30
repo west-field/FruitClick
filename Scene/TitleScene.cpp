@@ -137,18 +137,11 @@ void TitleScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 			m_updateFunc = &TitleScene::FadeOutUpdat;
 		}
 	}
-
-#ifdef _DEBUG
-	if (CheckHitKey(KEY_INPUT_S) == 0)
+	if (input.IsTriggered(InputType::pause))
 	{
+		m_manager.PushScene(new SettingScene(m_manager, m_BgmH));
 		return;
 	}
-	else
-	{
-		m_manager.ChangeScene(new CharacterSelectScene(m_manager));
-		return;
-	}
-#endif
 }
 
 void TitleScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)

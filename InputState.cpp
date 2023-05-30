@@ -16,11 +16,11 @@ InputState::InputState()
 										{InputCategory::mouse,MOUSE_INPUT_LEFT} };
 
 	defaultMapTable_[InputType::prev] = { {InputCategory::keybd,KEY_INPUT_ESCAPE},
-										{InputCategory::pad,PAD_INPUT_2},//B
-										{InputCategory::mouse,MOUSE_INPUT_RIGHT} };
+										{InputCategory::pad,PAD_INPUT_2}};//B
 
 	defaultMapTable_[InputType::pause] = { {InputCategory::keybd,KEY_INPUT_P},
-										{InputCategory::pad,PAD_INPUT_R} };//start
+										{InputCategory::pad,PAD_INPUT_R},//start
+										{InputCategory::mouse,MOUSE_INPUT_RIGHT} };
 
 	defaultMapTable_[InputType::up] = { {InputCategory::keybd,KEY_INPUT_UP},
 											{InputCategory::pad,PAD_INPUT_UP} };//上
@@ -35,6 +35,7 @@ InputState::InputState()
 											{InputCategory::pad , PAD_INPUT_RIGHT} };//右
 	
 	inputMapTable_ = defaultMapTable_;
+	//SaveKeyInfo();
 	LoadKeyInfo();
 	//一時マップテーブルにコピー
 	tempMapTable_ = inputMapTable_;
@@ -50,11 +51,9 @@ InputState::InputState()
 
 	currentInput_.resize(static_cast<int>(InputType::max));
 	lastInput_.resize(static_cast<int>(InputType::max));
-	//SaveKeyInfo();
 }
 
-void
-InputState::Update()
+void InputState::Update()
 {
 	lastInput_ = currentInput_;//直前の入力情報を記憶しておく
 
@@ -90,20 +89,17 @@ InputState::Update()
 	}
 }
 
-bool
-InputState::IsPressed(InputType type) const
+bool InputState::IsPressed(InputType type) const
 {
 	return currentInput_[static_cast<int>(type)];
 }
 
-bool
-InputState::IsTriggered(InputType type) const
+bool InputState::IsTriggered(InputType type) const
 {
 	return IsPressed(type) && !lastInput_[static_cast<int>(type)];
 }
 
-void
-InputState::RewriteInputInfo(InputType type, InputCategory cat, int id)
+void InputState::RewriteInputInfo(InputType type, InputCategory cat, int id)
 {
 	//入力種別(割り当て先)がなければ、無効なので無視する。
 	if (tempMapTable_.count(type) == 0)
@@ -128,14 +124,12 @@ InputState::RewriteInputInfo(InputType type, InputCategory cat, int id)
 	}
 }
 
-void
-InputState::CommitChangedInputInfo()
+void InputState::CommitChangedInputInfo()
 {
 	inputMapTable_ = tempMapTable_;
 }
 
-void
-InputState::RollbackChangedInputInfo()
+void InputState::RollbackChangedInputInfo()
 {
 	tempMapTable_ = inputMapTable_;
 }

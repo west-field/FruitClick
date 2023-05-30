@@ -35,10 +35,14 @@ void Mouse::Update(const InputState& input)
 	}
 
 	//ÅV‚Ìó‘Ô
-	if (input.IsTriggered(InputType::slect)|| input.IsTriggered(InputType::prev))
+	if (input.IsTriggered(InputType::slect))
 	{
 		mouseLog[0] = 1;
 		ClickAnimCreate();
+	}
+	else if (input.IsTriggered(InputType::prev))
+	{
+		mouseLog[0] = 1;
 	}
 	else
 	{
