@@ -73,7 +73,8 @@ GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
 		block.sizeW = 28;
 		block.sizeH = 24;
 	}
-	m_count = 0;
+	m_isCount = true;
+	m_count = 3 * 60;
 	m_type = 0;
 	m_idx = 0;
 }
@@ -106,7 +107,7 @@ void GameplayingScene::Draw()
 			my::MyDrawRectRotaGraph(x+m_scroll, y+ m_scroll, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_bgH, true, false);
 		}
 	}
-
+	//ブロック
 	int y = 2 * kBgSize;
 	for (int i = 0; i < 6; i++)
 	{
@@ -115,18 +116,18 @@ void GameplayingScene::Draw()
 			m_blocks[m_type].sizeW, m_blocks[m_type].sizeH, 2.0f, 0.0f, m_blocks[m_type].handle, true, false);
 	}
 
-	m_fruitsFactory->Draw();
-	m_char->Draw(true);
+	m_fruitsFactory->Draw();//フルーツ
+	m_char->Draw(true);//キャラ
 
 	for (auto& point : m_fruitsPoint)
 	{
 		if (!point.isExist)	continue;//存在しないときは処理をしない
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, point.fade);
-		PointUpdate(point.pos.x, point.pos.y, point.point);
+		PointUpdate(static_cast<int>(point.pos.x), static_cast<int>(point.pos.y), point.point);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
-	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_point);
+	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_point);//ポイント
 
 #ifdef _DEBUG
 	DrawString(0, 20, L"ゲームプレイングシーン", 0xffffff);
@@ -135,6 +136,22 @@ void GameplayingScene::Draw()
 	my::MyDrawRectRotaGraph(m_settingRect.center.x, m_settingRect.center.y,
 		0, 0, m_settingRect.size.w, m_settingRect.size.h,
 		kGearScale, 0.0f, m_settingH, true, false);
+
+	if (m_isCount)
+	{
+		if (m_count / 60 == 0)
+		{
+			SetFontSize(40);
+			DrawFormatStringF(Game::kScreenWidth / 2 - 5*40/2, Game::kScreenHeight / 2, 0x000000, L"スタート!!");
+			SetFontSize(0);
+		}
+		else
+		{
+			SetFontSize(40);
+			DrawFormatStringF(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 0x000000, L"%d", m_count / 60);
+			SetFontSize(0);
+		}
+	}
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
@@ -147,9 +164,20 @@ void GameplayingScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
 	if (--m_fadeTimer == 0)
 	{
-		m_updateFunc = &GameplayingScene::NormalUpdat;
+		m_updateFunc = &GameplayingScene::CountDownUpdate;
 		m_fadeValue = 0;
 		return;
+	}
+}
+
+void GameplayingScene::CountDownUpdate(const InputState& input, Mouse& mouse)
+{
+	m_count--;
+	if (m_count == 0)
+	{
+		m_count = 0;
+		m_updateFunc = &GameplayingScene::NormalUpdat;
+		m_isCount = false;
 	}
 }
 
@@ -459,51 +487,6 @@ void GameplayingScene::PointUpdate(int leftX, int y, int dispNum, int digit)
 		int no = temp % 10;
 
 		DrawRectGraph(posX, posY,
-			no * 16, 0, 16, 32,
-			m_numFont, true);
-
-		temp /= 10;
-		posX -= 16;
-	}
-}
-
-void GameplayingScene::PointUpdate(float leftX, float y, int dispNum, int digit)
-{
-	int digitNum = 0;
-	int temp = dispNum;
-	int cutNum = 10;	// 表示桁数指定時に表示をおさめるために使用する
-
-	// 表示する数字の桁数数える
-	while (temp > 0)
-	{
-		digitNum++;
-		temp /= 10;
-		cutNum *= 10;
-	}
-	if (digitNum <= 0)
-	{
-		digitNum = 1;	// 0の場合は1桁表示する
-	}
-
-	// 表示桁数指定
-	temp = dispNum;
-	if (digit >= 0)
-	{
-		if (digitNum > digit)
-		{
-			// 下から指定桁数を表示するためはみ出し範囲を切り捨て
-			temp %= cutNum;
-		}
-		digitNum = digit;
-	}
-	// 一番下の桁から表示
-	float posX = leftX - kFontWidth;
-	float posY = y;
-	for (int i = 0; i < digitNum; i++)
-	{
-		int no = temp % 10;
-
-		DrawRectGraphF(posX, posY,
 			no * 16, 0, 16, 32,
 			m_numFont, true);
 

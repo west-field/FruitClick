@@ -26,11 +26,16 @@ public:
 private:
     //画面のフェードイン
      void FadeInUpdat(const InputState& input,  Mouse& mouse);
+    //カウントダウン
+     void CountDownUpdate(const InputState& input,  Mouse& mouse);
     //通常更新
      void NormalUpdat(const InputState& input,  Mouse& mouse);
     //画面のフェードアウト
      void FadeOutUpdat(const InputState& input,  Mouse& mouse);
 
+     /// <summary>
+     /// フルーツ生成
+     /// </summary>
      void SpawnerUpdate();
      /// <summary>
      /// フルーツをランダムで作る
@@ -38,11 +43,12 @@ private:
     void FruitsCreate(FruitsSpawnId id, const Position2 pos);
 
     void PointUpdate(int leftX, int y, int dispNum, int digit = -1);
-    void PointUpdate(float leftX, float y, int dispNum, int digit = -1);
 
     unsigned int m_fadeColor = 0xe3e3e3;//フェードの色（白
     
     void (GameplayingScene::* m_updateFunc)(const InputState& ,  Mouse& );
+
+    bool m_isCount;
     
     int m_soundVolume = 0;//サウンドの音量
 

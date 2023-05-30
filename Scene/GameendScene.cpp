@@ -86,8 +86,6 @@ void GameendScene::Draw()
 
 	m_char->Draw(false);
 
-	PointUpdate(Game::kScreenWidth / 2, Game::kScreenHeight / 2, m_point);
-
 	(this->*m_drawFunc)();
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
@@ -127,28 +125,30 @@ void GameendScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 
 void GameendScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 {
-	if (m_pointCount-- <= 0)
+	m_pointCount--;
+	if (m_pointCount <= 0)
 	{
 		if (m_pointAdd != 0)
 		{
 			m_pointAdd--;
 			m_point++;
 			SoundManager::GetInstance().Play(SoundId::Point);
+			m_pointCount = 3;
 		}
-		m_pointCount = 3;
+
+		else if (m_pointAdd == 0)
+		{
+			m_score->Comparison(m_point);
+			m_updateFunc = &GameendScene::MojiUpdate;
+			m_drawFunc = &GameendScene::MojiDraw;
+			return;
+		}
 	}
 	if (m_pointAdd != 0 && input.IsTriggered(InputType::slect))
 	{
 		m_point += m_pointAdd;
 		m_pointAdd = 0;
-	}
-
-	if (m_pointAdd == 0)
-	{
-		m_score->Comparison(m_point);
-		m_updateFunc = &GameendScene::MojiUpdate;
-		m_drawFunc = &GameendScene::MojiDraw;
-		return;
+		m_pointCount = 60;
 	}
 }
 
@@ -222,6 +222,7 @@ void GameendScene::NormalDraw()
 #ifdef _DEBUG
 	DrawString(0, Game::kScreenHeight / 2, L"ÉQÅ[ÉÄÉNÉäÉA", 0xffffff);
 #endif
+	PointUpdate(Game::kScreenWidth / 2, Game::kScreenHeight / 2, m_point);
 }
 
 void GameendScene::MojiDraw()
