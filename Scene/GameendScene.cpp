@@ -150,28 +150,23 @@ void GameendScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 void GameendScene::MojiUpdate(const InputState& input, Mouse& mouse)
 {
 	//メニュー
-	bool isPress = false;//キーが押されたかどうか
+	bool isSelect = false;//キーが押されたかどうか
 	m_selectNum = -1;
 	//マウスで選択
-	if (mouse.MouseSelect(m_selectMenu[menuGameEnd].x, m_selectMenu[menuGameEnd].x + kMenuFontSize * 7,
-		m_selectMenu[menuGameEnd].y, m_selectMenu[menuGameEnd].y + kMenuFontSize))
+	int i = 0;
+	for (auto& menu : m_selectMenu)
 	{
-		if (m_selectNum != static_cast<int>(menuGameEnd))
+		if (mouse.MouseSelect(menu.x, menu.x + menu.fontSize * menu.nameNum, menu.y, menu.y + menu.fontSize))
 		{
-			m_selectNum = static_cast<int>(menuGameEnd);
-			SoundManager::GetInstance().Play(SoundId::Cursor);
+			if (m_selectNum != i)
+			{
+				m_selectNum = i;
+				SoundManager::GetInstance().Play(SoundId::Cursor);
+			}
+			isSelect = true;
+			break;
 		}
-		isPress = true;
-	}
-	else if (mouse.MouseSelect(m_selectMenu[menuRestart].x, m_selectMenu[menuRestart].x + kMenuFontSize * 4,
-		m_selectMenu[menuRestart].y, m_selectMenu[menuRestart].y + kMenuFontSize))
-	{
-		if (m_selectNum != static_cast<int>(menuRestart))
-		{
-			m_selectNum = static_cast<int>(menuRestart);
-			SoundManager::GetInstance().Play(SoundId::Cursor);
-		}
-		isPress = true;
+		i++;
 	}
 	
 	for (int i = 0; i < menuNum; i++)
@@ -189,7 +184,7 @@ void GameendScene::MojiUpdate(const InputState& input, Mouse& mouse)
 	}
 
 	//「次へ」ボタンが押されたら次シーンへ移行する
-	if (isPress && input.IsTriggered(InputType::slect))
+	if (isSelect && input.IsTriggered(InputType::slect))
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
 
