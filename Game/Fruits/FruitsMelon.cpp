@@ -17,7 +17,7 @@ namespace
 
 FruitsMelon::FruitsMelon(Position2 pos, int handle) : FruitsBase(pos, handle)
 {
-	m_rect.size = { kSizeW + 40,kSizeH + 30 };
+	m_rect.size = { kSizeW + 50,kSizeH + 30 };
 	m_vec.y = kSpeed;
 	m_hp->MaxHp(kMelonMaxHp);
 	
