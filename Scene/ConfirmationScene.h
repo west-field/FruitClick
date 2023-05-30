@@ -5,18 +5,28 @@
 
 class InputState;
 class SceneManager;
+
+enum class SelectType
+{
+	End,
+	BackTitle,
+	Scene
+};
+
 /// <summary>
 /// 確認シーン
 /// </summary>
 class ConfirmationScene : public Scene
 {
 public:
-	ConfirmationScene(SceneManager& manager, const wchar_t* conf,bool isEnd, int soundH);
+	ConfirmationScene(SceneManager& manager, const wchar_t* conf, SelectType type, int soundH);
 	virtual ~ConfirmationScene();
 
 	virtual void Update(const InputState& inpu, Mouse& mouse) override;
 	void Draw();
 private:
+	void FullSceneChange();
+
 	enum class Item
 	{
 		yes,//その処理をする
@@ -37,7 +47,9 @@ private:
 	int m_selectNum = static_cast<int>(Item::no);
 
 	std::wstring m_conf;
-	bool m_isEnd;
+	SelectType m_type;
 	int m_soundH;
+
+	bool m_isWindouwMode;//ウィンドウモードを変更する
 };
 
