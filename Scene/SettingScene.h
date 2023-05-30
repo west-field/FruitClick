@@ -1,6 +1,7 @@
 #pragma once
 #include "Secne.h"
 #include "../game.h"
+#include "../Util/menuInfo.h"
 
 class InputState;
 class SceneManager;
@@ -24,14 +25,6 @@ private:
 		pauseGameEnd,	//ゲーム終了
 
 		pauseMax
-	};
-
-	struct Element
-	{
-		int x, y;//座標
-		int color;//色
-		const wchar_t* name;//名前
-		int size;
 	};
 	
 	Element m_pauseMenu[static_cast<int>(Item::pauseMax)];//メニュー

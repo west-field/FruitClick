@@ -1,6 +1,7 @@
 #pragma once
 #include "Secne.h"
 #include "../game.h"
+#include "../Util/menuInfo.h"
 #include <string>
 
 class InputState;
@@ -10,7 +11,7 @@ enum class SelectType
 {
 	End,
 	BackTitle,
-	Scene
+	SceneMode,
 };
 
 /// <summary>
@@ -33,14 +34,6 @@ private:
 		no,//ñﬂÇÈ
 
 		Max
-	};
-
-	struct Element
-	{
-		int x, y;//ç¿ïW
-		int color;//êF
-		const wchar_t* name;//ñºëO
-		int size;
 	};
 
 	Element m_pauseMenu[static_cast<int>(Item::Max)];

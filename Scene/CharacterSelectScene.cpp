@@ -31,9 +31,9 @@ namespace
 }
 
 
-CharacterSelectScene::CharacterSelectScene(SceneManager& manager) : 
-	Scene(manager), m_updateFunc(&CharacterSelectScene::FadeInUpdat), m_drawFunc(&CharacterSelectScene::NormalDraw),m_frameCount(0), m_selectChar(), 
-	m_bgH(-1),m_scroll(0), isExpo(false)
+CharacterSelectScene::CharacterSelectScene(SceneManager& manager) :
+	Scene(manager), m_updateFunc(&CharacterSelectScene::FadeInUpdat), m_drawFunc(&CharacterSelectScene::NormalDraw), m_frameCount(0), m_select(-1), m_selectChar(),
+	m_bgH(-1), m_scroll(0), isExpo(false)
 {
 	//キャラクター初期化
 	int typeIdle = static_cast<int>(CharAnimType::Idle);
@@ -47,33 +47,33 @@ CharacterSelectScene::CharacterSelectScene(SceneManager& manager) :
 
 	m_char[static_cast<int>(CharType::MaskDude)].handle[typeIdle] = my::MyLoadGraph(L"Data/Characters/MaskDude/Idle.png");
 	m_char[static_cast<int>(CharType::MaskDude)].handle[typeRun] = my::MyLoadGraph(L"Data/Characters/MaskDude/Run.png");
-	m_char[static_cast<int>(CharType::MaskDude)].handle[typeJump] = my::MyLoadGraph(L"Data/Characters/MaskDude/Jump.png");
+	m_char[static_cast<int>(CharType::MaskDude)].handle[typeJump] = -1;
 	m_char[static_cast<int>(CharType::MaskDude)].handle[typeDoubleJump] = my::MyLoadGraph(L"Data/Characters/MaskDude/DoubleJump.png");
-	m_char[static_cast<int>(CharType::MaskDude)].handle[typeFall] = my::MyLoadGraph(L"Data/Characters/MaskDude/Fall.png");
+	m_char[static_cast<int>(CharType::MaskDude)].handle[typeFall] =-1;
 	m_char[static_cast<int>(CharType::MaskDude)].isLeft = false;
-	m_char[static_cast<int>(CharType::MaskDude)].rect.center = {screneSizeW / 2 ,screneSizeH / 2};
+	m_char[static_cast<int>(CharType::MaskDude)].rect.center = { screneSizeW / 2 ,screneSizeH / 2 };
 
 	m_char[static_cast<int>(CharType::NinjaFrog)].handle[typeIdle] = my::MyLoadGraph(L"Data/Characters/NinjaFrog/Idle.png");
 	m_char[static_cast<int>(CharType::NinjaFrog)].handle[typeRun] = my::MyLoadGraph(L"Data/Characters/NinjaFrog/Run.png");
-	m_char[static_cast<int>(CharType::NinjaFrog)].handle[typeJump] = my::MyLoadGraph(L"Data/Characters/NinjaFrog/Jump.png");
+	m_char[static_cast<int>(CharType::NinjaFrog)].handle[typeJump] = -1;
 	m_char[static_cast<int>(CharType::NinjaFrog)].handle[typeDoubleJump] = my::MyLoadGraph(L"Data/Characters/NinjaFrog/DoubleJump.png");
-	m_char[static_cast<int>(CharType::NinjaFrog)].handle[typeFall] = my::MyLoadGraph(L"Data/Characters/NinjaFrog/Fall.png");
+	m_char[static_cast<int>(CharType::NinjaFrog)].handle[typeFall] = -1;
 	m_char[static_cast<int>(CharType::NinjaFrog)].isLeft = true;
 	m_char[static_cast<int>(CharType::NinjaFrog)].rect.center = { Game::kScreenWidth - screneSizeW / 2 ,screneSizeH / 2 };
 
 	m_char[static_cast<int>(CharType::PinkMan)].handle[typeIdle] = my::MyLoadGraph(L"Data/Characters/PinkMan/Idle.png");
 	m_char[static_cast<int>(CharType::PinkMan)].handle[typeRun] = my::MyLoadGraph(L"Data/Characters/PinkMan/Run.png");
-	m_char[static_cast<int>(CharType::PinkMan)].handle[typeJump] = my::MyLoadGraph(L"Data/Characters/PinkMan/Jump.png");
+	m_char[static_cast<int>(CharType::PinkMan)].handle[typeJump] = -1;
 	m_char[static_cast<int>(CharType::PinkMan)].handle[typeDoubleJump] = my::MyLoadGraph(L"Data/Characters/PinkMan/DoubleJump.png");
-	m_char[static_cast<int>(CharType::PinkMan)].handle[typeFall] = my::MyLoadGraph(L"Data/Characters/PinkMan/Fall.png");
+	m_char[static_cast<int>(CharType::PinkMan)].handle[typeFall] = -1;
 	m_char[static_cast<int>(CharType::PinkMan)].isLeft = false;
-	m_char[static_cast<int>(CharType::PinkMan)].rect.center = { screneSizeW / 2 ,Game::kScreenHeight - screneSizeH / 2 - kFontSize *2};
+	m_char[static_cast<int>(CharType::PinkMan)].rect.center = { screneSizeW / 2 ,Game::kScreenHeight - screneSizeH / 2 - kFontSize * 2 };
 
 	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeIdle] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/Idle.png");
 	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeRun] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/Run.png");
-	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeJump] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/Jump.png");
+	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeJump] = -1;
 	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeDoubleJump] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/DoubleJump.png");
-	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeFall] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/Fall.png");
+	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeFall] = -1;
 	m_char[static_cast<int>(CharType::VirtualGuy)].isLeft = true;
 	m_char[static_cast<int>(CharType::VirtualGuy)].rect.center = { Game::kScreenWidth - screneSizeW / 2 ,Game::kScreenHeight - screneSizeH / 2 - kFontSize * 2 };
 
@@ -102,28 +102,17 @@ CharacterSelectScene::CharacterSelectScene(SceneManager& manager) :
 	ChangeVolumeSoundMem(0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 
-	m_select = static_cast<int>(Item::No);
-
 	m_menu[static_cast<int>(Item::Yes)].x = (pw_start_x + pw_width) - (pw_width / 2);
-	m_menu[static_cast<int>(Item::Yes)].y = kPosY ;
 	m_menu[static_cast<int>(Item::Yes)].name = L"はい";
 
 	m_menu[static_cast<int>(Item::No)].x = pw_start_x + 20;
-	m_menu[static_cast<int>(Item::No)].y = kPosY;
 	m_menu[static_cast<int>(Item::No)].name = L"いいえ";
 
 	for (int i = 0; i < static_cast<int>(Item::Max); i++)
 	{
-		if (i == m_select)
-		{
-			m_menu[i].size = kFontSize * 2;
-			m_menu[i].color = 0xaaffaa;
-		}
-		else
-		{
-			m_menu[i].size = kFontSize;
-			m_menu[i].color = 0xffffff;
-		}
+		m_menu[i].y = kPosY;
+		m_menu[i].size = kFontSize;
+		m_menu[i].color = 0xffffff;
 	}
 }
 
@@ -282,18 +271,7 @@ void CharacterSelectScene::SelectScene(const InputState& input, Mouse& mouse)
 {
 	bool isSelect = false;
 	int pauseMax = static_cast<int>(Item::Max);
-	if (input.IsTriggered(InputType::down) || input.IsTriggered(InputType::left))
-	{
-		m_select = (m_select + 1) % pauseMax;
-		SoundManager::GetInstance().Play(SoundId::Cursor);
-		isSelect = true;
-	}
-	else if (input.IsTriggered(InputType::up) || input.IsTriggered(InputType::right))
-	{
-		m_select = (m_select + (pauseMax - 1)) % pauseMax;
-		SoundManager::GetInstance().Play(SoundId::Cursor);
-		isSelect = true;
-	}
+	m_select = -1;
 
 	//マウスで選択
 	if (mouse.MouseSelect(m_menu[static_cast<int>(Item::Yes)].x, m_menu[static_cast<int>(Item::Yes)].x + kFontSize * 6,
@@ -317,25 +295,21 @@ void CharacterSelectScene::SelectScene(const InputState& input, Mouse& mouse)
 		isSelect = true;
 	}
 
-	if (isSelect)
+	for (int i = 0; i < pauseMax; i++)
 	{
-		for (int i = 0; i < pauseMax; i++)
+		if (i == m_select)
 		{
-			if (i == m_select)
-			{
-				m_menu[i].size = kFontSize * 2;
-				m_menu[i].color = 0xaaffaa;
-			}
-			else
-			{
-				m_menu[i].size = kFontSize;
-				m_menu[i].color = 0xffffff;
-			}
+			m_menu[i].size = kFontSize * 2;
+			m_menu[i].color = 0xaaffaa;
+		}
+		else
+		{
+			m_menu[i].size = kFontSize;
+			m_menu[i].color = 0xffffff;
 		}
 	}
 
-
-	if (input.IsTriggered(InputType::slect))
+	if (isSelect && input.IsTriggered(InputType::slect))
 	{
 		m_updateFunc = &CharacterSelectScene::FadeOutUpdat;
 		if (m_select == static_cast<int>(Item::Yes))

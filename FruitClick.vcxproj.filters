@@ -141,6 +141,9 @@
     <ClInclude Include="Game\Score.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Util\menuInfo.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputState.cpp">

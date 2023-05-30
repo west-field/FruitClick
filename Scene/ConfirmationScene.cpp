@@ -8,6 +8,7 @@
 #include "TitleScene.h"
 #include "KeyConfigScene.h"
 #include "SoundSettingScene.h"
+#include "ExplanationScene.h"
 
 namespace
 {
@@ -34,20 +35,13 @@ ConfirmationScene::ConfirmationScene(SceneManager& manager, const wchar_t* conf,
 	m_pauseMenu[static_cast<int>(Item::no)].y = kPosY ;
 	m_pauseMenu[static_cast<int>(Item::no)].name = L"いいえ";
 
-	m_selectNum = static_cast<int>(Item::no);
+	m_selectNum = -1;
 
 	for (int i = 0; i < static_cast<int>(Item::Max); i++)
 	{
-		if (i == m_selectNum)
-		{
-			m_pauseMenu[i].size = kFontSize * 2;
-			m_pauseMenu[i].color = 0x00ff00;
-		}
-		else
-		{
-			m_pauseMenu[i].size = kFontSize;
-			m_pauseMenu[i].color = 0x000000;
-		}
+		m_pauseMenu[i].fontSize = kFontSize;
+		m_pauseMenu[i].color = 0x000000;
+		m_pauseMenu[i].nameNum = static_cast<int>(wcslen(m_pauseMenu[i].name));
 	}
 	m_isWindouwMode = m_manager.GetIsWindouMode();
 }
@@ -61,59 +55,40 @@ void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
 {
 	bool isSelect = false;
 	int pauseMax = static_cast<int>(Item::Max);
-	if (input.IsTriggered(InputType::down) || input.IsTriggered(InputType::left))
-	{
-		m_selectNum = (m_selectNum + 1) % pauseMax;
-		SoundManager::GetInstance().Play(SoundId::Cursor);
-		isSelect = true;
-	}
-	else if (input.IsTriggered(InputType::up) || input.IsTriggered(InputType::right))
-	{
-		m_selectNum = (m_selectNum + (pauseMax - 1)) % pauseMax;
-		SoundManager::GetInstance().Play(SoundId::Cursor);
-		isSelect = true;
-	}
+	m_selectNum = -1;
 
 	//マウスで選択
-	if (mouse.MouseSelect(m_pauseMenu[static_cast<int>(Item::yes)].x, m_pauseMenu[static_cast<int>(Item::yes)].x + kFontSize*6,
-		m_pauseMenu[static_cast<int>(Item::yes)].y, m_pauseMenu[static_cast<int>(Item::yes)].y + kFontSize))
+	int i = 0;
+	for (auto& menu : m_pauseMenu)
 	{
-		if (m_selectNum != static_cast<int>(Item::yes))
+		if (mouse.MouseSelect(menu.x, menu.x + menu.fontSize * menu.nameNum, menu.y, menu.y + menu.fontSize))
 		{
-			m_selectNum = static_cast<int>(Item::yes);
-			SoundManager::GetInstance().Play(SoundId::Cursor);
-		}
-		isSelect = true;
-	}
-	else if (mouse.MouseSelect(m_pauseMenu[static_cast<int>(Item::no)].x, m_pauseMenu[static_cast<int>(Item::no)].x + kFontSize*2,
-		m_pauseMenu[static_cast<int>(Item::no)].y, m_pauseMenu[static_cast<int>(Item::no)].y + kFontSize))
-	{
-		if (m_selectNum != static_cast<int>(Item::no))
-		{
-			m_selectNum = static_cast<int>(Item::no);
-			SoundManager::GetInstance().Play(SoundId::Cursor);
-		}
-		isSelect = true;
-	}
-
-	if (isSelect)
-	{
-		for (int i = 0; i < pauseMax; i++)
-		{
-			if (i == m_selectNum)
+			if (m_selectNum != i)
 			{
-				m_pauseMenu[i].size = kFontSize * 2;
-				m_pauseMenu[i].color = 0x00ff00;
+				m_selectNum = i;
+				SoundManager::GetInstance().Play(SoundId::Cursor);
 			}
-			else
-			{
-				m_pauseMenu[i].size = kFontSize;
-				m_pauseMenu[i].color = 0x000000;
-			}
+			isSelect = true;
+			break;
+		}
+		i++;
+	}
+	
+	for (int i = 0; i < pauseMax; i++)
+	{
+		if (i == m_selectNum)
+		{
+			m_pauseMenu[i].fontSize = kFontSize * 2;
+			m_pauseMenu[i].color = 0x00ff00;
+		}
+		else
+		{
+			m_pauseMenu[i].fontSize = kFontSize;
+			m_pauseMenu[i].color = 0x000000;
 		}
 	}
 
-	if (input.IsTriggered(InputType::slect))
+	if (isSelect && input.IsTriggered(InputType::slect))
 	{
 		switch (m_selectNum)
 		{
@@ -127,11 +102,10 @@ void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
 			{
 				m_manager.ChangeScene(new TitleScene(m_manager));
 			}
-			else if(m_type == SelectType::Scene)
+			else if(m_type == SelectType::SceneMode)
 			{
 				FullSceneChange();
 				m_manager.PopScene();
-				return;
 			}
 
 			StopSoundMem(m_soundH);
@@ -162,8 +136,12 @@ void ConfirmationScene::Draw()
 	DrawString(pw_start_x + 30, pw_start_y + 10, m_conf.c_str(), 0xf0f088);
 	for (auto& menu : m_pauseMenu)
 	{
-		SetFontSize(menu.size);
+		SetFontSize(menu.fontSize);
 		DrawString(menu.x, menu.y, menu.name, menu.color);
+#ifdef _DEBUG
+		int size = menu.nameNum * menu.fontSize;
+		DrawBox(menu.x, menu.y, menu.x + size, menu.y + menu.fontSize, menu.color, false);
+#endif
 	}
 		SetFontSize(0);
 	//ウィンドウ枠線
@@ -172,7 +150,6 @@ void ConfirmationScene::Draw()
 
 void ConfirmationScene::FullSceneChange()
 {
-	
 	m_isWindouwMode = !m_isWindouwMode;
 	ChangeWindowMode(m_isWindouwMode);
 	m_manager.SetIsWindouMode(m_isWindouwMode);

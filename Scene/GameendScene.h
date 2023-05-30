@@ -1,6 +1,7 @@
 #pragma once
 #include "Secne.h"
 #include "../Util/Geometry.h"
+#include "../Util/menuInfo.h"
 #include <array>
 #include <memory>
 
@@ -47,15 +48,8 @@ private:
 
         menuNum			//項目の数
     };
-    //メニュー要素
-    struct MenuElement
-    {
-        int x;
-        int y;				//座標
-        unsigned int color;//色
-        int fontSize;
-    };
-    MenuElement SelectMenu[menuNum];
+
+    Element m_selectMenu[menuNum];
     int m_selectNum = 0;//選択しているメニュー項目
 
     int m_bgH;//背景

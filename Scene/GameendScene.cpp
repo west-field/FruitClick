@@ -25,24 +25,19 @@ GameendScene::GameendScene(SceneManager& manager, std::shared_ptr<Character> cha
 	Scene(manager), m_updateFunc(&GameendScene::FadeInUpdat), m_drawFunc (&GameendScene::NormalDraw),
 	m_char(character), m_scroll(0), m_point(0),m_pointAdd(count), m_pointCount(0)
 {
-	m_selectNum = menuGameEnd;
+	m_selectNum = -1;
 
-	SelectMenu[menuGameEnd].x = kMenuFontSize;
-	SelectMenu[menuRestart].x = Game::kScreenWidth / 2 + kMenuFontSize;
+	m_selectMenu[menuGameEnd].x = kMenuFontSize;
+	m_selectMenu[menuGameEnd].name = L"タイトルに戻る";
+	m_selectMenu[menuRestart].x = Game::kScreenWidth / 2 + kMenuFontSize;
+	m_selectMenu[menuRestart].name = L"もう一度";
 
 	for (int i = 0; i < menuNum; i++)
 	{
-		SelectMenu[i].y = static_cast<int>(character->GetRect().GetCenter().y);
-		if (i == m_selectNum)
-		{
-			SelectMenu[i].color = 0xffa0aa;//色を変える
-			SelectMenu[i].fontSize = kMenuFontSize * 2;//大きさを変える
-		}
-		else
-		{
-			SelectMenu[i].color = 0xaaa0ff;//元の色に戻す
-			SelectMenu[i].fontSize = kMenuFontSize;//大きさを変える
-		}
+		m_selectMenu[i].y = static_cast<int>(character->GetRect().GetCenter().y);
+		m_selectMenu[i].color = 0xaaa0ff;
+		m_selectMenu[i].fontSize = kMenuFontSize;
+		m_selectMenu[i].nameNum = static_cast<int>(wcslen(m_selectMenu[i].name));
 	}
 
 	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/gameEnd.mp3");
@@ -156,22 +151,10 @@ void GameendScene::MojiUpdate(const InputState& input, Mouse& mouse)
 {
 	//メニュー
 	bool isPress = false;//キーが押されたかどうか
-	if (input.IsTriggered(InputType::down)|| input.IsTriggered(InputType::right))
-	{
-		m_selectNum = (m_selectNum + 1) % menuNum;//選択状態を一つ下げる
-		SoundManager::GetInstance().Play(SoundId::Cursor);
-		isPress = true;
-	}
-	else if (input.IsTriggered(InputType::up)|| input.IsTriggered(InputType::left))
-	{
-		m_selectNum = (m_selectNum + (menuNum - 1)) % menuNum;//選択状態を一つ上げる
-		SoundManager::GetInstance().Play(SoundId::Cursor);
-		isPress = true;
-	}
-
+	m_selectNum = -1;
 	//マウスで選択
-	if (mouse.MouseSelect(SelectMenu[menuGameEnd].x, SelectMenu[menuGameEnd].x + kMenuFontSize * 7,
-		SelectMenu[menuGameEnd].y, SelectMenu[menuGameEnd].y + kMenuFontSize))
+	if (mouse.MouseSelect(m_selectMenu[menuGameEnd].x, m_selectMenu[menuGameEnd].x + kMenuFontSize * 7,
+		m_selectMenu[menuGameEnd].y, m_selectMenu[menuGameEnd].y + kMenuFontSize))
 	{
 		if (m_selectNum != static_cast<int>(menuGameEnd))
 		{
@@ -180,8 +163,8 @@ void GameendScene::MojiUpdate(const InputState& input, Mouse& mouse)
 		}
 		isPress = true;
 	}
-	else if (mouse.MouseSelect(SelectMenu[menuRestart].x, SelectMenu[menuRestart].x + kMenuFontSize * 4,
-		SelectMenu[menuRestart].y, SelectMenu[menuRestart].y + kMenuFontSize))
+	else if (mouse.MouseSelect(m_selectMenu[menuRestart].x, m_selectMenu[menuRestart].x + kMenuFontSize * 4,
+		m_selectMenu[menuRestart].y, m_selectMenu[menuRestart].y + kMenuFontSize))
 	{
 		if (m_selectNum != static_cast<int>(menuRestart))
 		{
@@ -190,26 +173,23 @@ void GameendScene::MojiUpdate(const InputState& input, Mouse& mouse)
 		}
 		isPress = true;
 	}
-
-	if (isPress)
+	
+	for (int i = 0; i < menuNum; i++)
 	{
-		for (int i = 0; i < menuNum; i++)
+		if (i == m_selectNum)
 		{
-			if (i == m_selectNum)
-			{
-				SelectMenu[i].color = 0xffa0aa;//色を変える
-				SelectMenu[i].fontSize = kMenuFontSize * 2;//大きさを変える
-			}
-			else
-			{
-				SelectMenu[i].color = 0xaaa0ff;//元の色に戻す
-				SelectMenu[i].fontSize = kMenuFontSize;//大きさを変える
-			}
+			m_selectMenu[i].color = 0xffa0aa;//色を変える
+			m_selectMenu[i].fontSize = kMenuFontSize * 2;//大きさを変える
+		}
+		else
+		{
+			m_selectMenu[i].color = 0xaaa0ff;//元の色に戻す
+			m_selectMenu[i].fontSize = kMenuFontSize;//大きさを変える
 		}
 	}
 
 	//「次へ」ボタンが押されたら次シーンへ移行する
-	if (input.IsTriggered(InputType::slect))
+	if (isPress && input.IsTriggered(InputType::slect))
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
 
@@ -228,13 +208,12 @@ void GameendScene::NormalDraw()
 void GameendScene::MojiDraw()
 {
 	m_score->Draw();
-
-	SetFontSize(SelectMenu[menuGameEnd].fontSize);
-	DrawString(SelectMenu[menuGameEnd].x + 5, SelectMenu[menuGameEnd].y + 5, L"タイトルに戻る", 0x000000);
-	DrawString(SelectMenu[menuGameEnd].x, SelectMenu[menuGameEnd].y, L"タイトルに戻る", SelectMenu[menuGameEnd].color);
-	SetFontSize(SelectMenu[menuRestart].fontSize);
-	DrawString(SelectMenu[menuRestart].x + 5, SelectMenu[menuRestart].y + 5, L"もう一度", 0x000000);
-	DrawString(SelectMenu[menuRestart].x, SelectMenu[menuRestart].y, L"もう一度", SelectMenu[menuRestart].color);
+	for (auto& menu : m_selectMenu)
+	{
+		SetFontSize(menu.fontSize);
+		DrawString(menu.x + 5, menu.y, menu.name, 0x000000);
+		DrawString(menu.x, menu.y, menu.name, menu.color);
+	}
 	SetFontSize(0);
 }
 

@@ -160,6 +160,7 @@
     <ClInclude Include="Game\Spawner.h" />
     <ClInclude Include="Game\StraightSpawner.h" />
     <ClInclude Include="InputState.h" />
+    <ClInclude Include="Util\menuInfo.h" />
     <ClInclude Include="Scene\CharacterSelectScene.h" />
     <ClInclude Include="Scene\ConfirmationScene.h" />
     <ClInclude Include="Scene\GameendScene.h" />
