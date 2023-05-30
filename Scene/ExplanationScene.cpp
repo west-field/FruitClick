@@ -16,16 +16,15 @@ namespace
 {
 	constexpr int kFontSize = 30;//フォントサイズ
 
-	constexpr float kButtonDrawScale = 2.0f;//拡大率
-	//プレイヤーグラフィック
-	constexpr int kGraphSizeWidth = 32;		//サイズ
-	constexpr int kGraphSizeHeight = 32;	//サイズ
-	constexpr float kDrawScale = 2.0f;		//拡大率
-	constexpr int kFrameSpeed = 10;		//アニメーションスピード
+	constexpr float kButtonDrawScale = 2.0f;//戻るボタン拡大率
+
+	constexpr float kFruitsDrawScale = 4.0f;//フルーツ拡大率
+	constexpr int kFruitsSize= 32;		//フルーツ画像サイズ
+	constexpr int kFruitsDrawSize = static_cast<int>(kFruitsSize * kFruitsDrawScale);//フルーツ画面表示サイズ
 }
 
 ExplanationScene::ExplanationScene(SceneManager& manager,int selectChar) : Scene(manager),
-m_updateFunc(&ExplanationScene::FadeInUpdat), m_drawFunc(&ExplanationScene::NormalDraw), m_selectChar(selectChar),
+m_updateFunc(&ExplanationScene::FadeInUpdat), m_drawFunc(&ExplanationScene::RuleExpDraw), m_selectChar(selectChar),
 m_frameCount(10)
 {
 	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/charSelect.mp3");
@@ -39,26 +38,44 @@ m_frameCount(10)
 	Y = static_cast<int>(Y * kButtonDrawScale);
 	m_backRect = { {X / 2.0f,Y / 2.0f},{X,Y} };
 
-	m_fruitH = my::MyLoadGraph(L"Data/PointExp.png");
 	m_bgH = my::MyLoadGraph(L"Data/Background/Blue.png");
 	m_scroll = 0;
 
-	float addX[3] =
+	/*float addX[3] =
 	{
 		(640 / 2),
 		(640 / 3) / 2,
 		(640 / 4) / 2
 	};
 	float addY = (480 / 3) / 2;
+	int handle = my::MyLoadGraph(L"Data/Fruits/Melon.png");
+	m_fruitsPos.push_back({ handle, { addX[0], addY }, L"スイカ",0xdc143c, 10 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Apple.png");
+	m_fruitsPos.push_back({ handle, { addX[1], addY * 3 },L"リンゴ",0xb22222,5 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Pineapple.png");
+	m_fruitsPos.push_back({ handle, { addX[1] * 5, addY * 3 - 10 }, L"パイナップル",0xff8c00, 8 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Bananas.png");
+	m_fruitsPos.push_back({ handle, { addX[1] * 3, addY * 3 }, L"バナナ",0xffd700, 5 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Kiwi.png");
+	m_fruitsPos.push_back({ handle, { addX[2], addY * 5 }, L"キウイ",0x3cb371, 3 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Strawberry.png");
+	m_fruitsPos.push_back({ handle, { addX[2] * 3, addY * 5 }, L"イチゴ",0xff69b4, 2 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Orange.png");
+	m_fruitsPos.push_back({ handle, { addX[2] * 5, addY * 5 }, L"オレンジ",0xffa500, 3 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Cherries.png");
+	m_fruitsPos.push_back({ handle, { addX[2] * 7, addY * 5 }, L"チェリー",0xa52a2a, 2 });*/
 
-	m_fruitsPos.push_back({ { addX[0], addY }, L"スイカ",0xdc143c, 10 });
-	m_fruitsPos.push_back({ { addX[1], addY * 3 },L"リンゴ",0xb22222,5 });
-	m_fruitsPos.push_back({ { addX[1] * 5, addY * 3 - 10 }, L"パイナップル",0xff8c00, 8 });
-	m_fruitsPos.push_back({ { addX[1] * 3, addY * 3 }, L"バナナ",0xffd700, 5 });
-	m_fruitsPos.push_back({ { addX[2], addY * 5 }, L"キウイ",0x3cb371, 3 });
-	m_fruitsPos.push_back({ { addX[2] * 3, addY * 5 }, L"イチゴ",0xff69b4, 2 });
-	m_fruitsPos.push_back({ { addX[2] * 5, addY * 5 }, L"オレンジ",0xffa500, 3 });
-	m_fruitsPos.push_back({ { addX[2] * 7, addY * 5 }, L"チェリー",0xa52a2a, 2 });
+
+	m_hitExpH[0] = my::MyLoadGraph(L"Data/atc1.jpg");
+	m_hitExpH[1] = my::MyLoadGraph(L"Data/click1.jpg");
+	m_hitExpH[2] = my::MyLoadGraph(L"Data/click2.jpg");
+	m_pointExpH = my::MyLoadGraph(L"Data/point.png");//rule3
+	m_endExpH[0] = my::MyLoadGraph(L"Data/heat1.jpg");
+	m_endExpH[1] = my::MyLoadGraph(L"Data/heat2.jpg");
+	m_endExpH[2] = my::MyLoadGraph(L"Data/heat3.jpg");
+	m_closeExpH = my::MyLoadGraph(L"Data/rule1.png");
+
+	SetFontSize(kFontSize);//フォントサイズ変更
 }
 
 ExplanationScene::~ExplanationScene()
@@ -66,9 +83,21 @@ ExplanationScene::~ExplanationScene()
 	DeleteSoundMem(m_BgmH);
 
 	DeleteGraph(m_backH);
-	DeleteGraph(m_fruitH);
 	DeleteGraph(m_bgH);
-	m_fruitsPos.clear();
+	/*for (auto& fruit : m_fruitsPos)
+	{
+		DeleteGraph(fruit.handle);
+	}
+	m_fruitsPos.clear();*/
+
+	DeleteGraph(m_hitExpH[0]);
+	DeleteGraph(m_hitExpH[1]);
+	DeleteGraph(m_hitExpH[2]);
+	DeleteGraph(m_pointExpH);
+	DeleteGraph(m_endExpH[0]);
+	DeleteGraph(m_endExpH[1]);
+	DeleteGraph(m_endExpH[2]);
+	DeleteGraph(m_closeExpH);
 }
 
 void
@@ -98,8 +127,6 @@ void ExplanationScene::Draw()
 	my::MyDrawRectRotaGraph(m_backRect.center.x, m_backRect.center.y,
 		0, 0, m_backRect.size.w, m_backRect.size.h, kButtonDrawScale, 0.0f, m_backH, true, false);
 
-	DrawString(0, 0, L"説明", 0xffffff);
-
 	(this->*m_drawFunc)();
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
@@ -128,51 +155,41 @@ void ExplanationScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 	
 	if (mouse.GetRect().IsHit(m_backRect) && mouse.IsTriggerLeft())//戻るボタンを押したら一つ前の表示に戻る
 	{
-		if (m_drawFunc == &ExplanationScene::FirstExpDraw)
-		{
-			m_drawFunc = &ExplanationScene::NormalDraw;
-			return;
-		}
 		if (m_drawFunc == &ExplanationScene::PointExpDraw)
 		{
-			m_drawFunc = &ExplanationScene::FirstExpDraw;
+			m_drawFunc = &ExplanationScene::RuleExpDraw;
 			return;
 		}
-		if (m_drawFunc == &ExplanationScene::ThirdExpDraw)
+		if (m_drawFunc == &ExplanationScene::EndExpDraw)
 		{
 			m_drawFunc = &ExplanationScene::PointExpDraw;
 			return;
 		}
-		if (m_drawFunc == &ExplanationScene::FourthExpDraw)
+		if (m_drawFunc == &ExplanationScene::CloseDraw)
 		{
-			m_drawFunc = &ExplanationScene::ThirdExpDraw;
+			m_drawFunc = &ExplanationScene::EndExpDraw;
 			return;
 		}
 	}
 	else if (m_frameCount == 0 && mouse.IsTriggerLeft())//カウントが0の時次の表示に進
 	{
 		m_frameCount = 10;
-		if (m_drawFunc == &ExplanationScene::NormalDraw)
-		{
-			m_drawFunc = &ExplanationScene::FirstExpDraw;
-			return;
-		}
-		if (m_drawFunc == &ExplanationScene::FirstExpDraw)
+		if (m_drawFunc == &ExplanationScene::RuleExpDraw)
 		{
 			m_drawFunc = &ExplanationScene::PointExpDraw;
 			return;
 		}
 		if (m_drawFunc == &ExplanationScene::PointExpDraw)
 		{
-			m_drawFunc = &ExplanationScene::ThirdExpDraw;
+			m_drawFunc = &ExplanationScene::EndExpDraw;
 			return;
 		}
-		if (m_drawFunc == &ExplanationScene::ThirdExpDraw)
+		if (m_drawFunc == &ExplanationScene::EndExpDraw)
 		{
-			m_drawFunc = &ExplanationScene::FourthExpDraw;
+			m_drawFunc = &ExplanationScene::CloseDraw;
 			return;
 		}
-		if (m_drawFunc == &ExplanationScene::FourthExpDraw)//最後の表示
+		if (m_drawFunc == &ExplanationScene::CloseDraw)//最後の表示
 		{
 			m_updateFunc = &ExplanationScene::FadeOutUpdat;//次のシーンに移行する
 			return;
@@ -187,61 +204,75 @@ void ExplanationScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue,m_BgmH);
 	if (++m_fadeTimer == kFadeInterval)
 	{
+		SetFontSize(0);
 		m_manager.ChangeScene(new GameplayingScene(m_manager, m_selectChar));
 		return;
 	}
 }
 
-void ExplanationScene::NormalDraw()
-{
-	DrawString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, L"normal", 0xffffff);
-}
-
-void ExplanationScene::FirstExpDraw()
+//ルール説明
+void ExplanationScene::RuleExpDraw()
 {
 	//箱から落ちてくるフルーツをクリックして消して、キャラクタに当たらないようにしよう
-	DrawString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, L"1", 0xffffff);
-	DrawString(100, 100, L"箱から落ちてくるフルーツを", 0xffffff);
-	DrawString(100, 120, L"クリックして消して、", 0xffffff);
-	DrawString(100, 140, L"キャラクタに当たらないようにしよう", 0xffffff);
+	DrawString(Game::kScreenWidth / 4 + 75, 100, L"箱から落ちてくるフルーツを\nクリックして消して", 0x000000);
+	DrawString(90, Game::kScreenHeight - 110 , L"キャラクターに\n当たらないようにしよう", 0x000000);
+	
+	int X = Game::kScreenWidth / 4;//初期位置X
+	int Y = Game::kScreenHeight / 4;//初期位置Y
+
+	my::MyDrawRectRotaGraph(X, Y, 0, 0, 115, 122, 1.0f, 0.0f, m_hitExpH[1], true, false);//クリック1
+	Y += 122 / 2;
+	DrawString(X, Y, L"↓", 0x000000);
+	Y += 122 / 2 + kFontSize;
+	my::MyDrawRectRotaGraph(X, Y, 0, 0, 115, 122, 1.0f, 0.0f, m_hitExpH[2], true, false);//クリック2
+	X *= 3;
+	Y += kFontSize;
+	my::MyDrawRectRotaGraph(X, Y, 0, 0, 115, 211, 1.0f, 0.0f, m_hitExpH[0], true, false);//キャラクタ
 }
 
+//ポイント説明
 void ExplanationScene::PointExpDraw()
 {
-	float scale = 4.0f;
-	int size = static_cast<int>(32 * scale);
-	int halfSize = static_cast<int>(size / 2);//表示する大きさの半分
-	int add = 25;//文字を絵の上に表示できるように
-	int sud = 32 * 2;//文字を左にずらす
-	int fontsize = kFontSize / 2;
-
+	my::MyDrawRectRotaGraph(642 / 2, 481 / 2, 0, 0, 606, 476, 0.9f, 0.0f, m_pointExpH, true, false);//説明画像を表示
 	//フルーツを消すと得点をもらえる。
-	DrawString(80, 80, L"フルーツを消すと\n得点をもらえる", 0x000000);
-	DrawStringF(m_fruitsPos[0].pos.x + halfSize + 50, 80.0f, L"得点が高いほど\nHPも多い", 0x000000);
+	DrawString(20, 80, L"フルーツを消すと\n得点をもらえる", 0x000000);
+	DrawStringF((640 / 2) + (static_cast<int>(kFruitsDrawSize / 2)) + 30, 80.0f, L"得点が高いほど\nHPも多い", 0x000000);
 
-	for (auto& fruit : m_fruitsPos)
-	{
-		int left = static_cast<int>(fruit.pos.x - halfSize);
-		int top = static_cast<int>(fruit.pos.y - halfSize);
-
-		my::MyDrawRectRotaGraph(fruit.pos.x, fruit.pos.y, left,top , size, size, 1.0f, 0.0f, m_fruitH, true, false);
-		DrawStringF(fruit.pos.x - add, fruit.pos.y - sud, fruit.name, fruit.color);
-		SetFontSize(kFontSize);
-		DrawFormatStringF(fruit.pos.x - fontsize, fruit.pos.y + 32, fruit.color, L"%d点", fruit.point);
-		SetFontSize(0);
-	}
+	//for (auto& fruit : m_fruitsPos)
+	//{
+	//	my::MyDrawRectRotaGraph(fruit.pos.x, fruit.pos.y, 0, 0, kFruitsSize, kFruitsSize, kFruitsDrawScale, 0.0f, fruit.handle, true, false);//フルーツ画像
+	//	DrawStringF(fruit.pos.x - 25, fruit.pos.y - kFruitsSize * 2, fruit.name, fruit.color);//フルーツ名
+	//	SetFontSize(kFontSize);//フォントサイズを変更
+	//	DrawFormatStringF(fruit.pos.x - kFontSize / 2, fruit.pos.y + kFruitsSize, fruit.color, L"%d点", fruit.point);//得点を表示
+	//	SetFontSize(0);//フォントサイズを戻す
+	//}
 }
 
-void ExplanationScene::ThirdExpDraw()
+//終わりの説明
+void ExplanationScene::EndExpDraw()
 {
 	//キャラクタのハートがすべてなくなると終了
-	DrawString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, L"3", 0xffffff);
-	DrawString(100, 100, L"キャラクタのハードがすべてなくなると終了", 0xffffff);
+	DrawString(70, 50, L"キャラクタのハートが\n　　　　すべてなくなると終了", 0x000000);
+	int X = 180;
+	int Y = Game::kScreenHeight / 3;
+
+	my::MyDrawRectRotaGraph(X, Y, 10, 10, 339, 77, 1.0f, 0.0f, m_endExpH[0], true, false);
+	Y += 77/2;
+	DrawString(X, Y, L"↓", 0x000000);
+	X += 339 / 3;
+	Y += 77 / 2 + kFontSize;
+	my::MyDrawRectRotaGraph(X, Y, 10, 10, 339, 77, 1.0f, 0.0f, m_endExpH[1], true, false);
+	Y += 77/2;
+	DrawString(X, Y, L"↓", 0x000000);
+	X += 339 / 3;
+	Y += 77 / 2 + kFontSize;
+	my::MyDrawRectRotaGraph(X, Y, 10, 10, 339, 77, 1.0f, 0.0f, m_endExpH[2], true, false);
 }
 
-void ExplanationScene::FourthExpDraw()
+//締め
+void ExplanationScene::CloseDraw()
 {
+	my::MyDrawRectRotaGraph(642 / 2, 481 / 2 + kFontSize, 1, 0, 640, 481, 0.7f, 0.0f, m_closeExpH, true, false);
 	//キャラクタを守りながら、得点を集めよう
-	DrawString(Game::kScreenWidth / 2, Game::kScreenHeight / 2, L"4", 0xffffff);
-	DrawString(100, 100, L"キャラクタを守りながら、得点を集めよう!!", 0xffffff);
+	DrawString(40, 40, L"キャラクタを守りながら、得点を稼ごう!!", 0x000000);
 }

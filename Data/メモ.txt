@@ -15,6 +15,10 @@ https://cupnooble.itch.io/sprout-lands-asset-pack
 RavenmoreIconPack_2019_Beta
 https://ravenmore.itch.io/fantasy-icon-pack
 
+フォント
+KyouryunoGuratan
+https://sagamiriku.wixsite.com/rikugamenodoria
+
 キャラによって性能が変わる
 MaskDude		HP
 NinjaFrog		speed
