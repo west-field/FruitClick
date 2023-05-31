@@ -6,7 +6,7 @@
 class HpBar;//HpBarクラス
 
 /// <summary>
-/// キャラクタ
+/// キャラクター
 /// </summary>
 class Character
 {
@@ -16,7 +16,7 @@ public:
 
 	//更新
 	void Update();
-	void Update(bool isClear);
+	void Update(bool isClear);//クリアしたときの更新
 	//表示
 	void Draw(bool isHp);
 	//キャラクターロード

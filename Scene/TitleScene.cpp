@@ -42,6 +42,15 @@ TitleScene::TitleScene(SceneManager& manager) : Scene(manager),
 	m_settingRect = { {static_cast<float>(Game::kScreenWidth - X / 2),static_cast<float>(Y/2)}, {X,Y} };
 	//背景
 	m_bgH = my::MyLoadGraph(L"Data/Background/Yellow.png");
+
+	m_charPos = {0.0f,static_cast<float>(Game::kScreenHeight - 100) };
+	m_char[0] = my::MyLoadGraph(L"Data/Characters/MaskDude/Run.png");//キャラクター
+	m_char[1] = my::MyLoadGraph(L"Data/Characters/NinjaFrog/Run.png");
+	m_char[2] = my::MyLoadGraph(L"Data/Characters/PinkMan/Run.png");
+	m_char[3] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/Run.png");
+	m_charType = 0;
+	m_frameCount = 0;//画像変更
+	m_idx = 0;
 }
 
 TitleScene::~TitleScene()
@@ -61,6 +70,22 @@ TitleScene::Update(const InputState& input, Mouse& mouse)
 	{
 		m_scroll -= static_cast<int>(kBgSize);
 	}
+
+	m_charPos.x += 2.0f;//キャラクター移動
+	if (m_charPos.x >= Game::kScreenWidth + 32 / 2)
+	{
+		m_charPos.x = -32/2;
+		m_charType = GetRand(3);
+	}
+
+	if (m_frameCount-- <= 0)
+	{
+		if (m_idx++ >= 12 - 1)
+		{
+			m_idx -= 12;
+		}
+		m_frameCount = 5;
+	}
 }
 
 void TitleScene::Draw()
@@ -72,6 +97,13 @@ void TitleScene::Draw()
 		{
 			my::MyDrawRectRotaGraph(x, y+ m_scroll, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_bgH, true, false);
 		}
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (i != m_charType)	continue;
+		my::MyDrawRectRotaGraph(m_charPos.x, m_charPos.y, m_idx * 32, 0, 32, 32, 2.0f, 0.0f, m_char[m_charType], true, false);
+		break;
 	}
 
 	SetFontSize(kMenuFontSize);
@@ -106,7 +138,6 @@ void TitleScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 
 void TitleScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 {
-	
 	m_moveTitle += m_moveAdd;
 	if (m_moveTitle >= 60 || m_moveTitle <= 0)
 	{

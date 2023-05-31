@@ -52,4 +52,10 @@ private:
 
 	int m_bgH;//背景
 	int m_scroll;//背景を動かす
+
+	Position2 m_charPos;
+	int m_char[4];//キャラクターを表示
+	int m_charType;//表示するキャラクター
+	int m_frameCount;//画像変更
+	int m_idx;
 };
