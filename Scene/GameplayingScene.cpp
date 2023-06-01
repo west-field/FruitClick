@@ -379,6 +379,7 @@ void GameplayingScene::SpawnerUpdate()
 	Position2 pos = { static_cast<float>((rand + 2) * kBgSize) + kBgSize / 2, static_cast<float>(2 * kBgSize) };
 
 	FruitsCreate(static_cast<FruitsSpawnId>(fruitsSpawnIdRand), pos);
+	SoundManager::GetInstance().Play(SoundId::FruitCreate);
 	m_type = 1;
 	m_idx = 0;
 

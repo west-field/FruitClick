@@ -14,6 +14,7 @@ enum class SoundId
 	PlayerMove,		//プレイヤー移動音
 	Hit,			//接触音
 	
+	FruitCreate,	//フルーツ生成音
 	FruitClick,		//フルーツクリック音
 	FruitDelete,	//フルーツ破壊音
 

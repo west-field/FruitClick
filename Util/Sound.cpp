@@ -24,6 +24,7 @@ SoundManager::SoundManager()
 	LoadSoundFile(SoundId::PlayerMove,L"Move.mp3");
 	LoadSoundFile(SoundId::Hit,L"Hit.mp3");
 	
+	LoadSoundFile(SoundId::FruitCreate,L"FruitCreate.mp3");
 	LoadSoundFile(SoundId::FruitClick,L"FruitClick.mp3");
 	LoadSoundFile(SoundId::FruitDelete,L"FruitDelete.mp3");
 }
