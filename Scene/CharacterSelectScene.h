@@ -5,6 +5,7 @@
 #include <array>
 #include "../Util/Geometry.h"
 #include "../Util/Info.h"
+#include "../Util/menuInfo.h"
 
 class InputState;
 
@@ -82,13 +83,7 @@ private:
 	int m_scroll;//背景を動かす
 
 	bool isExpo;//説明シーンに行くかどうか
-	struct Element
-	{
-		int x, y;//座標
-		int color;//色
-		const wchar_t* name;//名前
-		int size;
-	};
+
 	enum class Item
 	{
 		Yes,

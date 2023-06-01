@@ -105,14 +105,15 @@ CharacterSelectScene::CharacterSelectScene(SceneManager& manager) :
 	m_menu[static_cast<int>(Item::Yes)].x = (pw_start_x + pw_width) - (pw_width / 2);
 	m_menu[static_cast<int>(Item::Yes)].name = L"はい";
 
-	m_menu[static_cast<int>(Item::No)].x = pw_start_x + 20;
+	m_menu[static_cast<int>(Item::No)].x = pw_start_x + kFontSize;
 	m_menu[static_cast<int>(Item::No)].name = L"いいえ";
 
-	for (int i = 0; i < static_cast<int>(Item::Max); i++)
+	for (auto& menu : m_menu)
 	{
-		m_menu[i].y = kPosY;
-		m_menu[i].size = kFontSize;
-		m_menu[i].color = 0xffffff;
+		menu.y = kPosY;
+		menu.fontSize = kFontSize;
+		menu.color = 0xffffff;
+		menu.nameNum = static_cast<int>(wcslen(menu.name));
 	}
 }
 
@@ -274,35 +275,30 @@ void CharacterSelectScene::SelectScene(const InputState& input, Mouse& mouse)
 	m_select = -1;
 
 	//マウスで選択
-	if (mouse.MouseSelect(m_menu[static_cast<int>(Item::Yes)].x, m_menu[static_cast<int>(Item::Yes)].x + kFontSize * 6,
-		m_menu[static_cast<int>(Item::Yes)].y, m_menu[static_cast<int>(Item::Yes)].y + kFontSize))
+	int i = 0;
+	for (auto& menu : m_menu)
 	{
-		if (m_select != static_cast<int>(Item::Yes))
+		if (mouse.MouseSelect(menu.x, menu.x + menu.fontSize * menu.nameNum,menu.y, menu.y + menu.fontSize))
 		{
-			m_select = static_cast<int>(Item::Yes);
+			if (m_select != i)
+			{
+				m_select = i;
+			}
+			isSelect = true;
 		}
-		isSelect = true;
-	}
-	else if (mouse.MouseSelect(m_menu[static_cast<int>(Item::No)].x, m_menu[static_cast<int>(Item::No)].x + kFontSize * 2,
-		m_menu[static_cast<int>(Item::No)].y, m_menu[static_cast<int>(Item::No)].y + kFontSize))
-	{
-		if (m_select != static_cast<int>(Item::No))
-		{
-			m_select = static_cast<int>(Item::No);
-		}
-		isSelect = true;
+		i++;
 	}
 
 	for (int i = 0; i < pauseMax; i++)
 	{
 		if (i == m_select)
 		{
-			m_menu[i].size = kFontSize * 2;
+			m_menu[i].fontSize = kFontSize * 2;
 			m_menu[i].color = 0xaaffaa;
 		}
 		else
 		{
-			m_menu[i].size = kFontSize;
+			m_menu[i].fontSize = kFontSize;
 			m_menu[i].color = 0xffffff;
 		}
 	}
@@ -352,12 +348,17 @@ void CharacterSelectScene::SelectSceneDraw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	SetFontSize(kFontSize);
-	DrawString(pw_start_x + 10, pw_start_y + 10, L"説明を聞きますか？", 0xffff88);
+	int x = pw_width / 2 + pw_start_x - kFontSize * 4;//pw_start_x + 10
+	DrawString(x, pw_start_y + 10, L"説明を聞きますか？", 0xffff88);
 	
 	for (auto& menu : m_menu)
 	{
-		SetFontSize(menu.size);
+		SetFontSize(menu.fontSize);
 		DrawString(menu.x, menu.y, menu.name, menu.color);
+#ifdef _DEBUG
+		int size = menu.fontSize * menu.nameNum;
+		DrawBox(menu.x, menu.y, menu.x + size, menu.y + menu.fontSize, menu.color, false);
+#endif
 	}
 
 	SetFontSize(0);
