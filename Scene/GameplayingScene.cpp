@@ -28,17 +28,18 @@ namespace
 	constexpr float kPlayerMoveSpeed = 5.0f;//プレイヤーの移動速度
 
 	constexpr int kFruitsCreateFrame = 100;//フルーツを作る待ち時間
+	constexpr int kFruitsCreateMinFrame = 20;//フルーツを作る最小待ち時間
 
 	constexpr float kGearScale = 2.0f;//設定ボタン表示拡大率
 
-	constexpr int kFontWidth = 16;
-	constexpr int kFontHeight = 32;
+	constexpr int kFontWidth = 16;//数字の画像の横幅
+	constexpr int kFontHeight = 32;//数字の画像の縦幅
 
-	constexpr int kBlockSpeed = 5;
+	constexpr int kBlockSpeed = 5;//箱の画像カウント
 }
 
 GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
-	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat)
+	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat), m_prevFuruitsType(-1)
 {
 	m_char = std::make_shared<Character>(selectChar, Position2{ static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight - 100) });
 	m_fruitsFactory = std::make_shared<FruitsFactory>();
@@ -73,7 +74,7 @@ GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
 		block.sizeW = 28;
 		block.sizeH = 24;
 	}
-	m_isCount = true;
+	m_isCountDown = true;
 	m_count = 3 * 60;
 	m_type = 0;
 	m_idx = 0;
@@ -137,7 +138,7 @@ void GameplayingScene::Draw()
 		0, 0, m_settingRect.size.w, m_settingRect.size.h,
 		kGearScale, 0.0f, m_settingH, true, false);
 
-	if (m_isCount)
+	if (m_isCountDown)
 	{
 		if (m_count / 60 == 0)
 		{
@@ -179,7 +180,7 @@ void GameplayingScene::CountDownUpdate(const InputState& input, Mouse& mouse)
 	{
 		m_count = 0;
 		m_updateFunc = &GameplayingScene::NormalUpdat;
-		m_isCount = false;
+		m_isCountDown = false;
 		return;
 	}
 	if (m_count == 60)
@@ -234,11 +235,13 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 	{		
 		int now = (GetNowCount() - m_startTime) / 1000;//経過時間
 
-		if (now > kFruitsCreateFrame - 10)
+		//経過時間が待ち時間-最小待ち時間よりも大きかったら
+		if (now > kFruitsCreateFrame - kFruitsCreateMinFrame)
 		{
-			now = kFruitsCreateFrame - 10;
+			//待ち時間-最小待ち時間以上にならないようにする。
+			now = kFruitsCreateFrame - kFruitsCreateMinFrame;
 		}
-
+		//待ち時間から経過時間を引くことでだんだん生成速度を上げる
 		m_fruitsFrame = kFruitsCreateFrame - now;
 		SpawnerUpdate();
 	}
@@ -366,6 +369,13 @@ void GameplayingScene::SpawnerUpdate()
 	int fruitsSpawnIdRand = GetRand((static_cast<int>(FruitsSpawnId::Max) - 1));//ランダムで生成するフルーツの種類を決める
 	int rand = GetRand(100) % 6;//ランダムにスポナー生成位置を決める
 	assert(rand < 6);//スポナーの数よりも大きかったら止める
+	//一つ前の生成場所と同じだった場合もう一度決めなおす
+	while (m_prevFuruitsType == rand)
+	{
+		rand = GetRand(100) % 6;
+		assert(rand < 6);
+	}
+	m_prevFuruitsType = rand;
 	Position2 pos = { static_cast<float>((rand + 2) * kBgSize) + kBgSize / 2, static_cast<float>(2 * kBgSize) };
 
 	FruitsCreate(static_cast<FruitsSpawnId>(fruitsSpawnIdRand), pos);

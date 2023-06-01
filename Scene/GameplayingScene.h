@@ -48,28 +48,31 @@ private:
     
     void (GameplayingScene::* m_updateFunc)(const InputState& ,  Mouse& );
 
-    bool m_isCount;
+    bool m_isCountDown;//最初のカウントダウンをしているかどうか
     
     int m_soundVolume = 0;//サウンドの音量
 
-    std::shared_ptr<Character> m_char;//キャラクタ
+    std::shared_ptr<Character> m_char;//キャラクター
 
     std::shared_ptr<FruitsFactory> m_fruitsFactory;//フルーツ工場
 
     std::list<std::shared_ptr<Spawner>> m_spawners;//フルーツ発生器
+
+    int m_prevFuruitsType;//一つ前に生成したフルーツ
+
     //ポイントを表示
     struct Point
     {
         int point;//ポイント
         Position2 pos;//表示位置
-        bool isExist;//存在
+        bool isExist;//存在するかどうか
         int count = 60;//表示時間
         int fade = 255;//フェードアウト
     };
     std::list<Point> m_fruitsPoint;//フルーツのポイントを表示
     int m_point;//現在のポイント
     int m_pointAdd;//追加したいポイント
-    int m_pointCount;//ポイント
+    int m_pointCount;//ポイントを追加するまでの時間
 
     int m_startTime;//ゲーム開始時間
     int m_fruitsFrame = 0;//次にフルーツを作るまでの時間
