@@ -17,7 +17,6 @@ public:
 	virtual void Draw() override;
 
 private:
-	unsigned int m_fadeColor = 0xe3e3e3;
 	//フェードインの時のUpdate関数
 	void FadeInUpdat(const InputState& input,  Mouse& mouse);
 	//通常状態の時のUpdate関数
@@ -37,6 +36,8 @@ private:
 	void (ExplanationScene::* m_updateFunc)(const InputState& ,  Mouse& );//Update用メンバ関数ポインタ
 	void (ExplanationScene::* m_drawFunc)();//Draw用メンバ関数ポインタ
 
+	unsigned int m_fadeColor = 0xe3e3e3;//フェードイン、フェードアウト時の色
+
 	Rect m_backRect;//前の表示に戻る矩形
 	int m_backH;//戻る画像
 
@@ -46,22 +47,12 @@ private:
 	int m_bgH;//背景
 	int m_scroll;//背景を動かす
 
-	//ルール説明
-	int m_hitExpH[3];
-	//ポイント説明
-	int m_pointExpH;
-	//struct FruitInfo
-	//{
-	//	int handle;//フルーツ画像
-	//	Position2 pos;//位置
-	//	const wchar_t* name;//名前
-	//	unsigned int color;//色
-	//	int point;//得点
-	//};
-	//std::vector<FruitInfo> m_fruitsPos;//フルーツ
-	//終わりの説明
-	int m_endExpH[3];
-	//締め
-	int m_closeExpH;
+	int m_hitExpH[3];//ルール説明
+	
+	int m_pointExpH;//ポイント説明
+	
+	int m_endExpH[3];//終わりの説明
+	
+	int m_closeExpH;//締め
 };
-//x224,y160
+

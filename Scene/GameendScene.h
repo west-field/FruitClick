@@ -55,10 +55,10 @@ private:
     int m_bgH;//背景
     int m_scroll;//背景を動かす
     int m_point;//フルーツを壊した数
-    int m_pointAdd;
-    int m_pointCount;
+    int m_pointAdd;//ポイントを足すために
+    int m_pointCount;//ポイントのカウント
 
     int m_numFont;//数字画像
-    std::shared_ptr<Score> m_score;
+    std::shared_ptr<Score> m_score;//スコアを表示
 };
 

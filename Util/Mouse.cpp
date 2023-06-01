@@ -26,7 +26,7 @@ Mouse::~Mouse()
 	DeleteGraph(m_mouseH);
 }
 
-void Mouse::Update(const InputState& input)
+void Mouse::Update()
 {
 	//ログの更新
 	for (int i = kLogNum - 1; i >= 1; i--)
@@ -35,14 +35,14 @@ void Mouse::Update(const InputState& input)
 	}
 
 	//最新の状態
-	if (input.IsTriggered(InputType::slect))
+	if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0)
 	{
 		mouseLog[0] = 1;
 		ClickAnimCreate();
 	}
-	else if (input.IsTriggered(InputType::prev))
+	else if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0)
 	{
-		mouseLog[0] = 1;
+		mouseLog[0] = 2;
 	}
 	else
 	{
@@ -101,19 +101,39 @@ Position2 Mouse::GetPos()
 bool Mouse::IsPressLeft()
 {
 	//最新のログが1の時押されている
-	return (mouseLog[0]);
+	return (mouseLog[0] == 1);
+}
+
+bool Mouse::IsPressRight()
+{
+	//最新のログが2の時押されている
+	return (mouseLog[0] == 2);
 }
 
 bool Mouse::IsTriggerLeft()
 {
-	bool isNow = (mouseLog[0]);//現在の状態
+	bool isNow = (mouseLog[0] == 1);//現在の状態
+	bool isLast = (mouseLog[1]);//1フレーム前の状態
+	return (isNow && !isLast);//今押していて、1フレーム前押されていなかったとき押せる
+}
+
+bool Mouse::IsTriggerRight()
+{
+	bool isNow = (mouseLog[0] == 2);//現在の状態
 	bool isLast = (mouseLog[1]);//1フレーム前の状態
 	return (isNow && !isLast);//今押していて、1フレーム前押されていなかったとき押せる
 }
 
 bool Mouse::IsRelaseLeft()
 {
-	bool isNow = (mouseLog[0]);//現在の状態
+	bool isNow = (mouseLog[0] == 1);//現在の状態
+	bool isLast = (mouseLog[1]);//1フレーム前の状態
+	return (!isNow && isLast);//今離していて、1フレーム前押されていたとき離した判定になる
+}
+
+bool Mouse::IsRelaseRight()
+{
+	bool isNow = (mouseLog[0] == 2);//現在の状態
 	bool isLast = (mouseLog[1]);//1フレーム前の状態
 	return (!isNow && isLast);//今離していて、1フレーム前押されていたとき離した判定になる
 }

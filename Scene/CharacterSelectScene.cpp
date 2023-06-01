@@ -95,13 +95,13 @@ CharacterSelectScene::CharacterSelectScene(SceneManager& manager) :
 		charctor.idxX = 0;
 		charctor.idxY = 0;
 	}
-
+	//背景
 	m_bgH = my::MyLoadGraph(L"Data/Background/Purple.png");
-
+	//BGM
 	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/title.mp3");
 	ChangeVolumeSoundMem(0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
-
+	//メニュー
 	m_menu[static_cast<int>(Item::Yes)].x = (pw_start_x + pw_width) - (pw_width / 2);
 	m_menu[static_cast<int>(Item::Yes)].name = L"はい";
 
@@ -134,8 +134,8 @@ CharacterSelectScene::~CharacterSelectScene()
 void
 CharacterSelectScene::Update(const InputState& input, Mouse& mouse)
 {
-	//◇メンバ関数ポインタを呼び出す　演算子　->*
 	(this->*m_updateFunc)(input,mouse);
+	//背景移動
 	if (m_scroll++ >= static_cast<int>(kBgSize))
 	{
 		m_scroll -= static_cast<int>(kBgSize);
@@ -152,7 +152,7 @@ void CharacterSelectScene::Draw()
 			my::MyDrawRectRotaGraph(x+ m_scroll, y+ m_scroll, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_bgH, true, false);
 		}
 	}
-
+	//キャラクター
 	for (auto& charctor : m_char)
 	{
 		int type = static_cast<int>(charctor.type);
@@ -174,9 +174,8 @@ void CharacterSelectScene::Draw()
 
 void CharacterSelectScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 {
-	//◇どんどん明るくなる
-	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
-	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
+	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);//画面のフェードイン
+	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);//音のフェードイン
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &CharacterSelectScene::NormalUpdat;
@@ -186,20 +185,20 @@ void CharacterSelectScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 
 void CharacterSelectScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 {
-	//マウスがキャラクターの範囲内にあるとき
 	for (int i = 0; i < static_cast<int>(CharType::Max);i++)
 	{
+		//マウスがキャラクターの範囲内にあるとき
 		if (mouse.MouseSelect(m_char[i].rect.center.x - m_char[i].rect.size.w / 2, m_char[i].rect.center.x + m_char[i].rect.size.w / 2, 
 			m_char[i].rect.center.y - m_char[i].rect.size.h / 2, m_char[i].rect.center.y + m_char[i].rect.size.h / 2))
 		{
+			//走っているアニメーションに変更する
 			if (m_char[i].type != CharAnimType::Run)
 			{
 				m_char[i].type = CharAnimType::Run;
 				m_char[i].idxX = 0;
 			}
-			//メニュー
-			//「次へ」ボタンが押されたら次シーンへ移行する
-			if (input.IsTriggered(InputType::slect))
+			//マウスが押されたら次シーンへ移行する
+			if (mouse.IsTriggerLeft())
 			{
 				SoundManager::GetInstance().Play(SoundId::Determinant);
 				m_selectChar = i;
@@ -208,12 +207,13 @@ void CharacterSelectScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 		}
 		else
 		{
+			//待機アニメーションに
 			if (m_char[i].type == CharAnimType::Idle)	continue;
 			m_char[i].type = CharAnimType::Idle;
 			m_char[i].idxX = 0;
 		}
 	}
-	
+	//アニメーション
 	if (m_frameCount++ >= kAnimSpeed)
 	{
 		m_frameCount = 0;
@@ -231,12 +231,14 @@ void CharacterSelectScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 	}
 }
 
+//選択した後のキャラクターの動き
 void CharacterSelectScene::MoveChar(const InputState& input, Mouse& mouse)
 {
 	CharType type = static_cast<CharType>(m_selectChar);
 
 	bool isOk = false;
 
+	//一つアニメーションを再生する
 	if (m_char[m_selectChar].type != CharAnimType::DoubleJump)
 	{
 		m_char[m_selectChar].type = CharAnimType::DoubleJump;
@@ -262,16 +264,16 @@ void CharacterSelectScene::MoveChar(const InputState& input, Mouse& mouse)
 
 	if (isOk) 
 	{
-		//どのシーンに行くかを選択する
+		//どのシーンに行くかを選択するUpdateに
 		m_updateFunc = &CharacterSelectScene::SelectScene;
 		m_drawFunc = &CharacterSelectScene::SelectSceneDraw;
 	}
 }
 
+//どのシーンに変更するかを決める
 void CharacterSelectScene::SelectScene(const InputState& input, Mouse& mouse)
 {
 	bool isSelect = false;
-	int pauseMax = static_cast<int>(Item::Max);
 	m_select = -1;
 
 	//マウスで選択
@@ -289,6 +291,7 @@ void CharacterSelectScene::SelectScene(const InputState& input, Mouse& mouse)
 		i++;
 	}
 
+	int pauseMax = static_cast<int>(Item::Max);
 	for (int i = 0; i < pauseMax; i++)
 	{
 		if (i == m_select)
@@ -303,7 +306,7 @@ void CharacterSelectScene::SelectScene(const InputState& input, Mouse& mouse)
 		}
 	}
 
-	if (isSelect && input.IsTriggered(InputType::slect))
+	if (isSelect && mouse.IsTriggerLeft())
 	{
 		m_updateFunc = &CharacterSelectScene::FadeOutUpdat;
 		if (m_select == static_cast<int>(Item::Yes))
@@ -348,7 +351,7 @@ void CharacterSelectScene::SelectSceneDraw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	SetFontSize(kFontSize);
-	int x = pw_width / 2 + pw_start_x - kFontSize * 4;//pw_start_x + 10
+	int x = pw_width / 2 + pw_start_x - kFontSize * 4;
 	DrawString(x, pw_start_y + 10, L"説明を聞きますか？", 0xffff88);
 	
 	for (auto& menu : m_menu)
@@ -368,6 +371,7 @@ void CharacterSelectScene::SelectSceneDraw()
 
 void CharacterSelectScene::DrawExplanationString(int type, int color)
 {
+	//キャラクターの説明
 	const wchar_t* string[] =
 	{
 		L"HPが\n多いよ",

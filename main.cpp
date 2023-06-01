@@ -59,7 +59,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 		ClearDrawScreen();
 
 		input.Update();
-		mouse.Update(input);
+		mouse.Update();
 
 		sceneManeger.Update(input,mouse);
 		sceneManeger.Draw();

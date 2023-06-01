@@ -20,7 +20,6 @@ public:
 	virtual void Draw() override;
 
 private:
-	unsigned int m_fadeColor = 0xe3e3e3;//フェードの色（白
 	//フェードインの時のUpdate関数
 	void FadeInUpdat(const InputState& input,  Mouse& mouse);
 	//通常状態の時のUpdate関数
@@ -31,7 +30,7 @@ private:
 	//Update用メンバ関数ポインタ
 	void (TitleScene::* m_updateFunc)(const InputState& , Mouse& );
 
-	static constexpr int kMenuFontSize = 50;//文字のサイズ
+	unsigned int m_fadeColor = 0xe3e3e3;//フェードの色（白
 
 	//メニュー項目
 	enum class MenuItem
@@ -44,7 +43,7 @@ private:
 	
 	int m_selectNum;//選択しているメニュー項目
 
-	int  m_moveTitle;//文字を移動させる
+	int  m_instrString;//文字を移動させる
 	int m_moveAdd;//文字を移動させる距離
 
 	int m_settingH ;//設定のグラフィック

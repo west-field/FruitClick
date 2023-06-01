@@ -41,7 +41,13 @@ private:
      /// フルーツをランダムで作る
      /// </summary>
     void FruitsCreate(FruitsSpawnId id, const Position2 pos);
-
+    /// <summary>
+    /// 得点を表示する
+    /// </summary>
+    /// <param name="leftX">表示位置左</param>
+    /// <param name="y">表示位置Y</param>
+    /// <param name="dispNum">表示する数字</param>
+    /// <param name="digit"></param>
     void PointUpdate(int leftX, int y, int dispNum, int digit = -1);
 
     unsigned int m_fadeColor = 0xe3e3e3;//フェードの色（白
@@ -94,7 +100,7 @@ private:
         int animNum;
     };
 
-    Block m_blocks[2];//ブロックIdleとHit2つ分を持つ
+    Block m_boxes[2];//ブロックIdleとHit2つ分を持つ
     int m_count;//経過時間
     int m_type;//今表示するブロックタイプ
     int m_idx;//ブロック表示のための変数

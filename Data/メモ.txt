@@ -22,15 +22,61 @@ https://sagamiriku.wixsite.com/rikugamenodoria
 キャラによって性能が変わる
 MaskDude		HP
 NinjaFrog		speed
-PinkMan		当たり判定
+PinkMan			当たり判定
 VirtualGuy		無敵時間
 
 設定画面の文字を絵に変える？
 　→当たり判定をRectでとる
-ゲームエンドの時のメニューに背景をつける？
 選択範囲を決め、その範囲外の時は処理をしないようにする。
 
 文字色
 
 赤、黄、橙
 緑、赤、オレンジ
+//ピンタレスト game UI
+struct FruitInfo
+	{
+		int handle;//フルーツ画像
+		Position2 pos;//位置
+		const wchar_t* name;//名前
+		unsigned int color;//色
+		int point;//得点
+	};
+	std::vector<FruitInfo> m_fruitsPos;//フルーツ
+
+/*float addX[3] =
+	{
+		(640 / 2),
+		(640 / 3) / 2,
+		(640 / 4) / 2
+	};
+	float addY = (480 / 3) / 2;
+	int handle = my::MyLoadGraph(L"Data/Fruits/Melon.png");
+	m_fruitsPos.push_back({ handle, { addX[0], addY }, L"スイカ",0xdc143c, 10 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Apple.png");
+	m_fruitsPos.push_back({ handle, { addX[1], addY * 3 },L"リンゴ",0xb22222,5 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Pineapple.png");
+	m_fruitsPos.push_back({ handle, { addX[1] * 5, addY * 3 - 10 }, L"パイナップル",0xff8c00, 8 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Bananas.png");
+	m_fruitsPos.push_back({ handle, { addX[1] * 3, addY * 3 }, L"バナナ",0xffd700, 5 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Kiwi.png");
+	m_fruitsPos.push_back({ handle, { addX[2], addY * 5 }, L"キウイ",0x3cb371, 3 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Strawberry.png");
+	m_fruitsPos.push_back({ handle, { addX[2] * 3, addY * 5 }, L"イチゴ",0xff69b4, 2 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Orange.png");
+	m_fruitsPos.push_back({ handle, { addX[2] * 5, addY * 5 }, L"オレンジ",0xffa500, 3 });
+	handle = my::MyLoadGraph(L"Data/Fruits/Cherries.png");
+	m_fruitsPos.push_back({ handle, { addX[2] * 7, addY * 5 }, L"チェリー",0xa52a2a, 2 });*/
+/*for (auto& fruit : m_fruitsPos)
+	{
+		DeleteGraph(fruit.handle);
+	}
+	m_fruitsPos.clear();*/
+for (auto& fruit : m_fruitsPos)
+	{
+		my::MyDrawRectRotaGraph(fruit.pos.x, fruit.pos.y, 0, 0, kFruitsSize, kFruitsSize, kFruitsDrawScale, 0.0f, fruit.handle, true, false);//フルーツ画像
+		DrawStringF(fruit.pos.x - 25, fruit.pos.y - kFruitsSize * 2, fruit.name, fruit.color);//フルーツ名
+		SetFontSize(kFontSize);//フォントサイズを変更
+		DrawFormatStringF(fruit.pos.x - kFontSize / 2, fruit.pos.y + kFruitsSize, fruit.color, L"%d点", fruit.point);//得点を表示
+		SetFontSize(0);//フォントサイズを戻す
+	}

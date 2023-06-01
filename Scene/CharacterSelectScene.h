@@ -55,14 +55,14 @@ private:
 	//キャラクタの要素
 	struct CharctorInfo
 	{
-		int handle[static_cast<int>(CharAnimType::Max)] = {};
+		int handle[static_cast<int>(CharAnimType::Max)] = {};//画像
 
-		CharAnimType type;
+		CharAnimType type;//現在再生しているアニメーションタイプ
 
-		int w[static_cast<int>(CharAnimType::Max)] = { 0 };
-		int h = 0;
+		int w[static_cast<int>(CharAnimType::Max)] = { 0 };//切り替える画像数
+		int h = 0;//画像数
 
-		Rect rect = {};
+		Rect rect = {};//当たり判定
 
 		int idxX = 0;//表示する画像の位置X
 		int idxY = 0;//表示する画像の位置Y
@@ -91,5 +91,5 @@ private:
 		Max
 	};
 	Element m_menu[static_cast<int>(Item::Max)];
-	int m_select;
+	int m_select;//どちらのメニューを選択しているのか
 };

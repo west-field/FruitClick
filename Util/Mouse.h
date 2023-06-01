@@ -10,7 +10,7 @@ class Mouse
 public:
 	Mouse();
 	virtual ~Mouse();
-	void Update(const InputState& input);
+	void Update();
 	void Draw();
 
 	void MouseReset();
@@ -20,10 +20,13 @@ public:
 
 	//押し下げ判定
 	bool IsPressLeft();
+	bool IsPressRight();
 	//トリガー判定
 	bool IsTriggerLeft();
-	//話した判定
+	bool IsTriggerRight();
+	//離した判定
 	bool IsRelaseLeft();
+	bool IsRelaseRight();
 
 	//当たり矩形
 	Rect& GetRect();

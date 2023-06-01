@@ -30,7 +30,7 @@ namespace
 	constexpr int kFruitsCreateFrame = 100;//フルーツを作る待ち時間
 	constexpr int kFruitsCreateMinFrame = 20;//フルーツを作る最小待ち時間
 
-	constexpr float kGearScale = 2.0f;//設定ボタン表示拡大率
+	constexpr float kSettingDrawScale = 2.0f;//設定ボタン表示拡大率
 
 	constexpr int kFontWidth = 16;//数字の画像の横幅
 	constexpr int kFontHeight = 32;//数字の画像の縦幅
@@ -41,43 +41,48 @@ namespace
 GameplayingScene::GameplayingScene(SceneManager& manager, int selectChar) :
 	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat), m_prevFuruitsType(-1)
 {
+	//キャラクター
 	m_char = std::make_shared<Character>(selectChar, Position2{ static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight - 100) });
+	//フルーツ生成
 	m_fruitsFactory = std::make_shared<FruitsFactory>();
 	
 	m_startTime = GetNowCount();//現在の経過時間を得る
-	m_fruitsFrame = kFruitsCreateFrame;
+	m_fruitsFrame = kFruitsCreateFrame;//フルーツ生成までの時間
 
+	//設定ボタン
 	m_settingH = my::MyLoadGraph(L"Data/UI/Settings.png");
 	int X = 0, Y = 0;
 	GetGraphSize(m_settingH, &X, &Y);
-	X = static_cast<int>(X * kGearScale);
-	Y = static_cast<int>(Y * kGearScale);
+	X = static_cast<int>(X * kSettingDrawScale);
+	Y = static_cast<int>(Y * kSettingDrawScale);
 	m_settingRect = { {static_cast<float>(Game::kScreenWidth - X / 2),static_cast<float>(Y / 2)}, {X,Y} };
 
+	//背景
 	m_bgH = my::MyLoadGraph(L"Data/Background/Gray.png");
 	m_scroll = 0;
 	//BGM
 	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/gameMain.mp3");
 	ChangeVolumeSoundMem(0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
-
+	//得点
 	m_numFont = my::MyLoadGraph(L"Data/numfont.png");
+	//箱
+	m_boxes[0].handle = my::MyLoadGraph(L"Data/block.png");
+	m_boxes[1].handle = my::MyLoadGraph(L"Data/blockHit.png");
 
-	m_blocks[0].handle = my::MyLoadGraph(L"Data/block.png");
-	m_blocks[1].handle = my::MyLoadGraph(L"Data/blockHit.png");
+	m_boxes[0].animNum = 1;
+	m_boxes[1].animNum = 4;
 
-	m_blocks[0].animNum = 1;
-	m_blocks[1].animNum = 4;
-
-	for (auto& block : m_blocks)
+	for (auto& block : m_boxes)
 	{
 		block.sizeW = 28;
 		block.sizeH = 24;
 	}
-	m_isCountDown = true;
-	m_count = 3 * 60;
-	m_type = 0;
-	m_idx = 0;
+	m_type = 0;//箱表示タイプ
+	m_idx = 0;//箱のアニメーション
+
+	m_isCountDown = true;//最初にカウントダウン
+	m_count = 3 * 60;//カウント
 }
 
 GameplayingScene::~GameplayingScene()
@@ -87,7 +92,7 @@ GameplayingScene::~GameplayingScene()
 	DeleteGraph(m_bgH);
 	DeleteGraph(m_numFont);
 
-	for (auto& block : m_blocks)
+	for (auto& block : m_boxes)
 	{
 		DeleteGraph(block.handle);
 	}
@@ -108,13 +113,13 @@ void GameplayingScene::Draw()
 			my::MyDrawRectRotaGraph(x+m_scroll, y+ m_scroll, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_bgH, true, false);
 		}
 	}
-	//ブロック
+	//箱
 	int y = 2 * kBgSize;
 	for (int i = 0; i < 6; i++)
 	{
 		int x = (i + 2) * kBgSize + kBgSize / 2;
-		my::MyDrawRectRotaGraph(x, y, m_idx * m_blocks[m_type].sizeW, 0,
-			m_blocks[m_type].sizeW, m_blocks[m_type].sizeH, 2.0f, 0.0f, m_blocks[m_type].handle, true, false);
+		my::MyDrawRectRotaGraph(x, y, m_idx * m_boxes[m_type].sizeW, 0,
+			m_boxes[m_type].sizeW, m_boxes[m_type].sizeH, 2.0f, 0.0f, m_boxes[m_type].handle, true, false);
 	}
 
 	m_fruitsFactory->Draw();//フルーツ
@@ -130,16 +135,15 @@ void GameplayingScene::Draw()
 
 	PointUpdate(Game::kScreenWidth / 2, kFontHeight, m_point);//ポイント
 
-#ifdef _DEBUG
-	DrawString(0, 20, L"ゲームプレイングシーン", 0xffffff);
-#endif
-	//メニュー項目を描画
+	//設定画像描画
 	my::MyDrawRectRotaGraph(m_settingRect.center.x, m_settingRect.center.y,
 		0, 0, m_settingRect.size.w, m_settingRect.size.h,
-		kGearScale, 0.0f, m_settingH, true, false);
+		kSettingDrawScale, 0.0f, m_settingH, true, false);
 
+	//最初のカウントダウン
 	if (m_isCountDown)
 	{
+		//0の時スタートを表示する
 		if (m_count / 60 == 0)
 		{
 			SetFontSize(40);
@@ -162,7 +166,7 @@ void GameplayingScene::Draw()
 void GameplayingScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
+	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);//音のフェードイン
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &GameplayingScene::CountDownUpdate;
@@ -183,10 +187,12 @@ void GameplayingScene::CountDownUpdate(const InputState& input, Mouse& mouse)
 		m_isCountDown = false;
 		return;
 	}
+	//カウントが60になったらスタート音を鳴らす
 	if (m_count == 60)
 	{
 		SoundManager::GetInstance().Play(SoundId::Start);
 	}
+	//カウントが0の時カウント音を鳴らす
 	else if (m_count % 60 == 0)
 	{
 		SoundManager::GetInstance().Play(SoundId::Count);
@@ -195,6 +201,7 @@ void GameplayingScene::CountDownUpdate(const InputState& input, Mouse& mouse)
 
 void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 {
+	//フルーツから出るポイント
 	for (auto& point : m_fruitsPoint)
 	{
 		if (!point.isExist)	continue;//存在しないときは処理をしない
@@ -205,25 +212,25 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 			point.isExist = false;//存在を消す
 		}
 	}
-	//いらなくなったスポナーを削除
+	//いらなくなったものを削除(フルーツから出るポイント)
 	m_fruitsPoint.remove_if([](Point point) {
 		return !point.isExist;
 		});
-
+	//ポイントのカウントアップ
 	if (m_pointCount-- <= 0)
 	{
 		if (m_pointAdd != 0)
 		{
 			m_pointAdd--;
 			m_point++;
-			SoundManager::GetInstance().Play(SoundId::Point);
+			SoundManager::GetInstance().Play(SoundId::Point);//ポイント取得音を鳴らす
 		}
 		m_pointCount = 5;
 	}
 	
+	m_char->Update();//キャラクター
+	m_fruitsFactory->Update();//フルーツ生成
 
-	m_char->Update();
-	m_fruitsFactory->Update();
 	//背景スクロール
 	if (m_scroll++ >= static_cast<int>(kBgSize))
 	{
@@ -249,9 +256,9 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 	//箱
 	if (m_count-- <= 0)
 	{
-		if (m_idx++ >= m_blocks[m_type].animNum - 1)
+		if (m_idx++ >= m_boxes[m_type].animNum - 1)
 		{
-			m_idx -= m_blocks[m_type].animNum;
+			m_idx -= m_boxes[m_type].animNum;
 			if (m_type == 1)
 			{
 				m_type = 0;
@@ -279,7 +286,6 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 				if (fruit->GetHp() <= 0)
 				{
 					fruit->SetDestroy();
-					//m_point += fruit->GetPoint();
 					m_pointAdd += fruit->GetPoint();
 					Point p =
 					{
@@ -288,7 +294,7 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 						true
 					};
 					m_fruitsPoint.push_back(p);
-				}//ピンタレスト game UI
+				}
 				continue;
 			}
 		}
@@ -313,7 +319,7 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 	//ポーズ画面
 	if (mouse.GetRect().IsHit(m_settingRect))
 	{
-		if (input.IsTriggered(InputType::slect))
+		if (mouse.IsTriggerLeft())
 		{
 			SoundManager::GetInstance().Play(SoundId::Determinant);
 			int sound = m_BgmH;
@@ -334,18 +340,8 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 		return;
 	}
 
-#ifdef _DEBUG
-
-	if (mouse.IsPressLeft())
-	{
-		if (input.IsPressed(InputType::pause))
-		{
-			m_char->Damage(1);
-		}
-	}
-#endif
-
-	if (input.IsTriggered(InputType::pause))
+	//右クリックしたときポーズ画面を表示する
+	if (mouse.IsTriggerRight())
 	{
 		m_manager.PushScene(new PauseScene(m_manager, m_BgmH));
 		return;
@@ -378,14 +374,10 @@ void GameplayingScene::SpawnerUpdate()
 	m_prevFuruitsType = rand;
 	Position2 pos = { static_cast<float>((rand + 2) * kBgSize) + kBgSize / 2, static_cast<float>(2 * kBgSize) };
 
-	FruitsCreate(static_cast<FruitsSpawnId>(fruitsSpawnIdRand), pos);
-	SoundManager::GetInstance().Play(SoundId::FruitCreate);
+	FruitsCreate(static_cast<FruitsSpawnId>(fruitsSpawnIdRand), pos);//フルーツを生成する
+	SoundManager::GetInstance().Play(SoundId::FruitCreate);//生成音を鳴らす
 	m_type = 1;
 	m_idx = 0;
-
-#ifdef _DEBUG
-	DrawBoxAA(pos.x, pos.y, pos.x + 64, pos.y + 64, 0x000000, false);
-#endif
 
 	for (auto& spawner : m_spawners)
 	{
