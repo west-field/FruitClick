@@ -17,6 +17,8 @@ public:
 	virtual void Update(const InputState& input, Mouse& mouse) override;
 	void Draw();
 private:
+	void WindowDraw();
+
 	enum class Item
 	{
 		pauseSound,//âπó ê›íË
@@ -32,5 +34,7 @@ private:
 	int m_selectNum;
 
 	int m_soundH;
+
+	int m_bg;
 };
 

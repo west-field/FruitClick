@@ -4,6 +4,7 @@
 #include "../InputState.h"
 #include "../Util/Mouse.h"
 #include "../Util/Sound.h"
+#include "../Util/DrawFunctions.h"
 #include "SceneManager.h"
 #include "TitleScene.h"
 #include "KeyConfigScene.h"
@@ -23,9 +24,9 @@ namespace
 }
 
 ConfirmationScene::ConfirmationScene(SceneManager& manager, const wchar_t* conf, SelectType type,int soundH) :
-	Scene(manager), m_type(type), m_soundH(soundH)
+	Scene(manager), m_type(type), m_soundH(soundH),m_conf(conf)
 {
-	m_conf += conf;
+	m_stringNum = static_cast<int>(wcslen(m_conf));
 
 	m_pauseMenu[static_cast<int>(Item::yes)].x = (pw_start_x + pw_width) - (pw_width / 2);
 	m_pauseMenu[static_cast<int>(Item::yes)].y = kPosY;
@@ -44,11 +45,12 @@ ConfirmationScene::ConfirmationScene(SceneManager& manager, const wchar_t* conf,
 		m_pauseMenu[i].nameNum = static_cast<int>(wcslen(m_pauseMenu[i].name));
 	}
 	m_isWindouwMode = m_manager.GetIsWindouMode();
+	m_bg = my::MyLoadGraph(L"Data/panel_Example2.png");
 }
 
 ConfirmationScene::~ConfirmationScene()
 {
-
+	DeleteGraph(m_bg);
 }
 
 void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
@@ -128,11 +130,13 @@ void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
 
 void ConfirmationScene::Draw()
 {
-	//ウィンドウセロファン
-	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0xaaaaaa, true);
+	//ウィンドウ背景
+	WindowDraw();
 	//メッセージ
 	SetFontSize(kFontSize);
-	DrawString(pw_start_x + 30, pw_start_y + 10, m_conf.c_str(), 0xf0f088);
+	//DrawString(pw_start_x + 30, pw_start_y + 10, m_conf, 0xf0f088);
+	int startString = (pw_width - (m_stringNum * kFontSize)) / 2;
+	DrawString(pw_start_x + startString, pw_start_y + kFontSize*2, m_conf,0xff0000 );//0xf0f088
 	for (auto& menu : m_pauseMenu)
 	{
 		SetFontSize(menu.fontSize);
@@ -142,9 +146,34 @@ void ConfirmationScene::Draw()
 		DrawBox(menu.x, menu.y, menu.x + size, menu.y + menu.fontSize, menu.color, false);
 #endif
 	}
-		SetFontSize(0);
-	//ウィンドウ枠線
-	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0x000000, false);
+	SetFontSize(0);
+}
+
+void ConfirmationScene::WindowDraw()
+{
+	//角表示
+	int x = pw_start_x - 50 / 2;
+	int y = pw_start_y - 50 / 2;
+	DrawRectGraph(x, y,
+		0, 0, 50, 50, m_bg, true);//左上　50 y3,x9
+	DrawRectGraph(x + pw_width, y,
+		50 * 8, 0, 50, 50, m_bg, true);//右上
+	DrawRectGraph(x, y + pw_height,
+		0, 50 * 2, 50, 50, m_bg, true);//左下　50 y3,x9
+	DrawRectGraph(x + pw_width, y + pw_height,
+		50 * 8, 50 * 2, 50, 50, m_bg, true);//右下
+
+	//画像の左上、右下、グラフィックの左上からXサイズ、Yサイズ、表示する画像、透明
+	DrawRectExtendGraph(x + 50, y, x + pw_width, y + 50,
+		50 * 2, 0, 50, 50, m_bg, true);//上
+	DrawRectExtendGraph(x, y + 50, x + 50, y + pw_height,
+		0, 50 * 1, 50, 50, m_bg, true);//左
+	DrawRectExtendGraph(x + pw_width, y + 50, x + pw_width + 50, y + pw_height,
+		50 * 8, 50, 50, 50, m_bg, true);// 右
+	DrawRectExtendGraph(x + 50, y + pw_height, x + pw_width, y + pw_height + 50,
+		50 * 2, 50 * 2, 50, 50, m_bg, true);	// 下
+	DrawRectExtendGraph(x + 50, y + 50, x + pw_width, y + pw_height,
+		50 * 3, 50 * 1, 50, 50, m_bg, true);	// ウインドウ内部
 }
 
 void ConfirmationScene::FullSceneChange()

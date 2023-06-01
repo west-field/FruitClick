@@ -4,6 +4,7 @@
 #include "../InputState.h"
 #include "../Util/Mouse.h"
 #include "../Util/Sound.h"
+#include "../Util/DrawFunctions.h"
 #include "SceneManager.h"
 #include "TitleScene.h"
 #include "KeyConfigScene.h"
@@ -33,7 +34,7 @@ PauseScene::PauseScene(SceneManager& manager,int soundH) : Scene(manager), m_sou
 
 	m_pauseMenu[static_cast<int>(Item::pauseFullscreen)].x = kPosX + 10;
 	m_pauseMenu[static_cast<int>(Item::pauseFullscreen)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseFullscreen) + 1) + 20;
-	m_pauseMenu[static_cast<int>(Item::pauseFullscreen)].name = L"フルスクリーン変更";
+	m_pauseMenu[static_cast<int>(Item::pauseFullscreen)].name = L"スクリーンモード変更";
 
 	m_pauseMenu[static_cast<int>(Item::pauseBack)].x = kPosX + 10;
 	m_pauseMenu[static_cast<int>(Item::pauseBack)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseBack) + 1) + 30;
@@ -51,14 +52,15 @@ PauseScene::PauseScene(SceneManager& manager,int soundH) : Scene(manager), m_sou
 	for (int i = 0; i < num; i++)
 	{
 		m_pauseMenu[i].fontSize = kFontSize;
-		m_pauseMenu[i].color = 0xffffff;
+		m_pauseMenu[i].color = 0x000080;
 		m_pauseMenu[i].nameNum = static_cast<int>(wcslen(m_pauseMenu[i].name));
 	}
+	m_bg = my::MyLoadGraph(L"Data/panel_Example3.png");
 }
 
 PauseScene::~PauseScene()
 {
-
+	DeleteGraph(m_bg);
 }
 
 void PauseScene::Update(const InputState& input, Mouse& mouse)
@@ -87,13 +89,13 @@ void PauseScene::Update(const InputState& input, Mouse& mouse)
 	{
 		if (i == m_selectNum)
 		{
-			m_pauseMenu[i].fontSize = kFontSize * 2;
+			m_pauseMenu[i].fontSize = kFontSize + 15;
 			m_pauseMenu[i].color = 0xaaffaa;
 		}
 		else
 		{
 			m_pauseMenu[i].fontSize = kFontSize;
-			m_pauseMenu[i].color = 0xffffff;
+			m_pauseMenu[i].color = 0x000080;
 		}
 	}
 
@@ -107,7 +109,7 @@ void PauseScene::Update(const InputState& input, Mouse& mouse)
 			return;
 		case static_cast<int>(Item::pauseFullscreen):
 			SoundManager::GetInstance().Play(SoundId::Determinant);
-			m_manager.PushScene(new ConfirmationScene(m_manager, L"フルスクリーン変更しますか", SelectType::SceneMode, m_soundH));
+			m_manager.PushScene(new ConfirmationScene(m_manager, L"スクリーンモード変更しますか", SelectType::SceneMode, m_soundH));
 			return;
 		case static_cast<int>(Item::pauseBack):
 			SoundManager::GetInstance().Play(SoundId::Back);
@@ -137,13 +139,12 @@ void PauseScene::Update(const InputState& input, Mouse& mouse)
 
 void PauseScene::Draw()
 {
-	SetDrawBlendMode(DX_BLENDMODE_MULA, 196);
-	//ポーズウィンドウセロファン
-	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0x000000, true);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	//ウィンドウ背景
+	WindowDraw();
 	//ポーズ中メッセージ
 	SetFontSize(kFontSize * 2);
-	DrawString(pw_start_x + 10, pw_start_y + 10, L"ポーズ", 0xffff88);
+
+	DrawString(pw_start_x + 10+ (kFontSize * 2) * 3, pw_start_y + 10, L"ポーズ", 0x000000);
 	for (auto& menu : m_pauseMenu)
 	{
 		SetFontSize(menu.fontSize);
@@ -154,6 +155,31 @@ void PauseScene::Draw()
 #endif
 	}
 	SetFontSize(0);
-	//ポーズウィンドウ枠線
-	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0xffffff, false);
+}
+
+void PauseScene::WindowDraw()
+{
+	//角表示
+	int x = pw_start_x - 50 / 2;
+	int y = pw_start_y - 50 / 2;
+	DrawRectGraph(x, y,
+		0, 0, 50, 50, m_bg, true);//左上　50 y3,x9
+	DrawRectGraph(x + pw_width, y,
+		50 * 8, 0, 50, 50, m_bg, true);//右上
+	DrawRectGraph(x, y + pw_height,
+		0, 50 * 2, 50, 50, m_bg, true);//左下　50 y3,x9
+	DrawRectGraph(x + pw_width, y + pw_height,
+		50 * 8, 50 * 2, 50, 50, m_bg, true);//右下
+
+	//画像の左上、右下、グラフィックの左上からXサイズ、Yサイズ、表示する画像、透明
+	DrawRectExtendGraph(x + 50, y, x + pw_width, y + 50,
+		50 * 2, 0, 50, 50, m_bg, true);//上
+	DrawRectExtendGraph(x, y + 50, x + 50, y + pw_height,
+		0, 50 * 1, 50, 50, m_bg, true);//左
+	DrawRectExtendGraph(x + pw_width, y + 50, x + pw_width + 50, y + pw_height,
+		50 * 8, 50, 50, 50, m_bg, true);// 右
+	DrawRectExtendGraph(x + 50, y + pw_height, x + pw_width, y + pw_height + 50,
+		50 * 2, 50 * 2, 50, 50, m_bg, true);	// 下
+	DrawRectExtendGraph(x + 50, y + 50, x + pw_width, y + pw_height,
+		50 * 3, 50 * 1, 50, 50, m_bg, true);	// ウインドウ内部
 }

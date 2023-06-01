@@ -7,6 +7,9 @@
 class InputState;
 class SceneManager;
 
+/// <summary>
+/// 次に何をするのか
+/// </summary>
 enum class SelectType
 {
 	End,
@@ -26,6 +29,7 @@ public:
 	virtual void Update(const InputState& inpu, Mouse& mouse) override;
 	void Draw();
 private:
+	void WindowDraw();
 	void FullSceneChange();
 
 	enum class Item
@@ -39,10 +43,13 @@ private:
 	Element m_pauseMenu[static_cast<int>(Item::Max)];
 	int m_selectNum = static_cast<int>(Item::no);
 
-	std::wstring m_conf;
-	SelectType m_type;
-	int m_soundH;
+	const wchar_t* m_conf;//表示する文字
+	int m_stringNum;//表示する文字の数
+	SelectType m_type;//次何をするかを指定
+	int m_soundH;//音を次のシーンに渡すため
 
 	bool m_isWindouwMode;//ウィンドウモードを変更する
+
+	int m_bg;//ウィンドウ背景
 };
 
