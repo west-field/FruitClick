@@ -26,6 +26,10 @@ public:
 	bool IsSave()const { return m_isSave; }
 private:
 	/// <summary>
+	/// ウィンドウを画像で表示する
+	/// </summary>
+	void WindowDraw();
+	/// <summary>
 	/// 得点データを書き込む
 	/// </summary>
 	void Save();
@@ -61,5 +65,7 @@ private:
 	Header m_header[static_cast<int>(Rank::Max)];
 
 	bool m_isSave = false;//情報を変更したかどうか
+
+	int m_bg;
 };
 

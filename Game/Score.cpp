@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include <cassert>
 #include "../game.h"
+#include "../Util/DrawFunctions.h"
 
 namespace
 {
@@ -9,7 +10,7 @@ namespace
 
 	constexpr int add = 5;
 	constexpr int pw_width = 400;
-	constexpr int pw_height = 300 + add * 5;
+	constexpr int pw_height = 300 + add * 6;
 	constexpr int pw_start_x = (Game::kScreenWidth - pw_width) / 2;//左
 	constexpr int pw_start_y = (Game::kScreenHeight - pw_height) / 5;//上
 
@@ -22,27 +23,29 @@ namespace
 Score::Score():m_point(), m_header(), m_isSave(false)
 {
 	//PointInit();//ランキング初期化
+	m_bg = my::MyLoadGraph(L"Data/panel_Example1.png");
 }
 
 Score::~Score()
 {
-
+	DeleteGraph(m_bg);
 }
 
 void Score::Draw()
 {
-	SetDrawBlendMode(DX_BLENDMODE_MULA, 196);
-	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0x000000, true);//ウィンドウセロファン
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	WindowDraw();
 	
 	SetFontSize(kFontSize * 2);
 	int X = kPosX + ((kFontSize * 2) * 2);
-	DrawString(X, kPosY, L"ランキング", 0xffff88);//メッセージ
+	DrawString(X, kPosY, L"ランキング", 0x191970);//メッセージ
 	int y = kFontSize * 2 + 10;
-	int color = 0xffffff;
+	int color = 0x696969;
 	for (auto& score : m_header)
 	{
-		color = 0xffffff;
+		if (color != 0x696969)
+		{
+			color = 0x696969;
+		}
 		if (m_isSave && score.point == m_point)
 		{
 			color = 0xEEE8AA;
@@ -52,11 +55,9 @@ void Score::Draw()
 	}
 	if (!m_isSave)
 	{
-		DrawFormatString(kPosX+ (kFontSize), kPosY + y, 0xEEE8AA, L"ランキング外:%d点", m_point);
+		DrawFormatString(kPosX+ (kFontSize), kPosY + y, 0xdaa520, L"ランキング外:%d点", m_point);
 	}
 	SetFontSize(0);
-	
-	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0xffffff, false);//ウィンドウ枠線
 }
 
 void Score::Load()
@@ -103,6 +104,33 @@ void Score::Comparison(int score)
 	{
 		Save();//得点データを書き込む
 	}
+}
+
+void Score::WindowDraw()
+{
+	//角表示
+	int x = pw_start_x - 50 / 2;
+	int y = pw_start_y - 50 / 2;
+	DrawRectGraph(x, y,
+		0, 0, 50, 50, m_bg, true);//左上　50 y3,x9
+	DrawRectGraph(x + pw_width, y,
+		50 * 8, 0, 50, 50, m_bg, true);//右上
+	DrawRectGraph(x, y + pw_height,
+		0, 50 * 2, 50, 50, m_bg, true);//左下　50 y3,x9
+	DrawRectGraph(x + pw_width, y + pw_height,
+		50 * 8, 50 * 2, 50, 50, m_bg, true);//右下
+
+	//画像の左上、右下、グラフィックの左上からXサイズ、Yサイズ、表示する画像、透明
+	DrawRectExtendGraph(x + 50, y, x + pw_width, y + 50,
+		50 * 2, 0, 50, 50, m_bg, true);//上
+	DrawRectExtendGraph(x, y + 50, x + 50, y + pw_height,
+		0, 50 * 1, 50, 50, m_bg, true);//左
+	DrawRectExtendGraph(x + pw_width, y + 50, x + pw_width + 50, y + pw_height,
+		50 * 8, 50, 50, 50, m_bg, true);// 右
+	DrawRectExtendGraph(x + 50, y + pw_height, x + pw_width, y + pw_height + 50,
+		50 * 2, 50 * 2, 50, 50, m_bg, true);	// 下
+	DrawRectExtendGraph(x + 50, y + 50, x + pw_width, y + pw_height,
+		50 * 3, 50 * 1, 50, 50, m_bg, true);	// ウインドウ内部
 }
 
 void Score::Save()
