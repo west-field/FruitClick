@@ -172,7 +172,7 @@ void GameendScene::MojiUpdate(const InputState& input, Mouse& mouse)
 	{
 		if (i == m_selectNum)
 		{
-			m_selectMenu[i].color = 0xffa0aa;//F‚ğ•Ï‚¦‚é
+			m_selectMenu[i].color = 0x191970;//F‚ğ•Ï‚¦‚é
 			m_selectMenu[i].fontSize = kMenuFontSize * 2;//‘å‚«‚³‚ğ•Ï‚¦‚é
 		}
 		else
@@ -205,7 +205,6 @@ void GameendScene::MojiDraw()
 	for (auto& menu : m_selectMenu)
 	{
 		SetFontSize(menu.fontSize);
-		DrawString(menu.x + 5, menu.y, menu.name, 0x000000);
 		DrawString(menu.x, menu.y, menu.name, menu.color);
 	}
 	SetFontSize(0);

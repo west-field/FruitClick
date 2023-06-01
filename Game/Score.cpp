@@ -8,16 +8,16 @@ namespace
 {
 	const char* path = "Data/score.info";
 
+	constexpr int kFontSize = 20;
+
 	constexpr int add = 5;
 	constexpr int pw_width = 400;
-	constexpr int pw_height = 300 + add * 6;
+	constexpr int pw_height = 300 + add * 7;
 	constexpr int pw_start_x = (Game::kScreenWidth - pw_width) / 2;//ç∂
-	constexpr int pw_start_y = (Game::kScreenHeight - pw_height) / 5;//è„
+	constexpr int pw_start_y = kFontSize;//è„
 
 	constexpr int kPosX = pw_start_x + 10;
 	constexpr int kPosY = pw_start_y + 10;
-
-	constexpr int kFontSize = 20;
 }
 
 Score::Score():m_point(), m_header(), m_isSave(false)
@@ -42,13 +42,13 @@ void Score::Draw()
 	int color = 0x696969;
 	for (auto& score : m_header)
 	{
-		if (color != 0x696969)
-		{
-			color = 0x696969;
-		}
 		if (m_isSave && score.point == m_point)
 		{
-			color = 0xEEE8AA;
+			color = 0x2f4f4f;
+		}
+		else if (color != 0x696969)
+		{
+			color = 0x696969;
 		}
 		DrawFormatString(X, kPosY + y, color, L"%dà ÅF%dì_", static_cast<int>(score.rank) + 1, score.point);
 		y += kFontSize * 2 + add;
