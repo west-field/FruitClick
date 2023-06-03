@@ -21,17 +21,17 @@ public:
     GameplayingScene(SceneManager& manager,int selectChar);
     virtual ~GameplayingScene();
 
-    virtual void Update(const InputState& input, Mouse& mouse);
+    virtual void Update( Mouse& mouse);
     virtual void Draw();
 private:
     //画面のフェードイン
-     void FadeInUpdat(const InputState& input,  Mouse& mouse);
+     void FadeInUpdat( Mouse& mouse);
     //カウントダウン
-     void CountDownUpdate(const InputState& input,  Mouse& mouse);
+     void CountDownUpdate(Mouse& mouse);
     //通常更新
-     void NormalUpdat(const InputState& input,  Mouse& mouse);
+     void NormalUpdat(Mouse& mouse);
     //画面のフェードアウト
-     void FadeOutUpdat(const InputState& input,  Mouse& mouse);
+     void FadeOutUpdat( Mouse& mouse);
 
      /// <summary>
      /// フルーツ生成
@@ -52,7 +52,7 @@ private:
 
     unsigned int m_fadeColor = 0xe3e3e3;//フェードの色（白
     
-    void (GameplayingScene::* m_updateFunc)(const InputState& ,  Mouse& );
+    void (GameplayingScene::* m_updateFunc)( Mouse& );
 
     bool m_isCountDown;//最初のカウントダウンをしているかどうか
     

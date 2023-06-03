@@ -7,8 +7,6 @@
 #include "../Util/Info.h"
 #include "../Util/menuInfo.h"
 
-class InputState;
-
 /// <summary>
 /// キャラクター選択シーン
 /// </summary>
@@ -18,21 +16,21 @@ public:
 	CharacterSelectScene(SceneManager& manager);
 	virtual ~CharacterSelectScene();
 
-	void Update(const InputState& input, Mouse& mouse);
+	void Update(Mouse& mouse);
 	virtual void Draw() override;
 
 private:
 	unsigned int m_fadeColor = 0xe3e3e3;//フェードの色(白
 	//フェードインの時のUpdate関数
-	void FadeInUpdat(const InputState& input,  Mouse& mouse);
+	void FadeInUpdat( Mouse& mouse);
 	//通常状態の時のUpdate関数
-	void NormalUpdat(const InputState& input,  Mouse& mouse);
+	void NormalUpdat( Mouse& mouse);
 	//選択した後のキャラクターの動き
-	void MoveChar(const InputState& input, Mouse& mouse);
+	void MoveChar(Mouse& mouse);
 	//どのシーンに変更するかを決める
-	void SelectScene(const InputState& input, Mouse& mouse);
+	void SelectScene(Mouse& mouse);
 	//フェードアウトの時のUpdate関数
-	void FadeOutUpdat(const InputState& input,  Mouse& mouse);
+	void FadeOutUpdat(Mouse& mouse);
 
 	//通常
 	void NormalDraw();
@@ -47,7 +45,7 @@ private:
 	void DrawExplanationString(int type,int color);
 
 	//Update用メンバ関数ポインタ
-	void (CharacterSelectScene::* m_updateFunc)(const InputState& , Mouse& );
+	void (CharacterSelectScene::* m_updateFunc)( Mouse& );
 	void (CharacterSelectScene::* m_drawFunc)();
 
 	static constexpr int kMenuFontSize = 50;//文字のサイズ

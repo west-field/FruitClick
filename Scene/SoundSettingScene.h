@@ -2,25 +2,23 @@
 #include "Secne.h"
 #include "../Util/menuInfo.h"
 
-class InputState;
-
 class SoundSettingScene : public Scene
 {
 public:
 	SoundSettingScene(SceneManager& manager,int soundH);
 	~SoundSettingScene();
 
-	void Update(const InputState& input, Mouse& mouse);
+	void Update(Mouse& mouse);
 	void Draw();
 private:
 
-	void NormalUpdate(const InputState& input,  Mouse& mouse);
-	void BGMVolumeChange(const InputState& input,  Mouse& mouse);
-	void SEVolumeChange(const InputState& input,  Mouse& mouse);
+	void NormalUpdate( Mouse& mouse);
+	void BGMVolumeChange( Mouse& mouse);
+	void SEVolumeChange( Mouse& mouse);
 
 	void WindowDraw();
 
-	void (SoundSettingScene::* m_updateFunc)(const InputState& , Mouse& );
+	void (SoundSettingScene::* m_updateFunc)( Mouse& );
 
 	enum class SoundType
 	{

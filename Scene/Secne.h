@@ -2,7 +2,6 @@
 
 //プロトタイプ宣言
 class SceneManager;//シーンマネージャー
-class InputState;//入力ステート
 class Mouse;//マウス
 
 /// <summary>
@@ -21,7 +20,7 @@ public:
 	Scene(SceneManager& manager) :m_manager(manager){}
 	virtual ~Scene() {}
 	//シーンを更新する
-	virtual void Update(const InputState& input, Mouse& mouse) = 0;
+	virtual void Update(Mouse& mouse) = 0;
 	//シーンを描画する
 	virtual void Draw() = 0;
 };

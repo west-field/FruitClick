@@ -1,7 +1,6 @@
 #include "Mouse.h"
 #include <DxLib.h>
 #include "DrawFunctions.h"
-#include "../InputState.h"
 #include "../game.h"
 
 namespace

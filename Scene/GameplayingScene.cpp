@@ -7,11 +7,9 @@
 #include "SceneManager.h"
 #include "TitleScene.h"
 #include "PauseScene.h"
-#include "GameoverScene.h"
 #include "GameendScene.h"
 
 #include "../game.h"
-#include "../InputState.h"
 #include "../Util/Sound.h"
 #include "../Util/DrawFunctions.h"
 #include "../Util/Mouse.h"
@@ -98,9 +96,9 @@ GameplayingScene::~GameplayingScene()
 	}
 }
 
-void GameplayingScene::Update(const InputState& input,  Mouse& mouse)
+void GameplayingScene::Update( Mouse& mouse)
 {
-	(this->*m_updateFunc)(input,mouse);
+	(this->*m_updateFunc)(mouse);
 }
 
 void GameplayingScene::Draw()
@@ -163,7 +161,7 @@ void GameplayingScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
-void GameplayingScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
+void GameplayingScene::FadeInUpdat(Mouse& mouse)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);//音のフェードイン
@@ -176,7 +174,7 @@ void GameplayingScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 	}
 }
 
-void GameplayingScene::CountDownUpdate(const InputState& input, Mouse& mouse)
+void GameplayingScene::CountDownUpdate(Mouse& mouse)
 {
 	m_count--;
 	
@@ -199,7 +197,7 @@ void GameplayingScene::CountDownUpdate(const InputState& input, Mouse& mouse)
 	}
 }
 
-void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
+void GameplayingScene::NormalUpdat(Mouse& mouse)
 {
 	//フルーツから出るポイント
 	for (auto& point : m_fruitsPoint)
@@ -348,7 +346,7 @@ void GameplayingScene::NormalUpdat(const InputState& input, Mouse& mouse)
 	}
 }
 
-void GameplayingScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
+void GameplayingScene::FadeOutUpdat( Mouse& mouse)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);

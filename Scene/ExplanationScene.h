@@ -3,7 +3,6 @@
 #include "../Util/Geometry.h"
 #include <vector>
 
-class InputState;
 /// <summary>
 /// 説明シーン
 /// </summary>
@@ -13,16 +12,16 @@ public:
 	ExplanationScene(SceneManager& manager,int selectChar);
 	virtual ~ExplanationScene();
 
-	void Update(const InputState& input,  Mouse& mouse);
+	void Update( Mouse& mouse);
 	virtual void Draw() override;
 
 private:
 	//フェードインの時のUpdate関数
-	void FadeInUpdat(const InputState& input,  Mouse& mouse);
+	void FadeInUpdat(Mouse& mouse);
 	//通常状態の時のUpdate関数
-	void NormalUpdat(const InputState& input,  Mouse& mouse);
+	void NormalUpdat(Mouse& mouse);
 	//フェードアウトの時のUpdate関数
-	void FadeOutUpdat(const InputState& input,  Mouse& mouse);
+	void FadeOutUpdat(Mouse& mouse);
 
 	//ルール説明
 	void RuleExpDraw();
@@ -33,7 +32,7 @@ private:
 	//締め
 	void CloseDraw();
 
-	void (ExplanationScene::* m_updateFunc)(const InputState& ,  Mouse& );//Update用メンバ関数ポインタ
+	void (ExplanationScene::* m_updateFunc)(Mouse& );//Update用メンバ関数ポインタ
 	void (ExplanationScene::* m_drawFunc)();//Draw用メンバ関数ポインタ
 
 	unsigned int m_fadeColor = 0xe3e3e3;//フェードイン、フェードアウト時の色

@@ -1,13 +1,11 @@
 #include "SettingScene.h"
 #include <DxLib.h>
 #include "../game.h"
-#include "../InputState.h"
 #include "../Util/Mouse.h"
 #include "../Util/Sound.h"
 #include "../Util/DrawFunctions.h"
 #include "SceneManager.h"
 #include "TitleScene.h"
-#include "KeyConfigScene.h"
 #include "SoundSettingScene.h"
 #include "ConfirmationScene.h"
 
@@ -26,31 +24,28 @@ namespace
 
 SettingScene::SettingScene(SceneManager& manager,int soundH) : Scene(manager), m_soundH(soundH)
 {
-	m_selectNum = -1;
-
-	m_pauseMenu[static_cast<int>(Item::pauseSound)].x = kPosX +10;
-	m_pauseMenu[static_cast<int>(Item::pauseSound)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseSound) + 1) + 10;
-	m_pauseMenu[static_cast<int>(Item::pauseSound)].name = L"音量せってい";
+	m_selectNum = -1;//メニュー選択
+	//メニュー
+	m_pauseMenu[static_cast<int>(MenuItem::pauseSound)].y = kPosY + kFontSize * 2 * (static_cast<int>(MenuItem::pauseSound) + 1) + 10;
+	m_pauseMenu[static_cast<int>(MenuItem::pauseSound)].name = L"音量せってい";
 	
-	m_pauseMenu[static_cast<int>(Item::pauseFullScene)].x = kPosX +10;
-	m_pauseMenu[static_cast<int>(Item::pauseFullScene)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseFullScene) + 1) + 20;
-	m_pauseMenu[static_cast<int>(Item::pauseFullScene)].name = L"スクリーンモード変更";
+	m_pauseMenu[static_cast<int>(MenuItem::pauseFullScene)].y = kPosY + kFontSize * 2 * (static_cast<int>(MenuItem::pauseFullScene) + 1) + 20;
+	m_pauseMenu[static_cast<int>(MenuItem::pauseFullScene)].name = L"スクリーンモード変更";
 
-	m_pauseMenu[static_cast<int>(Item::pauseBack)].x = kPosX +10;
-	m_pauseMenu[static_cast<int>(Item::pauseBack)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseBack) + 1) + 30;
-	m_pauseMenu[static_cast<int>(Item::pauseBack)].name = L"閉じる";
+	m_pauseMenu[static_cast<int>(MenuItem::pauseBack)].y = kPosY + kFontSize * 2 * (static_cast<int>(MenuItem::pauseBack) + 1) + 30;
+	m_pauseMenu[static_cast<int>(MenuItem::pauseBack)].name = L"閉じる";
 
-	m_pauseMenu[static_cast<int>(Item::pauseGameEnd)].x = kPosX+10;
-	m_pauseMenu[static_cast<int>(Item::pauseGameEnd)].y = kPosY + kFontSize * 2 * (static_cast<int>(Item::pauseGameEnd) + 1) + 40;
-	m_pauseMenu[static_cast<int>(Item::pauseGameEnd)].name = L"ゲーム終了";
+	m_pauseMenu[static_cast<int>(MenuItem::pauseGameEnd)].y = kPosY + kFontSize * 2 * (static_cast<int>(MenuItem::pauseGameEnd) + 1) + 40;
+	m_pauseMenu[static_cast<int>(MenuItem::pauseGameEnd)].name = L"ゲーム終了";
 
-	int pauseMax = static_cast<int>(Item::pauseMax);
-	for (int i = 0; i < pauseMax; i++)
+	for (auto& menu : m_pauseMenu)
 	{
-		m_pauseMenu[i].fontSize = kFontSize;
-		m_pauseMenu[i].color = 0x808080;
-		m_pauseMenu[i].nameNum = static_cast<int>(wcslen(m_pauseMenu[i].name));
+		menu.x = kPosX + 10;
+		menu.fontSize = kFontSize;
+		menu.color = 0x808080;
+		menu.nameNum = static_cast<int>(wcslen(menu.name));
 	}
+	//ウィンドウ背景
 	m_bg = my::MyLoadGraph(L"Data/panel_Example3.png");
 }
 
@@ -59,10 +54,10 @@ SettingScene::~SettingScene()
 	DeleteGraph(m_bg);
 }
 
-void SettingScene::Update(const InputState& input, Mouse& mouse)
+void SettingScene::Update( Mouse& mouse)
 {
 	bool isSelect = false;
-	int pauseMax = static_cast<int>(Item::pauseMax);
+	int pauseMax = static_cast<int>(MenuItem::pauseMax);
 	m_selectNum = -1;
 
 	//マウスで選択
@@ -95,23 +90,24 @@ void SettingScene::Update(const InputState& input, Mouse& mouse)
 		}
 	}
 
-	if (isSelect && input.IsTriggered(InputType::slect))
+	//選択範囲内にあり、右クリックをしたとき
+	if (isSelect && mouse.IsTriggerLeft())
 	{
 		switch (m_selectNum)
 		{
-		case static_cast<int>(Item::pauseSound):
+		case static_cast<int>(MenuItem::pauseSound):
 			SoundManager::GetInstance().Play(SoundId::Determinant);
 			m_manager.PushScene(new SoundSettingScene(m_manager, m_soundH));
 			return;
-		case static_cast<int>(Item::pauseFullScene):
+		case static_cast<int>(MenuItem::pauseFullScene):
 			SoundManager::GetInstance().Play(SoundId::Determinant);
 			m_manager.PushScene(new ConfirmationScene(m_manager, L"スクリーンモード変更しますか", SelectType::SceneMode, m_soundH));
 			return;
-		case static_cast<int>(Item::pauseBack):
+		case static_cast<int>(MenuItem::pauseBack):
 			SoundManager::GetInstance().Play(SoundId::Back);
 			m_manager.PopScene();
 			return;
-		case static_cast<int>(Item::pauseGameEnd):
+		case static_cast<int>(MenuItem::pauseGameEnd):
 			SoundManager::GetInstance().Play(SoundId::Determinant);
 			m_manager.PushScene(new ConfirmationScene(m_manager, L"ゲームを終了しますか", SelectType::End, m_soundH));
 			return;
@@ -120,10 +116,11 @@ void SettingScene::Update(const InputState& input, Mouse& mouse)
 		}
 	}
 
-	if (input.IsTriggered(InputType::prev))
+	//左クリックしたとき
+	if (mouse.IsTriggerRight())
 	{
 		SoundManager::GetInstance().Play(SoundId::Back);
-		m_selectNum = static_cast<int>(Item::pauseBack);
+		m_selectNum = static_cast<int>(MenuItem::pauseBack);
 		m_manager.PopScene();
 		return;
 	}
@@ -132,7 +129,7 @@ void SettingScene::Update(const InputState& input, Mouse& mouse)
 void SettingScene::Draw()
 {
 	//ウィンドウ表示
-	WindowDraw();
+	BgDraw();
 
 	//せってい中メッセージ
 	SetFontSize(kFontSize * 2);
@@ -149,7 +146,7 @@ void SettingScene::Draw()
 	SetFontSize(0);
 }
 
-void SettingScene::WindowDraw()
+void SettingScene::BgDraw()
 {
 	//角表示
 	int x = pw_start_x - 50 / 2;

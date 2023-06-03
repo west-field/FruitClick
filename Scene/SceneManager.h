@@ -42,7 +42,7 @@ public:
 	/// 各シーンの更新を行う
 	/// </summary>
 	/// <param name="input">入力ステート</param>
-	void Update(const InputState& input, Mouse& mouse);
+	void Update(Mouse& mouse);
 	/// <summary>
 	/// 描画
 	/// </summary>

@@ -3,8 +3,6 @@
 #include "../game.h"
 #include "../Util/menuInfo.h"
 
-class InputState;
-class SceneManager;
 /// <summary>
 /// ポーズシーン
 /// </summary>
@@ -14,7 +12,7 @@ public:
 	PauseScene(SceneManager& manager, int soundH);
 	virtual ~PauseScene();
 
-	virtual void Update(const InputState& input, Mouse& mouse) override;
+	virtual void Update( Mouse& mouse) override;
 	void Draw();
 private:
 	void WindowDraw();

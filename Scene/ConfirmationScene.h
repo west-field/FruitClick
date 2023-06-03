@@ -4,9 +4,6 @@
 #include "../Util/menuInfo.h"
 #include <string>
 
-class InputState;
-class SceneManager;
-
 /// <summary>
 /// ŽŸ‚É‰½‚ð‚·‚é‚Ì‚©
 /// </summary>
@@ -26,7 +23,7 @@ public:
 	ConfirmationScene(SceneManager& manager, const wchar_t* conf, SelectType type, int soundH);
 	virtual ~ConfirmationScene();
 
-	virtual void Update(const InputState& inpu, Mouse& mouse) override;
+	virtual void Update(Mouse& mouse) override;
 	void Draw();
 private:
 	void WindowDraw();

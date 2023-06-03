@@ -2,7 +2,6 @@
 #include <DxLib.h>
 
 #include "../game.h"
-#include "../InputState.h"
 
 #include "../Util/Sound.h"
 #include "../Util/Info.h"
@@ -132,9 +131,9 @@ CharacterSelectScene::~CharacterSelectScene()
 }
 
 void
-CharacterSelectScene::Update(const InputState& input, Mouse& mouse)
+CharacterSelectScene::Update(Mouse& mouse)
 {
-	(this->*m_updateFunc)(input,mouse);
+	(this->*m_updateFunc)(mouse);
 	//背景移動
 	if (m_scroll++ >= static_cast<int>(kBgSize))
 	{
@@ -172,7 +171,7 @@ void CharacterSelectScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
-void CharacterSelectScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
+void CharacterSelectScene::FadeInUpdat( Mouse& mouse)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);//画面のフェードイン
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);//音のフェードイン
@@ -183,7 +182,7 @@ void CharacterSelectScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 	}
 }
 
-void CharacterSelectScene::NormalUpdat(const InputState& input,  Mouse& mouse)
+void CharacterSelectScene::NormalUpdat(Mouse& mouse)
 {
 	for (int i = 0; i < static_cast<int>(CharType::Max);i++)
 	{
@@ -232,7 +231,7 @@ void CharacterSelectScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 }
 
 //選択した後のキャラクターの動き
-void CharacterSelectScene::MoveChar(const InputState& input, Mouse& mouse)
+void CharacterSelectScene::MoveChar( Mouse& mouse)
 {
 	CharType type = static_cast<CharType>(m_selectChar);
 
@@ -271,7 +270,7 @@ void CharacterSelectScene::MoveChar(const InputState& input, Mouse& mouse)
 }
 
 //どのシーンに変更するかを決める
-void CharacterSelectScene::SelectScene(const InputState& input, Mouse& mouse)
+void CharacterSelectScene::SelectScene(Mouse& mouse)
 {
 	bool isSelect = false;
 	m_select = -1;
@@ -316,7 +315,7 @@ void CharacterSelectScene::SelectScene(const InputState& input, Mouse& mouse)
 	}
 }
 
-void CharacterSelectScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
+void CharacterSelectScene::FadeOutUpdat( Mouse& mouse)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue,m_BgmH);

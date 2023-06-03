@@ -1,13 +1,11 @@
 #include "ConfirmationScene.h"
 #include <DxLib.h>
 #include "../game.h"
-#include "../InputState.h"
 #include "../Util/Mouse.h"
 #include "../Util/Sound.h"
 #include "../Util/DrawFunctions.h"
 #include "SceneManager.h"
 #include "TitleScene.h"
-#include "KeyConfigScene.h"
 #include "SoundSettingScene.h"
 #include "ExplanationScene.h"
 
@@ -53,7 +51,7 @@ ConfirmationScene::~ConfirmationScene()
 	DeleteGraph(m_bg);
 }
 
-void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
+void ConfirmationScene::Update( Mouse& mouse)
 {
 	bool isSelect = false;
 	int pauseMax = static_cast<int>(Item::Max);
@@ -89,7 +87,7 @@ void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
 		}
 	}
 
-	if (isSelect && input.IsTriggered(InputType::slect))
+	if (isSelect && mouse.IsTriggerLeft())
 	{
 		switch (m_selectNum)
 		{
@@ -119,7 +117,7 @@ void ConfirmationScene::Update(const InputState& input, Mouse& mouse)
 			break;
 		}
 	}
-	if (input.IsTriggered(InputType::prev))
+	if (mouse.IsTriggerRight())
 	{
 		SoundManager::GetInstance().Play(SoundId::Back);
 		m_selectNum = static_cast<int>(Item::no);

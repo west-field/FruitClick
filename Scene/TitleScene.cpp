@@ -2,7 +2,6 @@
 #include <DxLib.h>
 
 #include "../game.h"
-#include "../InputState.h"
 
 #include "../Util/Sound.h"
 #include "../Util/Info.h"
@@ -67,10 +66,10 @@ TitleScene::~TitleScene()
 }
 
 void
-TitleScene::Update(const InputState& input, Mouse& mouse)
+TitleScene::Update(Mouse& mouse)
 {
 	//◇メンバ関数ポインタを呼び出す　演算子　->*
-	(this->*m_updateFunc)(input,mouse);
+	(this->*m_updateFunc)(mouse);
 
 	if (m_scroll++ >= static_cast<int>(kBgSize ))
 	{
@@ -130,7 +129,7 @@ void TitleScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
-void TitleScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
+void TitleScene::FadeInUpdat(Mouse& mouse)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);//画面のフェードイン
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);//音量のフェードイン
@@ -141,7 +140,7 @@ void TitleScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 	}
 }
 
-void TitleScene::NormalUpdat(const InputState& input,  Mouse& mouse)
+void TitleScene::NormalUpdat( Mouse& mouse)
 {
 	//次にする指示文字列を縦に揺らす
 	m_instrString += m_moveAdd;
@@ -181,7 +180,7 @@ void TitleScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 	}
 }
 
-void TitleScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
+void TitleScene::FadeOutUpdat( Mouse& mouse)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue,m_BgmH);

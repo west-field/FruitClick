@@ -2,7 +2,6 @@
 #include "game.h"
 #include "Util/Sound.h"
 #include "Util/Mouse.h"
-#include "InputState.h"
 #include "Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
 
@@ -46,7 +45,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 #endif
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	InputState input;
 	Mouse mouse;
 	SceneManager sceneManeger;
 	sceneManeger.ChangeScene(new TitleScene(sceneManeger));
@@ -58,10 +56,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 		// ‰æ–Ê‚ÌƒNƒŠƒA
 		ClearDrawScreen();
 
-		input.Update();
 		mouse.Update();
 
-		sceneManeger.Update(input,mouse);
+		sceneManeger.Update(mouse);
 		sceneManeger.Draw();
 
 		mouse.Draw();

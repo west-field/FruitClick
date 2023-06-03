@@ -32,9 +32,9 @@ void SceneManager::PopScene()
 }
 
 void
-SceneManager::Update(const InputState& input, Mouse& mouse)
+SceneManager::Update(Mouse& mouse)
 {
-	m_scenes.front()->Update(input,mouse);
+	m_scenes.front()->Update(mouse);
 }
 
 void

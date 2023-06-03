@@ -3,7 +3,6 @@
 #include "../game.h"
 #include "../Util/menuInfo.h"
 
-class InputState;
 class SceneManager;
 /// <summary>
 /// 設定シーン
@@ -14,12 +13,14 @@ public:
 	SettingScene(SceneManager& manager, int soundH);
 	virtual ~SettingScene();
 
-	virtual void Update(const InputState& inpu, Mouse& mouse) override;
+	virtual void Update( Mouse& mouse) override;
 	void Draw();
 private:
-	void WindowDraw();
+	//背景表示
+	void BgDraw();
 
-	enum class Item
+	//メニュー項目
+	enum class MenuItem
 	{
 		pauseSound,//音量設定
 		pauseFullScene,//画面表示を切り替える
@@ -29,11 +30,11 @@ private:
 		pauseMax
 	};
 	
-	Element m_pauseMenu[static_cast<int>(Item::pauseMax)];//メニュー
-	int m_selectNum = static_cast<int>(Item::pauseBack);//選択している
+	Element m_pauseMenu[static_cast<int>(MenuItem::pauseMax)];//メニュー
+	int m_selectNum = static_cast<int>(MenuItem::pauseBack);//選択している
 
 	int m_soundH;//BGM
 
-	int m_bg;
+	int m_bg;//背景
 };
 

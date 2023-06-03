@@ -4,7 +4,6 @@
 #include "../game.h"
 
 #include "../Util/Sound.h"
-#include "../InputState.h"
 #include "../Util/Mouse.h"
 #include "../Util/Info.h"
 #include "../Util/DrawFunctions.h"
@@ -75,9 +74,9 @@ ExplanationScene::~ExplanationScene()
 }
 
 void
-ExplanationScene::Update(const InputState& input,  Mouse& mouse)
+ExplanationScene::Update( Mouse& mouse)
 {
-	(this->*m_updateFunc)(input,mouse);
+	(this->*m_updateFunc)(mouse);
 
 	if (m_scroll++ >= static_cast<int>(kBgSize))
 	{
@@ -107,7 +106,7 @@ void ExplanationScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
-void ExplanationScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
+void ExplanationScene::FadeInUpdat( Mouse& mouse)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);//画像のフェードイン
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue,m_BgmH);//音のフェードイン
@@ -118,7 +117,7 @@ void ExplanationScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 	}
 }
 
-void ExplanationScene::NormalUpdat(const InputState& input,  Mouse& mouse)
+void ExplanationScene::NormalUpdat( Mouse& mouse)
 {
 	//一定時間はその画面で止まる
 	if (m_frameCount-- <= 0)
@@ -173,7 +172,7 @@ void ExplanationScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 	
 }
 
-void ExplanationScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
+void ExplanationScene::FadeOutUpdat(Mouse& mouse)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue,m_BgmH);

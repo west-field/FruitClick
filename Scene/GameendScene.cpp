@@ -2,7 +2,6 @@
 #include <DxLib.h>
 #include "../game.h"
 #include "../Util/Sound.h"
-#include "../InputState.h"
 #include "../Util/Mouse.h"
 #include "../Util/DrawFunctions.h"
 #include "SceneManager.h"
@@ -25,8 +24,8 @@ GameendScene::GameendScene(SceneManager& manager, std::shared_ptr<Character> cha
 	Scene(manager), m_updateFunc(&GameendScene::FadeInUpdat), m_drawFunc (&GameendScene::NormalDraw),
 	m_char(character), m_scroll(0), m_point(0),m_pointAdd(count), m_pointCount(0)
 {
-	m_selectNum = -1;
-
+	m_selectNum = -1;//選択しているメニュー
+	//メニュー
 	m_selectMenu[menuGameEnd].x = kMenuFontSize;
 	m_selectMenu[menuGameEnd].name = L"タイトルに戻る";
 	m_selectMenu[menuRestart].x = Game::kScreenWidth / 2 + kMenuFontSize;
@@ -40,12 +39,16 @@ GameendScene::GameendScene(SceneManager& manager, std::shared_ptr<Character> cha
 		m_selectMenu[i].nameNum = static_cast<int>(wcslen(m_selectMenu[i].name));
 	}
 
+	//BGM
 	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/gameEnd.mp3");
 	ChangeVolumeSoundMem(0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
+	//背景
 	m_bgH = my::MyLoadGraph(L"Data/Background/Brown.png");
+	//数字
 	m_numFont = my::MyLoadGraph(L"Data/numfont.png");
 
+	//得点
 	m_score = std::make_shared<Score>();
 	m_score->Load();
 }
@@ -57,10 +60,10 @@ GameendScene::~GameendScene()
 	DeleteGraph(m_numFont);
 }
 
-void GameendScene::Update(const InputState& input,  Mouse& mouse)
+void GameendScene::Update( Mouse& mouse)
 {
 	m_char->Update(true);
-	(this->*m_updateFunc)(input,mouse);
+	(this->*m_updateFunc)(mouse);
 	//背景移動
 	if (m_scroll++ >= static_cast<int>(kBgSize))
 	{
@@ -78,7 +81,7 @@ void GameendScene::Draw()
 			my::MyDrawRectRotaGraph(x , y + m_scroll, 0, 0, kBgSize, kBgSize, 1.0f, 0.0f, m_bgH, true, false);
 		}
 	}
-
+	//キャラクター
 	m_char->Draw(false);
 
 	(this->*m_drawFunc)();
@@ -88,7 +91,7 @@ void GameendScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
-void GameendScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
+void GameendScene::FadeInUpdat( Mouse& mouse)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
@@ -98,7 +101,7 @@ void GameendScene::FadeInUpdat(const InputState& input,  Mouse& mouse)
 		m_fadeValue = 0;
 	}
 }
-void GameendScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
+void GameendScene::FadeOutUpdat( Mouse& mouse)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
@@ -107,10 +110,10 @@ void GameendScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 		switch (m_selectNum)
 		{
 		case menuGameEnd:
-			m_manager.ChangeScene(new TitleScene(m_manager));
+			m_manager.ChangeScene(new TitleScene(m_manager));//タイトル
 			return;
 		case menuRestart:
-			m_manager.ChangeScene(new GameplayingScene(m_manager, m_char->GetSelectChar()));
+			m_manager.ChangeScene(new GameplayingScene(m_manager, m_char->GetSelectChar()));//ゲームプレイングシーン
 			return;
 		default:
 			return;
@@ -118,8 +121,9 @@ void GameendScene::FadeOutUpdat(const InputState& input,  Mouse& mouse)
 	}
 }
 
-void GameendScene::NormalUpdat(const InputState& input,  Mouse& mouse)
+void GameendScene::NormalUpdat( Mouse& mouse)
 {
+	//カウントアップ
 	m_pointCount--;
 	if (m_pointCount <= 0)
 	{
@@ -127,19 +131,20 @@ void GameendScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 		{
 			m_pointAdd--;
 			m_point++;
-			SoundManager::GetInstance().Play(SoundId::Point);
+			SoundManager::GetInstance().Play(SoundId::Point);//ポイント取得音
 			m_pointCount = 3;
 		}
-
+		//最後まで行ったら
 		else if (m_pointAdd == 0)
 		{
 			m_score->Comparison(m_point);
-			m_updateFunc = &GameendScene::MojiUpdate;
-			m_drawFunc = &GameendScene::MojiDraw;
+			m_updateFunc = &GameendScene::RankUpdate;
+			m_drawFunc = &GameendScene::RankDraw;
 			return;
 		}
 	}
-	if (m_pointAdd != 0 && input.IsTriggered(InputType::slect))
+	//ポイント取得途中でクリックしたら、カウントアップを終わらせる
+	if (m_pointAdd != 0 && mouse.IsTriggerLeft())
 	{
 		m_point += m_pointAdd;
 		m_pointAdd = 0;
@@ -147,7 +152,7 @@ void GameendScene::NormalUpdat(const InputState& input,  Mouse& mouse)
 	}
 }
 
-void GameendScene::MojiUpdate(const InputState& input, Mouse& mouse)
+void GameendScene::RankUpdate(Mouse& mouse)
 {
 	//メニュー
 	bool isSelect = false;//キーが押されたかどうか
@@ -182,8 +187,8 @@ void GameendScene::MojiUpdate(const InputState& input, Mouse& mouse)
 		}
 	}
 
-	//「次へ」ボタンが押されたら次シーンへ移行する
-	if (isSelect && input.IsTriggered(InputType::slect))
+	//クリックしたら次シーンへ移行する
+	if (isSelect && mouse.IsTriggerLeft())
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
 
@@ -193,15 +198,14 @@ void GameendScene::MojiUpdate(const InputState& input, Mouse& mouse)
 
 void GameendScene::NormalDraw()
 {
-#ifdef _DEBUG
-	DrawString(0, Game::kScreenHeight / 2, L"ゲームクリア", 0xffffff);
-#endif
+	//ポイントを表示
 	PointUpdate(Game::kScreenWidth / 2, Game::kScreenHeight / 2, m_point);
 }
 
-void GameendScene::MojiDraw()
+void GameendScene::RankDraw()
 {
-	m_score->Draw();
+	m_score->Draw();//ランキングを表示
+	//メニューを表示
 	for (auto& menu : m_selectMenu)
 	{
 		SetFontSize(menu.fontSize);

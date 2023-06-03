@@ -1,6 +1,5 @@
 #include "SoundSettingScene.h"
 #include <Dxlib.h>
-#include "../InputState.h"
 #include "../Util/Mouse.h"
 #include "../Util/Sound.h"
 #include "../Util/DrawFunctions.h"
@@ -46,9 +45,9 @@ SoundSettingScene::~SoundSettingScene()
 	DeleteGraph(m_bg);
 }
 
-void SoundSettingScene::Update(const InputState& input, Mouse& mouse)
+void SoundSettingScene::Update(Mouse& mouse)
 {
-	(this->*m_updateFunc)(input,mouse);
+	(this->*m_updateFunc)(mouse);
 }
 
 void SoundSettingScene::Draw()
@@ -82,7 +81,7 @@ void SoundSettingScene::Draw()
 #endif
 }
 
-void SoundSettingScene::NormalUpdate(const InputState& input,  Mouse& mouse)
+void SoundSettingScene::NormalUpdate(Mouse& mouse)
 {
 	bool isSelect = false;
 	m_selectNum = -1;
@@ -135,7 +134,7 @@ void SoundSettingScene::NormalUpdate(const InputState& input,  Mouse& mouse)
 	}
 	auto& soundMgr = SoundManager::GetInstance();
 
-	if (isSelect && input.IsTriggered(InputType::slect))
+	if (isSelect && mouse.IsTriggerLeft())
 	{
 		switch (m_selectNum)
 		{
@@ -158,7 +157,7 @@ void SoundSettingScene::NormalUpdate(const InputState& input,  Mouse& mouse)
 			break;
 		}
 	}
-	if (input.IsTriggered(InputType::prev))
+	if (mouse.IsTriggerRight())
 	{
 		soundMgr.SaveSoundConfig();
 		SoundManager::GetInstance().Play(SoundId::Back);
@@ -168,64 +167,11 @@ void SoundSettingScene::NormalUpdate(const InputState& input,  Mouse& mouse)
 	}
 }
 
-void SoundSettingScene::BGMVolumeChange(const InputState& input,  Mouse& mouse)
+void SoundSettingScene::BGMVolumeChange(Mouse& mouse)
 {
 	auto& soundMgr = SoundManager::GetInstance();
 	int soundVolume = 0;
-	//BGM
-	if (input.IsPressed(InputType::up))
-	{
-		if (input.IsTriggered(InputType::up))
-		{
-			m_puressTime = 0;
-			m_waitInterval = 60;
-		}
-		if (m_puressTime % m_waitInterval == 0)
-		{
-			soundVolume = soundMgr.GetBGMVolume() + 1;
-			if (soundVolume >= 255)
-			{
-				soundVolume = 255;
-			}
-			SoundManager::GetInstance().Play(SoundId::Cursor);
-			soundMgr.SetBGMVolume(soundVolume, m_soundH);
-		}
-		if (m_puressTime % 10 == 0)
-		{
-			if (m_waitInterval-- <= 3)
-			{
-				m_waitInterval = 3;
-			}
-		}
-		m_puressTime++;
-	}
-	if (input.IsPressed(InputType::down))
-	{
-		if (input.IsTriggered(InputType::down))
-		{
-			m_puressTime = 0;
-			m_waitInterval = 60;
-		}
-		if (m_puressTime % m_waitInterval == 0)
-		{
-			soundVolume = soundMgr.GetBGMVolume() - 1;
-			if (soundVolume <= 0)
-			{
-				soundVolume = 0;
-			}
-			SoundManager::GetInstance().Play(SoundId::Cursor);
-			soundMgr.SetBGMVolume(soundVolume, m_soundH);
-		}
-		if (m_puressTime % 10 == 0)
-		{
-			if (m_waitInterval-- <= 3)
-			{
-				m_waitInterval = 3;
-			}
-		}
-		m_puressTime++;
-	}
-	//マウスのホイールで音量を変える
+	//BGM マウスのホイールで音量を変える
 	int Rot = 0;
 	Rot += GetMouseWheelRotVol();
 	if (Rot != 0)
@@ -243,7 +189,7 @@ void SoundSettingScene::BGMVolumeChange(const InputState& input,  Mouse& mouse)
 	}
 	soundMgr.SetBGMVolume(soundVolume, m_soundH);
 
-	if (input.IsTriggered(InputType::slect) || input.IsTriggered(InputType::prev))
+	if (mouse.IsTriggerLeft() || mouse.IsTriggerRight())
 	{
 		SoundManager::GetInstance().Play(SoundId::Back);
 		m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].color = 0xaaffaa;
@@ -252,66 +198,12 @@ void SoundSettingScene::BGMVolumeChange(const InputState& input,  Mouse& mouse)
 	}
 }
 
-void SoundSettingScene::SEVolumeChange(const InputState& input, Mouse& mouse)
+void SoundSettingScene::SEVolumeChange(Mouse& mouse)
 {
 	auto& soundMgr = SoundManager::GetInstance();
 	int soundVolume = 0;
 
-	//SE
-	if (input.IsPressed(InputType::up))
-	{
-		if (input.IsTriggered(InputType::up))
-		{
-			m_puressTime = 0;
-			m_waitInterval = 60;
-		}
-		if (m_puressTime % m_waitInterval == 0)
-		{
-			soundVolume = soundMgr.GetSEVolume() + 1;
-			if (soundVolume >= 255)
-			{
-				soundVolume = 255;
-			}
-			SoundManager::GetInstance().Play(SoundId::Cursor);
-			soundMgr.SetSEVolume(soundVolume);
-		}
-		if (m_puressTime % 10 == 0)
-		{
-			if (m_waitInterval-- <= 3)
-			{
-				m_waitInterval = 3;
-			}
-		}
-		m_puressTime++;
-	}
-	if (input.IsPressed(InputType::down))
-	{
-		if (input.IsTriggered(InputType::down))
-		{
-			m_puressTime = 0;
-			m_waitInterval = 60;
-		}
-		if (m_puressTime % m_waitInterval == 0)
-		{
-			soundVolume = soundMgr.GetSEVolume() - 1;
-			if (soundVolume <= 0)
-			{
-				soundVolume = 0;
-			}
-			SoundManager::GetInstance().Play(SoundId::Cursor);
-			soundMgr.SetSEVolume(soundVolume);
-		}
-		if (m_puressTime % 10 == 0)
-		{
-			if (m_waitInterval-- <= 3)
-			{
-				m_waitInterval = 3;
-			}
-		}
-		m_puressTime++;
-	}
-
-	//マウスのホイールで音量を変える
+	//SE マウスのホイールで音量を変える
 	int Rot = 0;
 	Rot += GetMouseWheelRotVol();
 	if (Rot != 0)
@@ -329,7 +221,7 @@ void SoundSettingScene::SEVolumeChange(const InputState& input, Mouse& mouse)
 	}
 	soundMgr.SetSEVolume(soundVolume);
 
-	if (input.IsTriggered(InputType::slect) || input.IsTriggered(InputType::prev))
+	if (mouse.IsTriggerLeft() || mouse.IsTriggerRight())
 	{
 		SoundManager::GetInstance().Play(SoundId::Back);
 		m_soundChange[static_cast<int>(SoundType::soundTypeSE)].color = 0xaaffaa;
