@@ -223,8 +223,6 @@ void Character::CharacterLoad(const wchar_t* charName)
 	{
 		L"/Idle.png",
 		L"/Run.png",
-		L"/Jump.png",
-		L"/Fall.png",
 		L"/DoubleJump.png",
 	};
 

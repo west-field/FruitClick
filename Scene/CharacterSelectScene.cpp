@@ -37,42 +37,32 @@ CharacterSelectScene::CharacterSelectScene(SceneManager& manager) :
 	//キャラクター初期化
 	int typeIdle = static_cast<int>(CharAnimType::Idle);
 	int typeRun = static_cast<int>(CharAnimType::Run);
-	int typeJump = static_cast<int>(CharAnimType::Jump);
 	int typeDoubleJump = static_cast<int>(CharAnimType::DoubleJump);
-	int typeFall = static_cast<int>(CharAnimType::Fall);
 
 	float screneSizeW = Game::kScreenWidth / 2;
 	float screneSizeH = Game::kScreenHeight / 2;
 
 	m_char[static_cast<int>(CharType::MaskDude)].handle[typeIdle] = my::MyLoadGraph(L"Data/Characters/MaskDude/Idle.png");
 	m_char[static_cast<int>(CharType::MaskDude)].handle[typeRun] = my::MyLoadGraph(L"Data/Characters/MaskDude/Run.png");
-	m_char[static_cast<int>(CharType::MaskDude)].handle[typeJump] = -1;
 	m_char[static_cast<int>(CharType::MaskDude)].handle[typeDoubleJump] = my::MyLoadGraph(L"Data/Characters/MaskDude/DoubleJump.png");
-	m_char[static_cast<int>(CharType::MaskDude)].handle[typeFall] =-1;
 	m_char[static_cast<int>(CharType::MaskDude)].isLeft = false;
 	m_char[static_cast<int>(CharType::MaskDude)].rect.center = { screneSizeW / 2 ,screneSizeH / 2 };
 
 	m_char[static_cast<int>(CharType::NinjaFrog)].handle[typeIdle] = my::MyLoadGraph(L"Data/Characters/NinjaFrog/Idle.png");
 	m_char[static_cast<int>(CharType::NinjaFrog)].handle[typeRun] = my::MyLoadGraph(L"Data/Characters/NinjaFrog/Run.png");
-	m_char[static_cast<int>(CharType::NinjaFrog)].handle[typeJump] = -1;
 	m_char[static_cast<int>(CharType::NinjaFrog)].handle[typeDoubleJump] = my::MyLoadGraph(L"Data/Characters/NinjaFrog/DoubleJump.png");
-	m_char[static_cast<int>(CharType::NinjaFrog)].handle[typeFall] = -1;
 	m_char[static_cast<int>(CharType::NinjaFrog)].isLeft = true;
 	m_char[static_cast<int>(CharType::NinjaFrog)].rect.center = { Game::kScreenWidth - screneSizeW / 2 ,screneSizeH / 2 };
 
 	m_char[static_cast<int>(CharType::PinkMan)].handle[typeIdle] = my::MyLoadGraph(L"Data/Characters/PinkMan/Idle.png");
 	m_char[static_cast<int>(CharType::PinkMan)].handle[typeRun] = my::MyLoadGraph(L"Data/Characters/PinkMan/Run.png");
-	m_char[static_cast<int>(CharType::PinkMan)].handle[typeJump] = -1;
 	m_char[static_cast<int>(CharType::PinkMan)].handle[typeDoubleJump] = my::MyLoadGraph(L"Data/Characters/PinkMan/DoubleJump.png");
-	m_char[static_cast<int>(CharType::PinkMan)].handle[typeFall] = -1;
 	m_char[static_cast<int>(CharType::PinkMan)].isLeft = false;
 	m_char[static_cast<int>(CharType::PinkMan)].rect.center = { screneSizeW / 2 ,Game::kScreenHeight - screneSizeH / 2 - kFontSize * 2 };
 
 	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeIdle] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/Idle.png");
 	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeRun] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/Run.png");
-	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeJump] = -1;
 	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeDoubleJump] = my::MyLoadGraph(L"Data/Characters/VirtualGuy/DoubleJump.png");
-	m_char[static_cast<int>(CharType::VirtualGuy)].handle[typeFall] = -1;
 	m_char[static_cast<int>(CharType::VirtualGuy)].isLeft = true;
 	m_char[static_cast<int>(CharType::VirtualGuy)].rect.center = { Game::kScreenWidth - screneSizeW / 2 ,Game::kScreenHeight - screneSizeH / 2 - kFontSize * 2 };
 

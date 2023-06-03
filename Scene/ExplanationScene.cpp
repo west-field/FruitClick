@@ -51,7 +51,7 @@ m_frameCount(10)
 	m_endExpH[0] = my::MyLoadGraph(L"Data/heat1.jpg");
 	m_endExpH[1] = my::MyLoadGraph(L"Data/heat2.jpg");
 	m_endExpH[2] = my::MyLoadGraph(L"Data/heat3.jpg");
-	m_closeExpH = my::MyLoadGraph(L"Data/rule1.png");
+	m_closeExpH = my::MyLoadGraph(L"Data/rule.png");
 
 	SetFontSize(kFontSize);//フォントサイズ変更
 }
