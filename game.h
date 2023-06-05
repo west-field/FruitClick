@@ -8,7 +8,7 @@ namespace Game
 	constexpr bool kWindowMode = true;
 #endif
 	//ウィンドウ名
-	const wchar_t* const kTitleText = L"フルーツクリック";
+	const wchar_t* const kTitleText = L"FruitClick";
 	//ウィンドウサイズ
 	constexpr int kScreenWidth = 640;//160*4;//1600;//16:
 	constexpr int kScreenHeight = 480; //90*4;//900;//9:

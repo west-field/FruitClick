@@ -37,11 +37,18 @@ void Mouse::Update()
 	if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0)
 	{
 		mouseLog[0] = 1;
-		ClickAnimCreate();
+		if (IsTriggerLeft())
+		{
+			ClickAnimCreate();
+		}
 	}
 	else if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0)
 	{
 		mouseLog[0] = 2;
+		if (IsTriggerRight())
+		{
+			ClickAnimCreate();
+		}
 	}
 	else
 	{

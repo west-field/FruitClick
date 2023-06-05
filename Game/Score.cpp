@@ -44,7 +44,7 @@ void Score::Draw()
 	{
 		if (m_isSave && score.point == m_point)
 		{
-			color = 0x2f4f4f;
+			color = 0xdaa520;
 		}
 		else if (color != 0x696969)
 		{
