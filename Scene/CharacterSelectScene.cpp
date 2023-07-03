@@ -297,6 +297,7 @@ void CharacterSelectScene::SelectScene(Mouse& mouse)
 
 	if (isSelect && mouse.IsTriggerLeft())
 	{
+		SoundManager::GetInstance().Play(SoundId::Determinant);
 		m_updateFunc = &CharacterSelectScene::FadeOutUpdat;
 		if (m_select == static_cast<int>(Item::Yes))
 		{

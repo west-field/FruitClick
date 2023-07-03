@@ -92,6 +92,7 @@ void ConfirmationScene::Update( Mouse& mouse)
 		switch (m_selectNum)
 		{
 		case static_cast<int>(Item::yes):
+			StopSoundMem(m_soundH);
 			SoundManager::GetInstance().Play(SoundId::Determinant);
 			if (m_type == SelectType::End)
 			{
@@ -106,8 +107,6 @@ void ConfirmationScene::Update( Mouse& mouse)
 				FullSceneChange();
 				m_manager.PopScene();
 			}
-
-			StopSoundMem(m_soundH);
 			return;
 		case static_cast<int>(Item::no):
 			SoundManager::GetInstance().Play(SoundId::Back);
@@ -180,4 +179,7 @@ void ConfirmationScene::FullSceneChange()
 	ChangeWindowMode(m_isWindouwMode);
 	m_manager.SetIsWindouMode(m_isWindouwMode);
 	SetDrawScreen(DX_SCREEN_BACK);//ï`âÊêÊÇçƒíËã`
+
+	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume(), m_soundH);
+	PlaySoundMem(m_soundH, DX_PLAYTYPE_LOOP, true);
 }

@@ -341,6 +341,7 @@ void GameplayingScene::NormalUpdat(Mouse& mouse)
 	//右クリックしたときポーズ画面を表示する
 	if (mouse.IsTriggerRight())
 	{
+		SoundManager::GetInstance().Play(SoundId::Determinant);
 		m_manager.PushScene(new PauseScene(m_manager, m_BgmH));
 		return;
 	}

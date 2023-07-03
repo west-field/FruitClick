@@ -175,6 +175,7 @@ void TitleScene::NormalUpdat( Mouse& mouse)
 	//右クリックしたとき設定画面を表示する
 	if (mouse.IsTriggerRight())
 	{
+		SoundManager::GetInstance().Play(SoundId::Determinant);
 		m_manager.PushScene(new SettingScene(m_manager, m_BgmH));
 		return;
 	}

@@ -1,23 +1,34 @@
-Cursor.png
+画像
+●Cursor.png
 https://henrysoftware.itch.io/
 
-
-Pixel Adventure
+●Pixel Adventure
 https://pixelfrog-assets.itch.io/
 
-buttonUI.png
+●buttonUI.png
 https://kicked-in-teeth.itch.io/
 
-Sprout Lands - UI Pack - Basic pack
+●Sprout Lands - UI Pack - Basic pack
 https://cupnooble.itch.io/sprout-lands-ui-pack
 https://cupnooble.itch.io/sprout-lands-asset-pack
 
-RavenmoreIconPack_2019_Beta
+●RavenmoreIconPack_2019_Beta
 https://ravenmore.itch.io/fantasy-icon-pack
 
-フォント
-KyouryunoGuratan
-https://sagamiriku.wixsite.com/rikugamenodoria
+●PX UI - Basic
+https://karwisch.itch.io/pxui-basic
+
+サウンド
+●DOVA-SYNDROME
+Daily_life.mp3
+H.Lang(エイチ ラング)
+https://dova-s.jp/bgm/play18821.html
+
+●効果音ラボ
+
+●サイト名⇒ 甘茶の音楽工房（英語表記＝Music Atelier Amacha）
+　作曲者⇒ 甘茶（英語表記＝Amacha）
+　URL⇒ https://amachamusic.chagasi.com/
 
 キャラによって性能が変わる
 MaskDude		HP
