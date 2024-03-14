@@ -269,14 +269,14 @@ void GameplayingScene::NormalUpdat(Mouse& mouse)
 
 	//マウスとフルーツの当たり判定
 	//マウスを押したとき
-	if (mouse.IsTriggerLeft())
+	if (mouse.IsTrigger(Mouse::InputType::left))
 	{
 		//フルーツ
 		for (auto& fruit : m_fruitsFactory->GetFruits())
 		{
 			if (!fruit->IsExist()) continue;//フルーツが存在するかどうか
 			//フルーツの位置にマウスがあるとき
-			if (fruit->GetRect().IsHit(Rect{ {mouse.GetPos()},{10,10} }))
+			if (fruit->GetRect().IsHit(Rect{ {mouse.GetMousePos()},{10,10} }))
 			{
 				SoundManager::GetInstance().Play(SoundId::FruitClick);
 				//フルーツにダメージ
@@ -317,7 +317,7 @@ void GameplayingScene::NormalUpdat(Mouse& mouse)
 	//ポーズ画面
 	if (mouse.GetRect().IsHit(m_settingRect))
 	{
-		if (mouse.IsTriggerLeft())
+		if (mouse.IsTrigger(Mouse::InputType::left))
 		{
 			SoundManager::GetInstance().Play(SoundId::Determinant);
 			int sound = m_BgmH;
@@ -339,7 +339,7 @@ void GameplayingScene::NormalUpdat(Mouse& mouse)
 	}
 
 	//右クリックしたときポーズ画面を表示する
-	if (mouse.IsTriggerRight())
+	if (mouse.IsTrigger(Mouse::InputType::right))
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
 		m_manager.PushScene(new PauseScene(m_manager, m_BgmH));

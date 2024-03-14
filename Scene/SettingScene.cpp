@@ -91,7 +91,7 @@ void SettingScene::Update( Mouse& mouse)
 	}
 
 	//選択範囲内にあり、右クリックをしたとき
-	if (isSelect && mouse.IsTriggerLeft())
+	if (isSelect && mouse.IsTrigger(Mouse::InputType::left))
 	{
 		switch (m_selectNum)
 		{
@@ -116,8 +116,8 @@ void SettingScene::Update( Mouse& mouse)
 		}
 	}
 
-	//左クリックしたとき
-	if (mouse.IsTriggerRight())
+	//右クリックしたとき
+	if (mouse.IsTrigger(Mouse::InputType::right))
 	{
 		SoundManager::GetInstance().Play(SoundId::Back);
 		m_selectNum = static_cast<int>(MenuItem::pauseBack);

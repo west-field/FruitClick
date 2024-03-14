@@ -126,7 +126,7 @@ void ExplanationScene::NormalUpdat( Mouse& mouse)
 	}
 	
 	//戻るボタンを押したら一つ前の表示に戻る
-	if (mouse.GetRect().IsHit(m_backRect) && mouse.IsTriggerLeft())
+	if (mouse.GetRect().IsHit(m_backRect) && mouse.IsTrigger(Mouse::InputType::left))
 	{
 		if (m_drawFunc == &ExplanationScene::PointExpDraw)
 		{
@@ -145,7 +145,7 @@ void ExplanationScene::NormalUpdat( Mouse& mouse)
 		}
 	}
 	//カウントが0の時次の表示に進める
-	else if (m_frameCount == 0 && mouse.IsTriggerLeft())
+	else if (m_frameCount == 0 && mouse.IsTrigger(Mouse::InputType::left))
 	{
 		m_frameCount = 10;
 		if (m_drawFunc == &ExplanationScene::RuleExpDraw)

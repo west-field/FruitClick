@@ -159,7 +159,7 @@ void TitleScene::NormalUpdat( Mouse& mouse)
 	}
 
 	//マウスが押されたら次シーンへ移行する
-	if(mouse.IsTriggerLeft())
+	if(mouse.IsTrigger(Mouse::InputType::left))
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
 		if (m_selectNum == static_cast<int>(MenuItem::menuConfig))
@@ -173,7 +173,7 @@ void TitleScene::NormalUpdat( Mouse& mouse)
 		}
 	}
 	//右クリックしたとき設定画面を表示する
-	if (mouse.IsTriggerRight())
+	if (mouse.IsTrigger(Mouse::InputType::right))
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
 		m_manager.PushScene(new SettingScene(m_manager, m_BgmH));

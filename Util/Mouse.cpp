@@ -5,16 +5,15 @@
 
 namespace
 {
-	constexpr int kClickImgWidth = 100;//画像サイズX
-	constexpr int kClickImgHeight = 100;//画像サイズY
-	constexpr float kClickDrawScale = 1.0f;//拡大率
-	constexpr int kClickAnimNum = 31;//アニメーション枚数
-	constexpr int  kClickAnimSpeed = 1;//アニメーションスピード
+	constexpr int kRipplesImgWidth = 100;//波紋画像サイズX
+	constexpr int kRipplesImgHeight = 100;//波紋画像サイズY
+	constexpr float kRipplesDrawScale = 1.0f;//波紋拡大率
+	constexpr int kRipplesAnimNum = 31;//波紋アニメーション枚数
+	constexpr int  kRipplesAnimSpeed = 1;//波紋アニメーションスピード
 }
 
 Mouse::Mouse() :mouseLog(), m_rect{ {},{} }
 {
-	m_rect = { {},{} };
 	m_mouseH = my::MyLoadGraph(L"Data/Cursor.png");
 	m_ripplesH = my::MyLoadGraph(L"Data/ripples.png");
 	MouseReset();
@@ -33,32 +32,36 @@ void Mouse::Update()
 		mouseLog[i] = mouseLog[i - 1];
 	}
 
-	//最新の状態
+	//左クリックしたとき
 	if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0)
 	{
-		mouseLog[0] = 1;
-		if (IsTriggerLeft())
+		mouseLog[0] = InputType::left;
+		if (IsTrigger(InputType::left))
 		{
 			ClickAnimCreate();
 		}
 	}
+	//右クリックしたとき
 	else if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0)
 	{
-		mouseLog[0] = 2;
-		if (IsTriggerRight())
+		mouseLog[0] = InputType::right;
+		if (IsTrigger(InputType::right))
 		{
 			ClickAnimCreate();
 		}
 	}
+	//何も押していないとき
 	else
 	{
-		mouseLog[0] = 0;
+		mouseLog[0] = InputType::noPressed;
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
+	//波紋の更新
 	RipplesAnimUpdate();
 
-
-	m_rect.center = GetPos();
+	//マウスカーソルの位置を取得
+	m_rect.center = GetMousePos();
 }
 
 void Mouse::Draw()
@@ -69,28 +72,33 @@ void Mouse::Draw()
 		//波紋を表示できるとき
 		if (ripples.isDisplay)
 		{
-			int animNum = static_cast<int>(ripples.idx / kClickAnimSpeed);
-			if (animNum >= kClickAnimNum)
+			int animNum = static_cast<int>(ripples.idx / kRipplesAnimSpeed);
+			if (animNum >= kRipplesAnimNum)
 			{
-				animNum -= kClickAnimNum;
+				animNum -= kRipplesAnimNum;
 			}
-			int imgX = animNum % 6 * kClickImgWidth;
-			int imgY = animNum / 6 * kClickImgHeight;
-			my::MyDrawRectRotaGraph(ripples.pos.x, ripples.pos.y, imgX, imgY, kClickImgWidth, kClickImgHeight, kClickDrawScale, 0.0f, m_ripplesH, true, false);
+			int imgX = animNum % 6 * kRipplesImgWidth;
+			int imgY = animNum / 6 * kRipplesImgHeight;
+			my::MyDrawRectRotaGraph(ripples.pos.x, ripples.pos.y, imgX, imgY, kRipplesImgWidth, kRipplesImgHeight, kRipplesDrawScale, 0.0f, m_ripplesH, true, false);
 		}
 	}
+
+	//マウスカーソルを表示する
 	my::MyDrawGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), m_mouseH, true);
+
 #ifdef _DEBUG
+	//マウスカーソルの位置を表示
 	DrawFormatStringF(m_rect.center.x, m_rect.center.y, 0xffffff, L"-----x%3f,y%3f", m_rect.center.x, m_rect.center.y);
 #endif
 }
 
 void Mouse::MouseReset()
 {
-	SetMousePoint(Game::kScreenWidth / 2, Game::kScreenHeight / 2);//ポインタを中心に移動させる
+	//マウスカーソルを中心に移動させる
+	SetMousePoint(Game::kScreenWidth / 2, Game::kScreenHeight / 2);
 }
 
-Position2 Mouse::GetPos() const
+Position2 Mouse::GetMousePos() const
 {
 	int mouseX = 0;//マウスカーソルx座標
 	int mouseY = 0;//マウスカーソルy座標
@@ -105,56 +113,36 @@ Position2 Mouse::GetPos() const
 	return Position2(static_cast<float>(mouseX), static_cast<float>(mouseY));
 }
 
-bool Mouse::IsPressLeft()
+bool Mouse::IsPress(InputType type) const
 {
-	//最新のログが1の時押されている
-	return (mouseLog[0] == 1);
+	//最新のログが同じ時、押されている
+	return (mouseLog[0] == type);
 }
 
-bool Mouse::IsPressRight()
+bool Mouse::IsTrigger(InputType type) const
 {
-	//最新のログが2の時押されている
-	return (mouseLog[0] == 2);
+	bool isNow = (mouseLog[0] == type);//現在の状態
+	bool isLast = (mouseLog[1] == InputType::noPressed);//1フレーム前の状態
+
+	return (isNow && isLast);//今押していて、1フレーム前に何も押していないとき押せる判定
 }
 
-bool Mouse::IsTriggerLeft()
+bool Mouse::IsRelase(InputType type) const
 {
-	bool isNow = (mouseLog[0] == 1);//現在の状態
-	bool isLast = (mouseLog[1]);//1フレーム前の状態
-	return (isNow && !isLast);//今押していて、1フレーム前押されていなかったとき押せる
+	bool isNow = (mouseLog[0] == InputType::noPressed);//現在の状態
+	bool isLast = (mouseLog[1] == type);//1フレーム前の状態
+	return (isNow && isLast);//今離していて、1フレーム前押されていたとき離した判定になる
 }
 
-bool Mouse::IsTriggerRight()
-{
-	bool isNow = (mouseLog[0] == 2);//現在の状態
-	bool isLast = (mouseLog[1]);//1フレーム前の状態
-	return (isNow && !isLast);//今押していて、1フレーム前押されていなかったとき押せる
-}
-
-bool Mouse::IsRelaseLeft()
-{
-	bool isNow = (mouseLog[0] == 1);//現在の状態
-	bool isLast = (mouseLog[1]);//1フレーム前の状態
-	return (!isNow && isLast);//今離していて、1フレーム前押されていたとき離した判定になる
-}
-
-bool Mouse::IsRelaseRight()
-{
-	bool isNow = (mouseLog[0] == 2);//現在の状態
-	bool isLast = (mouseLog[1]);//1フレーム前の状態
-	return (!isNow && isLast);//今離していて、1フレーム前押されていたとき離した判定になる
-}
-
-//当たり判定
 Rect Mouse::GetRect() const
 {
+	//当たり判定を返す
 	return m_rect;
 }
 
-//カーソルの位置がメニュー位置にいるかどうか
-bool Mouse::MouseSelect(int startX, int endX, int startY, int endY)
+bool Mouse::MouseSelect(int startX, int endX, int startY, int endY) const
 {
-	
+	//カーソルの位置がメニュー位置にいるかどうか	
 	if (m_rect.center.y < startY)	return false;
 	if (m_rect.center.y > endY)		return false;
 	if (m_rect.center.x < startX)	return false;
@@ -164,8 +152,9 @@ bool Mouse::MouseSelect(int startX, int endX, int startY, int endY)
 	return true;
 }
 
-bool Mouse::MouseSelect(float startX, float endX, float startY, float endY)
+bool Mouse::MouseSelect(float startX, float endX, float startY, float endY) const
 {
+	//カーソルの位置がメニュー位置にいるかどうか
 	if (m_rect.center.y < startY)	return false;
 	if (m_rect.center.y > endY)		return false;
 	if (m_rect.center.x < startX)	return false;
@@ -175,9 +164,9 @@ bool Mouse::MouseSelect(float startX, float endX, float startY, float endY)
 	return true;
 }
 
-//波紋作成
 void Mouse::ClickAnimCreate()
 {
+	//波紋作成
 	Ripples ripples;
 	ripples.pos = m_rect.center;//現在の位置
 	ripples.isDisplay = true;//波紋を表示する
@@ -187,16 +176,16 @@ void Mouse::ClickAnimCreate()
 	m_ripples.push_back(ripples);
 }
 
-//波紋の更新
 void Mouse::RipplesAnimUpdate()
 {
+	//波紋の更新
 	for (auto& ripples : m_ripples)
 	{
 		//既に表示できなくなっている時は処理しない
 		if (!ripples.isDisplay)	continue;
 
 		//インデックスがアニメーション枚数以上のとき
-		if (ripples.idx++ >= kClickAnimNum * kClickAnimSpeed)
+		if (ripples.idx++ >= kRipplesAnimNum * kRipplesAnimSpeed)
 		{
 			ripples.idx = 0;
 			ripples.isDisplay = false;

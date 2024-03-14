@@ -87,7 +87,7 @@ void ConfirmationScene::Update( Mouse& mouse)
 		}
 	}
 
-	if (isSelect && mouse.IsTriggerLeft())
+	if (isSelect && mouse.IsTrigger(Mouse::InputType::left))
 	{
 		switch (m_selectNum)
 		{
@@ -116,7 +116,7 @@ void ConfirmationScene::Update( Mouse& mouse)
 			break;
 		}
 	}
-	if (mouse.IsTriggerRight())
+	if (mouse.IsTrigger(Mouse::InputType::right))
 	{
 		SoundManager::GetInstance().Play(SoundId::Back);
 		m_selectNum = static_cast<int>(Item::no);

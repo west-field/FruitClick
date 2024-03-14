@@ -134,7 +134,7 @@ void SoundSettingScene::NormalUpdate(Mouse& mouse)
 	}
 	auto& soundMgr = SoundManager::GetInstance();
 
-	if (isSelect && mouse.IsTriggerLeft())
+	if (isSelect && mouse.IsTrigger(Mouse::InputType::left))
 	{
 		switch (m_selectNum)
 		{
@@ -157,7 +157,7 @@ void SoundSettingScene::NormalUpdate(Mouse& mouse)
 			break;
 		}
 	}
-	if (mouse.IsTriggerRight())
+	if (mouse.IsTrigger(Mouse::InputType::right))
 	{
 		soundMgr.SaveSoundConfig();
 		SoundManager::GetInstance().Play(SoundId::Back);
@@ -189,7 +189,7 @@ void SoundSettingScene::BGMVolumeChange(Mouse& mouse)
 	}
 	soundMgr.SetBGMVolume(soundVolume, m_soundH);
 
-	if (mouse.IsTriggerLeft() || mouse.IsTriggerRight())
+	if (mouse.IsTrigger(Mouse::InputType::left) || mouse.IsTrigger(Mouse::InputType::right))
 	{
 		SoundManager::GetInstance().Play(SoundId::Back);
 		m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].color = 0xaaffaa;
@@ -221,7 +221,7 @@ void SoundSettingScene::SEVolumeChange(Mouse& mouse)
 	}
 	soundMgr.SetSEVolume(soundVolume);
 
-	if (mouse.IsTriggerLeft() || mouse.IsTriggerRight())
+	if (mouse.IsTrigger(Mouse::InputType::left) || mouse.IsTrigger(Mouse::InputType::right))
 	{
 		SoundManager::GetInstance().Play(SoundId::Back);
 		m_soundChange[static_cast<int>(SoundType::soundTypeSE)].color = 0xaaffaa;

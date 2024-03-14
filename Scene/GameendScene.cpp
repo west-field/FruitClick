@@ -144,7 +144,7 @@ void GameendScene::NormalUpdat( Mouse& mouse)
 		}
 	}
 	//ポイント取得途中でクリックしたら、カウントアップを終わらせる
-	if (m_pointAdd != 0 && mouse.IsTriggerLeft())
+	if (m_pointAdd != 0 && mouse.IsTrigger(Mouse::InputType::left))
 	{
 		m_point += m_pointAdd;
 		m_pointAdd = 0;
@@ -188,7 +188,7 @@ void GameendScene::RankUpdate(Mouse& mouse)
 	}
 
 	//クリックしたら次シーンへ移行する
-	if (isSelect && mouse.IsTriggerLeft())
+	if (isSelect && mouse.IsTrigger(Mouse::InputType::left))
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
 

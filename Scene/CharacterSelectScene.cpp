@@ -187,7 +187,7 @@ void CharacterSelectScene::NormalUpdat(Mouse& mouse)
 				m_char[i].idxX = 0;
 			}
 			//マウスが押されたら次シーンへ移行する
-			if (mouse.IsTriggerLeft())
+			if (mouse.IsTrigger(Mouse::InputType::left))
 			{
 				SoundManager::GetInstance().Play(SoundId::Determinant);
 				m_selectChar = i;
@@ -295,7 +295,7 @@ void CharacterSelectScene::SelectScene(Mouse& mouse)
 		}
 	}
 
-	if (isSelect && mouse.IsTriggerLeft())
+	if (isSelect && mouse.IsTrigger(Mouse::InputType::left))
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
 		m_updateFunc = &CharacterSelectScene::FadeOutUpdat;
