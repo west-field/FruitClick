@@ -5,7 +5,7 @@
 
 class InputState;
 
-class Mouse
+class Mouse	final
 {
 public:
 	Mouse();
@@ -15,8 +15,11 @@ public:
 
 	void MouseReset();
 
-	//現在のマウス位置取得
-	Position2 GetPos();
+	/// <summary>
+	/// 現在のマウス位置取得
+	/// </summary>
+	/// <returns></returns>
+	Position2 GetPos() const;
 
 	//押し下げ判定
 	bool IsPressLeft();
@@ -29,10 +32,10 @@ public:
 	bool IsRelaseRight();
 
 	//当たり矩形
-	Rect& GetRect();
+	Rect GetRect() const;
 
 	/// <summary>
-	/// メニューセレクト位置にいるかどうか
+	/// カーソルの位置がメニューセレクト位置にいるかどうか
 	/// </summary>
 	/// <param name="startY">y軸の上座標</param>
 	/// <param name="endY">y軸の下座標</param>
@@ -40,7 +43,6 @@ public:
 	/// <param name="endY">y軸の下座標</param>
 	/// <returns>true:押せる false:押せない</returns>
 	bool MouseSelect(int startX, int endX,int startY, int endY);
-
 	bool MouseSelect(float startX, float endX,float startY, float endY);
 
 	/// <summary>
@@ -51,19 +53,21 @@ public:
 	/// <summary>
 	/// クリックしたときに出す波紋の更新
 	/// </summary>
-	void ClickAnimUpdate();
+	void RipplesAnimUpdate();
 private:
     Rect m_rect;//マウスの位置
     int m_mouseH;//マウスの画像
 
-	struct Click
+	// 波紋を表示するために必要な構造体
+	struct Ripples
 	{
-		Position2 pos;
-		bool isClick;
-		int idx;
+		Position2 pos;//位置
+		bool isDisplay;//表示できるかどうか
+		int idx;//画像のインデックス
 	};
-	std::list<Click> m_click;
-	int m_clickH;
+	
+	std::list<Ripples> m_ripples;//波紋
+	int m_ripplesH;//波紋画像
 
 	static constexpr int kLogNum = 16;
 	//入力ログ　0が最新の状態

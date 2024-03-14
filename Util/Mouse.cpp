@@ -12,11 +12,11 @@ namespace
 	constexpr int  kClickAnimSpeed = 1;//アニメーションスピード
 }
 
-Mouse::Mouse():mouseLog()
+Mouse::Mouse() :mouseLog(), m_rect{ {},{} }
 {
 	m_rect = { {},{} };
 	m_mouseH = my::MyLoadGraph(L"Data/Cursor.png");
-	m_clickH = my::MyLoadGraph(L"Data/click.png");
+	m_ripplesH = my::MyLoadGraph(L"Data/ripples.png");
 	MouseReset();
 }
 
@@ -55,7 +55,7 @@ void Mouse::Update()
 		mouseLog[0] = 0;
 	}
 
-	ClickAnimUpdate();
+	RipplesAnimUpdate();
 
 
 	m_rect.center = GetPos();
@@ -63,18 +63,20 @@ void Mouse::Update()
 
 void Mouse::Draw()
 {
-	for (auto& click : m_click)
+	//波紋を表示する
+	for (auto& ripples : m_ripples)
 	{
-		if (click.isClick)
+		//波紋を表示できるとき
+		if (ripples.isDisplay)
 		{
-			int animNum = static_cast<int>(click.idx / kClickAnimSpeed);
+			int animNum = static_cast<int>(ripples.idx / kClickAnimSpeed);
 			if (animNum >= kClickAnimNum)
 			{
 				animNum -= kClickAnimNum;
 			}
 			int imgX = animNum % 6 * kClickImgWidth;
 			int imgY = animNum / 6 * kClickImgHeight;
-			my::MyDrawRectRotaGraph(click.pos.x, click.pos.y, imgX, imgY, kClickImgWidth, kClickImgHeight, kClickDrawScale, 0.0f, m_clickH, true, false);
+			my::MyDrawRectRotaGraph(ripples.pos.x, ripples.pos.y, imgX, imgY, kClickImgWidth, kClickImgHeight, kClickDrawScale, 0.0f, m_ripplesH, true, false);
 		}
 	}
 	my::MyDrawGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), m_mouseH, true);
@@ -88,20 +90,19 @@ void Mouse::MouseReset()
 	SetMousePoint(Game::kScreenWidth / 2, Game::kScreenHeight / 2);//ポインタを中心に移動させる
 }
 
-Position2 Mouse::GetPos()
+Position2 Mouse::GetPos() const
 {
-	Position2 mousePos{ 0,0 };
-	int mouseX = 0;
-	int mouseY = 0;
+	int mouseX = 0;//マウスカーソルx座標
+	int mouseY = 0;//マウスカーソルy座標
+
+	//マウスカーソルの位置を取得する関数の返り値が-1の時
 	if (GetMousePoint(&mouseX, &mouseY) == -1)
 	{
 		//エラー発生
-		return mousePos;
+		return Position2(0, 0);
 	}
-	mousePos.x = static_cast<float>(mouseX);
-	mousePos.y = static_cast<float>(mouseY);
 
-	return mousePos;
+	return Position2(static_cast<float>(mouseX), static_cast<float>(mouseY));
 }
 
 bool Mouse::IsPressLeft()
@@ -144,11 +145,13 @@ bool Mouse::IsRelaseRight()
 	return (!isNow && isLast);//今離していて、1フレーム前押されていたとき離した判定になる
 }
 
-Rect& Mouse::GetRect()
+//当たり判定
+Rect Mouse::GetRect() const
 {
 	return m_rect;
 }
 
+//カーソルの位置がメニュー位置にいるかどうか
 bool Mouse::MouseSelect(int startX, int endX, int startY, int endY)
 {
 	
@@ -172,32 +175,37 @@ bool Mouse::MouseSelect(float startX, float endX, float startY, float endY)
 	return true;
 }
 
+//波紋作成
 void Mouse::ClickAnimCreate()
 {
-	Click click;
-	click.pos = m_rect.center;
-	click.isClick = true;
-	click.idx = 0;
+	Ripples ripples;
+	ripples.pos = m_rect.center;//現在の位置
+	ripples.isDisplay = true;//波紋を表示する
+	ripples.idx = 0;//一番最初の絵のインデックス
 
-	m_click.push_back(click);
+	//一番後ろに入れる
+	m_ripples.push_back(ripples);
 }
 
-void Mouse::ClickAnimUpdate()
+//波紋の更新
+void Mouse::RipplesAnimUpdate()
 {
-	for (auto& click : m_click)
+	for (auto& ripples : m_ripples)
 	{
-		if (!click.isClick)	continue;
+		//既に表示できなくなっている時は処理しない
+		if (!ripples.isDisplay)	continue;
 
-		if (click.idx++ >= kClickAnimNum * kClickAnimSpeed)
+		//インデックスがアニメーション枚数以上のとき
+		if (ripples.idx++ >= kClickAnimNum * kClickAnimSpeed)
 		{
-			click.idx = 0;
-			click.isClick = false;
+			ripples.idx = 0;
+			ripples.isDisplay = false;
 		}
 	}
 
 	//いらなくなったものを削除
-	m_click.remove_if([](const Click click) {
-		return !click.isClick;
+	m_ripples.remove_if([](const Ripples click) {
+		return !click.isDisplay;
 		});
 }
 
