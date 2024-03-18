@@ -12,7 +12,7 @@ namespace
 	constexpr int  kRipplesAnimSpeed = 1;//波紋アニメーションスピード
 }
 
-Mouse::Mouse() :mouseLog(), m_rect{ {},{} }
+Mouse::Mouse() :m_mouseLog(), m_rect{ {},{} }
 {
 	m_mouseH = my::MyLoadGraph(L"Data/Cursor.png");
 	m_ripplesH = my::MyLoadGraph(L"Data/ripples.png");
@@ -29,13 +29,13 @@ void Mouse::Update()
 	//ログの更新
 	for (int i = kLogNum - 1; i >= 1; i--)
 	{
-		mouseLog[i] = mouseLog[i - 1];
+		m_mouseLog[i] = m_mouseLog[i - 1];
 	}
 
 	//左クリックしたとき
 	if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0)
 	{
-		mouseLog[0] = InputType::left;
+		m_mouseLog[0] = InputType::left;
 		if (IsTrigger(InputType::left))
 		{
 			ClickAnimCreate();
@@ -44,7 +44,7 @@ void Mouse::Update()
 	//右クリックしたとき
 	else if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0)
 	{
-		mouseLog[0] = InputType::right;
+		m_mouseLog[0] = InputType::right;
 		if (IsTrigger(InputType::right))
 		{
 			ClickAnimCreate();
@@ -53,7 +53,7 @@ void Mouse::Update()
 	//何も押していないとき
 	else
 	{
-		mouseLog[0] = InputType::noPressed;
+		m_mouseLog[0] = InputType::noPressed;
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 
@@ -116,21 +116,21 @@ Position2 Mouse::GetMousePos() const
 bool Mouse::IsPress(InputType type) const
 {
 	//最新のログが同じ時、押されている
-	return (mouseLog[0] == type);
+	return (m_mouseLog[0] == type);
 }
 
 bool Mouse::IsTrigger(InputType type) const
 {
-	bool isNow = (mouseLog[0] == type);//現在の状態
-	bool isLast = (mouseLog[1] == InputType::noPressed);//1フレーム前の状態
+	bool isNow = (m_mouseLog[0] == type);//現在の状態
+	bool isLast = (m_mouseLog[1] == InputType::noPressed);//1フレーム前の状態
 
 	return (isNow && isLast);//今押していて、1フレーム前に何も押していないとき押せる判定
 }
 
 bool Mouse::IsRelase(InputType type) const
 {
-	bool isNow = (mouseLog[0] == InputType::noPressed);//現在の状態
-	bool isLast = (mouseLog[1] == type);//1フレーム前の状態
+	bool isNow = (m_mouseLog[0] == InputType::noPressed);//現在の状態
+	bool isLast = (m_mouseLog[1] == type);//1フレーム前の状態
 	return (isNow && isLast);//今離していて、1フレーム前押されていたとき離した判定になる
 }
 

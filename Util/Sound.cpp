@@ -12,7 +12,7 @@ SoundManager::SoundManager()
 {
 	LoadSoundConfig();
 
-
+	//サウンドハンドルを取得する
 	LoadSoundFile(SoundId::Cursor,L"Cursor.mp3");
 	LoadSoundFile(SoundId::Determinant,L"Determinant.mp3");
 	LoadSoundFile(SoundId::Back,L"Back.mp3");
@@ -34,21 +34,25 @@ SoundManager::~SoundManager()
 
 int SoundManager::LoadSoundFile(SoundId id, const wchar_t* fileName)
 {
+	//サウンドハンドルを取得する
+	//パスとデータ名を一つにする
 	std::wstring path = L"Data/Sound/SE/";
 	path += fileName;
 	int handle = LoadSoundMem(path.c_str());
 
 	assert(handle >= 0);
-	nameAndHandleTable_[id] = handle;
+	m_nameAndHandleTable[id] = handle;
 
 	return handle;
 }
 
 void SoundManager::LoadSoundConfig()
 {
+	//サウンド情報のロード
 	SoundConfigInfo conf = {};
 	FILE* fp = nullptr;
 	fopen_s(&fp, kSoundConfigFilePath, "rb");
+
 	if (fp)
 	{
 		fread(&conf, sizeof(conf), 1, fp);
@@ -75,18 +79,22 @@ void SoundManager::SaveSoundConfig()
 
 void SoundManager::Play(SoundId id, int volume)
 {
-	PlaySoundMem(nameAndHandleTable_[id], DX_PLAYTYPE_BACK);
+	//指定のSEを鳴らす
+	PlaySoundMem(m_nameAndHandleTable[id], DX_PLAYTYPE_BACK);
 }
 
-void SoundManager::PlayBGM(int soundH)
+void SoundManager::PlayBGM(int soundH) const
 {
+	//BGMを鳴らす
 	PlaySoundMem(soundH, DX_PLAYTYPE_LOOP);
+	//音量を設定する
 	ChangeVolumeSoundMem(m_volumeBGM,soundH);
 }
 
 void SoundManager::SetSEVolume(int volume)
 {
-	for (auto& record : nameAndHandleTable_)
+	//全ての音の音量を変更する
+	for (auto& record : m_nameAndHandleTable)
 	{
 		ChangeVolumeSoundMem(volume, record.second);
 	}
@@ -111,5 +119,5 @@ int SoundManager::GetBGMVolume() const
 
 void SoundManager::StopBgm(SoundId id)
 {
-	StopSoundMem(nameAndHandleTable_[id]);
+	StopSoundMem(m_nameAndHandleTable[id]);
 }

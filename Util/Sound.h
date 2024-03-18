@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_map>
 
+//ゲーム中使用する音
 enum class SoundId
 {
 	Cursor,			//カーソル移動音
@@ -21,6 +22,7 @@ enum class SoundId
 	SoundId_Max
 };
 
+//サウンドマネージャー
 class SoundManager
 {
 private:
@@ -43,7 +45,7 @@ private:
 	/// </summary>
 	void LoadSoundConfig();
 
-	std::unordered_map<SoundId, int> nameAndHandleTable_;//サウンドハンドル
+	std::unordered_map<SoundId, int> m_nameAndHandleTable;//サウンドハンドル
 
 	//変更したサウンド情報をファイルに書き込む
 	struct SoundConfigInfo
@@ -80,20 +82,22 @@ public:
 	/// BGMを鳴らす
 	/// </summary>
 	/// <param name="soundH">サウンドハンドル</param>
-	void PlayBGM(int soundH);
+	void PlayBGM(int soundH) const;
 
 	/// <summary>
-	/// SEのボリュームを設定する
+	/// SEの音量を設定する
 	/// </summary>
 	/// <param name="volume">音量</param>
 	void SetSEVolume(int volume);
+	//SEの音量を取得する
 	int GetSEVolume()const;
 	/// <summary>
-	/// BGMのボリュームを設定する
+	/// BGMの音量を設定する
 	/// </summary>
 	/// <param name="volume">音量</param>
 	/// <param name="soundH">サウンドハンドル</param>
 	void SetBGMVolume(int volume,int soundH);
+	//BGMの音量を取得する
 	int GetBGMVolume()const;
 
 	/// <summary>

@@ -92,6 +92,6 @@ private:
 
 	static constexpr int kLogNum = 16;
 	//入力ログ　0が最新の状態　1が左クリック　2が右クリック
-	InputType mouseLog[kLogNum];
+	InputType m_mouseLog[kLogNum];
 };
 
