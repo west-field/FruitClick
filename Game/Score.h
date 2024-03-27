@@ -41,6 +41,9 @@ private:
 
 	int m_point;//自分のポイント
 
+	/// <summary>
+	/// 順位
+	/// </summary>
 	enum class Rank
 	{
 		First,
@@ -52,11 +55,9 @@ private:
 		Max
 	};
 
-	struct Info
-	{
-		int point;//得点
-	};
-
+	/// <summary>
+	/// ファイル保存用構造体
+	/// </summary>
 	struct Header
 	{
 		Rank rank;
