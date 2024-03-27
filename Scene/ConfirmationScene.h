@@ -26,10 +26,19 @@ public:
 	virtual void Update(Mouse& mouse) override;
 	void Draw();
 private:
+	/// <summary>
+	/// 背景のウィンドウを表示する
+	/// </summary>
 	void WindowDraw();
-	void FullSceneChange();
+	/// <summary>
+	/// ウィンドウモードを変更する
+	/// </summary>
+	void WindowModeChange();
 
-	enum class Item
+	/// <summary>
+	/// 選択
+	/// </summary>
+	enum class Choice
 	{
 		yes,//その処理をする
 		no,//戻る
@@ -37,15 +46,15 @@ private:
 		Max
 	};
 
-	Element m_pauseMenu[static_cast<int>(Item::Max)];
-	int m_selectNum = static_cast<int>(Item::no);
+	Element m_pauseMenu[static_cast<int>(Choice::Max)];
+	int m_selectNum = static_cast<int>(Choice::no);
 
 	const wchar_t* m_conf;//表示する文字
 	int m_stringNum;//表示する文字の数
 	SelectType m_type;//次何をするかを指定
 	int m_soundH;//音を次のシーンに渡すため
 
-	bool m_isWindouwMode;//ウィンドウモードを変更する
+	bool m_isWindowMode;//ウィンドウモードを変更する
 
 	int m_bg;//ウィンドウ背景
 };

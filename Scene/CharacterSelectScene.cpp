@@ -22,11 +22,11 @@ namespace
 
 	constexpr int kFontSize = 30;
 
-	static constexpr int pw_width = 400;
-	static constexpr int pw_height = 300;
-	static constexpr int pw_start_x = (Game::kScreenWidth - pw_width) / 2;
-	static constexpr int pw_start_y = (Game::kScreenHeight - pw_height) / 2;
-	static constexpr int kPosY = (pw_start_y + pw_height) - (pw_height / 2);
+	static constexpr int kWindowWidth = 400;
+	static constexpr int kWindowHeight = 300;
+	static constexpr int kWindowStartX = (Game::kScreenWidth - kWindowWidth) / 2;
+	static constexpr int kWindowStartY = (Game::kScreenHeight - kWindowHeight) / 2;
+	static constexpr int kPosY = (kWindowStartY + kWindowHeight) - (kWindowHeight / 2);
 }
 
 
@@ -91,11 +91,11 @@ CharacterSelectScene::CharacterSelectScene(SceneManager& manager) :
 	ChangeVolumeSoundMem(0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 	//メニュー
-	m_menu[static_cast<int>(Item::Yes)].x = (pw_start_x + pw_width) - (pw_width / 2);
-	m_menu[static_cast<int>(Item::Yes)].name = L"はい";
+	m_menu[static_cast<int>(Choice::Yes)].x = (kWindowStartX + kWindowWidth) - (kWindowWidth / 2);
+	m_menu[static_cast<int>(Choice::Yes)].name = L"はい";
 
-	m_menu[static_cast<int>(Item::No)].x = pw_start_x + kFontSize;
-	m_menu[static_cast<int>(Item::No)].name = L"いいえ";
+	m_menu[static_cast<int>(Choice::No)].x = kWindowStartX + kFontSize;
+	m_menu[static_cast<int>(Choice::No)].name = L"いいえ";
 
 	for (auto& menu : m_menu)
 	{
@@ -280,7 +280,7 @@ void CharacterSelectScene::SelectScene(Mouse& mouse)
 		i++;
 	}
 
-	int pauseMax = static_cast<int>(Item::Max);
+	int pauseMax = static_cast<int>(Choice::Max);
 	for (int i = 0; i < pauseMax; i++)
 	{
 		if (i == m_select)
@@ -299,7 +299,7 @@ void CharacterSelectScene::SelectScene(Mouse& mouse)
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
 		m_updateFunc = &CharacterSelectScene::FadeOutUpdat;
-		if (m_select == static_cast<int>(Item::Yes))
+		if (m_select == static_cast<int>(Choice::Yes))
 		{
 			isExpo = true;
 		}
@@ -337,12 +337,12 @@ void CharacterSelectScene::SelectSceneDraw()
 {
 	SetDrawBlendMode(DX_BLENDMODE_MULA, 196);
 	//ウィンドウセロファン
-	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0x000000, true);
+	DrawBox(kWindowStartX, kWindowStartY, kWindowStartX + kWindowWidth, kWindowStartY + kWindowHeight, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	SetFontSize(kFontSize);
-	int x = pw_width / 2 + pw_start_x - kFontSize * 4;
-	DrawString(x, pw_start_y + 10, L"説明を聞きますか？", 0xffff88);
+	int x = kWindowWidth / 2 + kWindowStartX - kFontSize * 4;
+	DrawString(x, kWindowStartY + 10, L"説明を聞きますか？", 0xffff88);
 	
 	for (auto& menu : m_menu)
 	{
@@ -356,7 +356,7 @@ void CharacterSelectScene::SelectSceneDraw()
 
 	SetFontSize(0);
 	//ウィンドウ枠線
-	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0xffffff, false);
+	DrawBox(kWindowStartX, kWindowStartY, kWindowStartX + kWindowWidth, kWindowStartY + kWindowHeight, 0xffffff, false);
 }
 
 void CharacterSelectScene::DrawExplanationString(int type, int color)

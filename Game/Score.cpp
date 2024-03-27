@@ -10,14 +10,14 @@ namespace
 
 	constexpr int kFontSize = 20;
 
-	constexpr int add = 5;
-	constexpr int pw_width = 400;
-	constexpr int pw_height = 300 + add * 7;
-	constexpr int pw_start_x = (Game::kScreenWidth - pw_width) / 2;//左
-	constexpr int pw_start_y = kFontSize;//上
+	constexpr int kAdd = 5;
+	constexpr int kWindowWidth = 400;
+	constexpr int kWindowHeight = 300 + kAdd * 7;
+	constexpr int kWindowStartX = (Game::kScreenWidth - kWindowWidth) / 2;//左
+	constexpr int kWindowStartY = kFontSize;//上
 
-	constexpr int kPosX = pw_start_x + 10;
-	constexpr int kPosY = pw_start_y + 10;
+	constexpr int kPosX = kWindowStartX + 10;
+	constexpr int kPosY = kWindowStartY + 10;
 }
 
 Score::Score():m_point(), m_header(), m_isSave(false)
@@ -51,7 +51,7 @@ void Score::Draw()
 			color = 0x696969;
 		}
 		DrawFormatString(X, kPosY + y, color, L"%d位：%d点", static_cast<int>(score.rank) + 1, score.point);
-		y += kFontSize * 2 + add;
+		y += kFontSize * 2 + kAdd;
 	}
 	if (!m_isSave)
 	{
@@ -109,27 +109,27 @@ void Score::Comparison(int score)
 void Score::WindowDraw()
 {
 	//角表示
-	int x = pw_start_x - 50 / 2;
-	int y = pw_start_y - 50 / 2;
+	int x = kWindowStartX - 50 / 2;
+	int y = kWindowStartY - 50 / 2;
 	DrawRectGraph(x, y,
 		0, 0, 50, 50, m_bg, true);//左上　50 y3,x9
-	DrawRectGraph(x + pw_width, y,
+	DrawRectGraph(x + kWindowWidth, y,
 		50 * 8, 0, 50, 50, m_bg, true);//右上
-	DrawRectGraph(x, y + pw_height,
+	DrawRectGraph(x, y + kWindowHeight,
 		0, 50 * 2, 50, 50, m_bg, true);//左下　50 y3,x9
-	DrawRectGraph(x + pw_width, y + pw_height,
+	DrawRectGraph(x + kWindowWidth, y + kWindowHeight,
 		50 * 8, 50 * 2, 50, 50, m_bg, true);//右下
 
 	//画像の左上、右下、グラフィックの左上からXサイズ、Yサイズ、表示する画像、透明
-	DrawRectExtendGraph(x + 50, y, x + pw_width, y + 50,
+	DrawRectExtendGraph(x + 50, y, x + kWindowWidth, y + 50,
 		50 * 2, 0, 50, 50, m_bg, true);//上
-	DrawRectExtendGraph(x, y + 50, x + 50, y + pw_height,
+	DrawRectExtendGraph(x, y + 50, x + 50, y + kWindowHeight,
 		0, 50 * 1, 50, 50, m_bg, true);//左
-	DrawRectExtendGraph(x + pw_width, y + 50, x + pw_width + 50, y + pw_height,
+	DrawRectExtendGraph(x + kWindowWidth, y + 50, x + kWindowWidth + 50, y + kWindowHeight,
 		50 * 8, 50, 50, 50, m_bg, true);// 右
-	DrawRectExtendGraph(x + 50, y + pw_height, x + pw_width, y + pw_height + 50,
+	DrawRectExtendGraph(x + 50, y + kWindowHeight, x + kWindowWidth, y + kWindowHeight + 50,
 		50 * 2, 50 * 2, 50, 50, m_bg, true);	// 下
-	DrawRectExtendGraph(x + 50, y + 50, x + pw_width, y + pw_height,
+	DrawRectExtendGraph(x + 50, y + 50, x + kWindowWidth, y + kWindowHeight,
 		50 * 3, 50 * 1, 50, 50, m_bg, true);	// ウインドウ内部
 }
 

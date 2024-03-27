@@ -205,7 +205,6 @@
     <ClCompile Include="Scene\ExplanationScene.cpp" />
     <ClCompile Include="Scene\PauseScene.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
-    <ClCompile Include="Scene\Secne.cpp" />
     <ClCompile Include="Scene\SettingScene.cpp" />
     <ClCompile Include="Scene\SoundSettingScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />

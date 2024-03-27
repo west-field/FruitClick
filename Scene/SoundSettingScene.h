@@ -2,6 +2,9 @@
 #include "Secne.h"
 #include "../Util/menuInfo.h"
 
+/// <summary>
+/// サウンド設定
+/// </summary>
 class SoundSettingScene : public Scene
 {
 public:
@@ -20,7 +23,10 @@ private:
 
 	void (SoundSettingScene::* m_updateFunc)( Mouse& );
 
-	enum class SoundType
+	/// <summary>
+	/// サウンド設定の項目
+	/// </summary>
+	enum class SoundItem
 	{
 		soundTypeBGM,
 		soundTypeSE,
@@ -30,7 +36,7 @@ private:
 		soundTypeMax,
 	};
 
-	Element m_soundChange[static_cast<int>(SoundType::soundTypeMax)];
+	Element m_soundChange[static_cast<int>(SoundItem::soundTypeMax)];
 
 	int m_selectNum = 0;
 

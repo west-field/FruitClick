@@ -11,12 +11,12 @@
 
 namespace
 {
-	static constexpr int pw_width = 350;
-	static constexpr int pw_height = 250;
-	static constexpr int pw_start_x = (Game::kScreenWidth - pw_width) / 2;
-	static constexpr int pw_start_y = (Game::kScreenHeight - pw_height) / 2;
+	static constexpr int kWindowWidth = 350;
+	static constexpr int kWindowHeight = 250;
+	static constexpr int kWindowStartX = (Game::kScreenWidth - kWindowWidth) / 2;
+	static constexpr int kWindowStartY = (Game::kScreenHeight - kWindowHeight) / 2;
 
-	static constexpr int kPosY = (pw_start_y + pw_height) - (pw_height / 2);
+	static constexpr int kPosY = (kWindowStartY + kWindowHeight) - (kWindowHeight / 2);
 
 	static constexpr int kFontSize = 20;
 }
@@ -26,23 +26,23 @@ ConfirmationScene::ConfirmationScene(SceneManager& manager, const wchar_t* conf,
 {
 	m_stringNum = static_cast<int>(wcslen(m_conf));
 
-	m_pauseMenu[static_cast<int>(Item::yes)].x = (pw_start_x + pw_width) - (pw_width / 2);
-	m_pauseMenu[static_cast<int>(Item::yes)].y = kPosY;
-	m_pauseMenu[static_cast<int>(Item::yes)].name = L"はい";
+	m_pauseMenu[static_cast<int>(Choice::yes)].x = (kWindowStartX + kWindowWidth) - (kWindowWidth / 2);
+	m_pauseMenu[static_cast<int>(Choice::yes)].y = kPosY;
+	m_pauseMenu[static_cast<int>(Choice::yes)].name = L"はい";
 		
-	m_pauseMenu[static_cast<int>(Item::no)].x = pw_start_x + 20; 
-	m_pauseMenu[static_cast<int>(Item::no)].y = kPosY ;
-	m_pauseMenu[static_cast<int>(Item::no)].name = L"いいえ";
+	m_pauseMenu[static_cast<int>(Choice::no)].x = kWindowStartX + 20; 
+	m_pauseMenu[static_cast<int>(Choice::no)].y = kPosY ;
+	m_pauseMenu[static_cast<int>(Choice::no)].name = L"いいえ";
 
 	m_selectNum = -1;
 
-	for (int i = 0; i < static_cast<int>(Item::Max); i++)
+	for (int i = 0; i < static_cast<int>(Choice::Max); i++)
 	{
 		m_pauseMenu[i].fontSize = kFontSize;
 		m_pauseMenu[i].color = 0x000000;
 		m_pauseMenu[i].nameNum = static_cast<int>(wcslen(m_pauseMenu[i].name));
 	}
-	m_isWindouwMode = m_manager.GetIsWindouMode();
+	m_isWindowMode = m_manager.GetIsWindouMode();
 	m_bg = my::MyLoadGraph(L"Data/panel_Example2.png");
 }
 
@@ -54,7 +54,7 @@ ConfirmationScene::~ConfirmationScene()
 void ConfirmationScene::Update( Mouse& mouse)
 {
 	bool isSelect = false;
-	int pauseMax = static_cast<int>(Item::Max);
+	int pauseMax = static_cast<int>(Choice::Max);
 	m_selectNum = -1;
 
 	//マウスで選択
@@ -91,7 +91,7 @@ void ConfirmationScene::Update( Mouse& mouse)
 	{
 		switch (m_selectNum)
 		{
-		case static_cast<int>(Item::yes):
+		case static_cast<int>(Choice::yes):
 			StopSoundMem(m_soundH);
 			SoundManager::GetInstance().Play(SoundId::Determinant);
 			if (m_type == SelectType::End)
@@ -104,11 +104,11 @@ void ConfirmationScene::Update( Mouse& mouse)
 			}
 			else if(m_type == SelectType::SceneMode)
 			{
-				FullSceneChange();
+				WindowModeChange();
 				m_manager.PopScene();
 			}
 			return;
-		case static_cast<int>(Item::no):
+		case static_cast<int>(Choice::no):
 			SoundManager::GetInstance().Play(SoundId::Back);
 			m_manager.PopScene();
 			return;
@@ -119,7 +119,7 @@ void ConfirmationScene::Update( Mouse& mouse)
 	if (mouse.IsTrigger(Mouse::InputType::right))
 	{
 		SoundManager::GetInstance().Play(SoundId::Back);
-		m_selectNum = static_cast<int>(Item::no);
+		m_selectNum = static_cast<int>(Choice::no);
 		m_manager.PopScene();
 		return;
 	}
@@ -132,8 +132,8 @@ void ConfirmationScene::Draw()
 	//メッセージ
 	SetFontSize(kFontSize);
 	//DrawString(pw_start_x + 30, pw_start_y + 10, m_conf, 0xf0f088);
-	int startString = (pw_width - (m_stringNum * kFontSize)) / 2;
-	DrawString(pw_start_x + startString, pw_start_y + kFontSize*2, m_conf,0xff0000 );//0xf0f088
+	int startString = (kWindowWidth - (m_stringNum * kFontSize)) / 2;
+	DrawString(kWindowStartX + startString, kWindowStartY + kFontSize*2, m_conf,0xff0000 );//0xf0f088
 	for (auto& menu : m_pauseMenu)
 	{
 		SetFontSize(menu.fontSize);
@@ -149,35 +149,35 @@ void ConfirmationScene::Draw()
 void ConfirmationScene::WindowDraw()
 {
 	//角表示
-	int x = pw_start_x - 50 / 2;
-	int y = pw_start_y - 50 / 2;
+	int x = kWindowStartX - 50 / 2;
+	int y = kWindowStartY - 50 / 2;
 	DrawRectGraph(x, y,
 		0, 0, 50, 50, m_bg, true);//左上　50 y3,x9
-	DrawRectGraph(x + pw_width, y,
+	DrawRectGraph(x + kWindowWidth, y,
 		50 * 8, 0, 50, 50, m_bg, true);//右上
-	DrawRectGraph(x, y + pw_height,
+	DrawRectGraph(x, y + kWindowHeight,
 		0, 50 * 2, 50, 50, m_bg, true);//左下　50 y3,x9
-	DrawRectGraph(x + pw_width, y + pw_height,
+	DrawRectGraph(x + kWindowWidth, y + kWindowHeight,
 		50 * 8, 50 * 2, 50, 50, m_bg, true);//右下
 
 	//画像の左上、右下、グラフィックの左上からXサイズ、Yサイズ、表示する画像、透明
-	DrawRectExtendGraph(x + 50, y, x + pw_width, y + 50,
+	DrawRectExtendGraph(x + 50, y, x + kWindowWidth, y + 50,
 		50 * 2, 0, 50, 50, m_bg, true);//上
-	DrawRectExtendGraph(x, y + 50, x + 50, y + pw_height,
+	DrawRectExtendGraph(x, y + 50, x + 50, y + kWindowHeight,
 		0, 50 * 1, 50, 50, m_bg, true);//左
-	DrawRectExtendGraph(x + pw_width, y + 50, x + pw_width + 50, y + pw_height,
+	DrawRectExtendGraph(x + kWindowWidth, y + 50, x + kWindowWidth + 50, y + kWindowHeight,
 		50 * 8, 50, 50, 50, m_bg, true);// 右
-	DrawRectExtendGraph(x + 50, y + pw_height, x + pw_width, y + pw_height + 50,
+	DrawRectExtendGraph(x + 50, y + kWindowHeight, x + kWindowWidth, y + kWindowHeight + 50,
 		50 * 2, 50 * 2, 50, 50, m_bg, true);	// 下
-	DrawRectExtendGraph(x + 50, y + 50, x + pw_width, y + pw_height,
+	DrawRectExtendGraph(x + 50, y + 50, x + kWindowWidth, y + kWindowHeight,
 		50 * 3, 50 * 1, 50, 50, m_bg, true);	// ウインドウ内部
 }
 
-void ConfirmationScene::FullSceneChange()
+void ConfirmationScene::WindowModeChange()
 {
-	m_isWindouwMode = !m_isWindouwMode;
-	ChangeWindowMode(m_isWindouwMode);
-	m_manager.SetIsWindouMode(m_isWindouwMode);
+	m_isWindowMode = !m_isWindowMode;
+	ChangeWindowMode(m_isWindowMode);
+	m_manager.SetIsWindouMode(m_isWindowMode);
 	SetDrawScreen(DX_SCREEN_BACK);//描画先を再定義
 
 	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume(), m_soundH);

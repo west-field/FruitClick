@@ -82,12 +82,15 @@ private:
 
 	bool isExpo;//説明シーンに行くかどうか
 
-	enum class Item
+	/// <summary>
+	/// 選択
+	/// </summary>
+	enum class Choice
 	{
 		Yes,
 		No,
 		Max
 	};
-	Element m_menu[static_cast<int>(Item::Max)];
+	Element m_menu[static_cast<int>(Choice::Max)];
 	int m_select;//どちらのメニューを選択しているのか
 };

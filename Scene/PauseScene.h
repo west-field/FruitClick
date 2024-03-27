@@ -15,8 +15,14 @@ public:
 	virtual void Update( Mouse& mouse) override;
 	void Draw();
 private:
+	/// <summary>
+	/// ”wŒi‚ğ•\¦
+	/// </summary>
 	void WindowDraw();
 
+	/// <summary>
+	/// €–Ú
+	/// </summary>
 	enum class Item
 	{
 		pauseSound,//‰¹—Êİ’è

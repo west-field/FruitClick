@@ -7,27 +7,27 @@
 
 namespace
 {
-	constexpr int pw_width = 350;//ウィンドウサイズ
-	constexpr int pw_height = 250;//ウィンドウサイズ
-	constexpr int pw_start_x = (640 - pw_width) / 2;//ウィンドウ表示開始位置
-	constexpr int pw_start_y = (480 - pw_height) / 2;//ウィンドウ表示開始位置
+	constexpr int kWindowWidth = 350;//ウィンドウサイズ
+	constexpr int kWindowHeight = 250;//ウィンドウサイズ
+	constexpr int kWindowStartX = (640 - kWindowWidth) / 2;//ウィンドウ表示開始位置
+	constexpr int kWindowStartY = (480 - kWindowHeight) / 2;//ウィンドウ表示開始位置
 
-	constexpr int kPosX = pw_start_x + 20;//文字表示開始位置
-	constexpr int kPosY = pw_start_y + 30;//文字表示開始位置
+	constexpr int kPosX = kWindowStartX + 20;//文字表示開始位置
+	constexpr int kPosY = kWindowStartY + 30;//文字表示開始位置
 
 	constexpr int kFontSize = 20;//フォントサイズ
 }
 
 SoundSettingScene::SoundSettingScene(SceneManager& manager,int soundH) :Scene(manager), m_soundH(soundH), m_updateFunc(&SoundSettingScene::NormalUpdate)
 {
-	m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].y = kPosY + kFontSize * (static_cast<int>(SoundType::soundTypeBGM) + 1) + 10;
-	m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].name = L"BGM Volume = %d";
+	m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].y = kPosY + kFontSize * (static_cast<int>(SoundItem::soundTypeBGM) + 1) + 10;
+	m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].name = L"BGM Volume = %d";
 
-	m_soundChange[static_cast<int>(SoundType::soundTypeSE)].y = kPosY + kFontSize * (static_cast<int>(SoundType::soundTypeSE) + 1) + 20;
-	m_soundChange[static_cast<int>(SoundType::soundTypeSE)].name = L"SE Volume = %d";
+	m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].y = kPosY + kFontSize * (static_cast<int>(SoundItem::soundTypeSE) + 1) + 20;
+	m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].name = L"SE Volume = %d";
 	
-	m_soundChange[static_cast<int>(SoundType::soundTypeBack)].y = kPosY + kFontSize * (static_cast<int>(SoundType::soundTypeBack) + 1) + 30;
-	m_soundChange[static_cast<int>(SoundType::soundTypeBack)].name = L"戻る";
+	m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].y = kPosY + kFontSize * (static_cast<int>(SoundItem::soundTypeBack) + 1) + 30;
+	m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].name = L"戻る";
 	
 	for (auto& sound : m_soundChange)
 	{
@@ -56,28 +56,28 @@ void SoundSettingScene::Draw()
 	WindowDraw();
 	SetFontSize(kFontSize);
 	//サウンドセッティング中メッセージ
-	DrawString(kPosX, pw_start_y + 10, L"サウンド設定", 0x000000);
+	DrawString(kPosX, kWindowStartY + 10, L"サウンド設定", 0x000000);
 	//BGMの設定
 	auto& soundMgr = SoundManager::GetInstance();
-	SetFontSize(m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].fontSize);
-	DrawFormatString(m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].x, m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].y, 
-		m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].color,
-		m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].name, soundMgr.GetBGMVolume());
+	SetFontSize(m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].fontSize);
+	DrawFormatString(m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].x, m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].y, 
+		m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].color,
+		m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].name, soundMgr.GetBGMVolume());
 	//SEの設定
-	SetFontSize(m_soundChange[static_cast<int>(SoundType::soundTypeSE)].fontSize);
-	DrawFormatString(m_soundChange[static_cast<int>(SoundType::soundTypeSE)].x, m_soundChange[static_cast<int>(SoundType::soundTypeSE)].y,
-		m_soundChange[static_cast<int>(SoundType::soundTypeSE)].color,
-		m_soundChange[static_cast<int>(SoundType::soundTypeSE)].name, soundMgr.GetSEVolume());
+	SetFontSize(m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].fontSize);
+	DrawFormatString(m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].x, m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].y,
+		m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].color,
+		m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].name, soundMgr.GetSEVolume());
 
-	SetFontSize(m_soundChange[static_cast<int>(SoundType::soundTypeBack)].fontSize);
-	DrawFormatString(m_soundChange[static_cast<int>(SoundType::soundTypeBack)].x, m_soundChange[static_cast<int>(SoundType::soundTypeBack)].y,
-		m_soundChange[static_cast<int>(SoundType::soundTypeBack)].color,
-		m_soundChange[static_cast<int>(SoundType::soundTypeBack)].name);
+	SetFontSize(m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].fontSize);
+	DrawFormatString(m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].x, m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].y,
+		m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].color,
+		m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].name);
 	SetFontSize(0);
 
 #ifdef _DEBUG
-	int size = m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].nameNum * (m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].fontSize/2);
-	DrawBox(m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].x, m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].y, m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].x + size, m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].y + m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].fontSize, m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].color, false);
+	int size = m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].nameNum * (m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].fontSize/2);
+	DrawBox(m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].x, m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].y, m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].x + size, m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].y + m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].fontSize, m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].color, false);
 #endif
 }
 
@@ -87,38 +87,38 @@ void SoundSettingScene::NormalUpdate(Mouse& mouse)
 	m_selectNum = -1;
 
 	//マウスで選択
-	if (mouse.MouseSelect(m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].x,
-		m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].x + (m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].fontSize/2) * m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].nameNum, 
-		m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].y,m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].y + m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].fontSize))
+	if (mouse.MouseSelect(m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].x,
+		m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].x + (m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].fontSize/2) * m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].nameNum, 
+		m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].y,m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].y + m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].fontSize))
 	{
-		if (m_selectNum != static_cast<int>(SoundType::soundTypeBGM))
+		if (m_selectNum != static_cast<int>(SoundItem::soundTypeBGM))
 		{
-			m_selectNum = static_cast<int>(SoundType::soundTypeBGM);
+			m_selectNum = static_cast<int>(SoundItem::soundTypeBGM);
 		}
 		isSelect = true;
 	}
-	else if (mouse.MouseSelect(m_soundChange[static_cast<int>(SoundType::soundTypeSE)].x,
-		m_soundChange[static_cast<int>(SoundType::soundTypeSE)].x +(m_soundChange[static_cast<int>(SoundType::soundTypeSE)].fontSize/2) * m_soundChange[static_cast<int>(SoundType::soundTypeSE)].nameNum,
-		m_soundChange[static_cast<int>(SoundType::soundTypeSE)].y, m_soundChange[static_cast<int>(SoundType::soundTypeSE)].y + m_soundChange[static_cast<int>(SoundType::soundTypeSE)].fontSize))
+	else if (mouse.MouseSelect(m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].x,
+		m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].x +(m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].fontSize/2) * m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].nameNum,
+		m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].y, m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].y + m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].fontSize))
 	{
-		if (m_selectNum != static_cast<int>(SoundType::soundTypeSE))
+		if (m_selectNum != static_cast<int>(SoundItem::soundTypeSE))
 		{
-			m_selectNum = static_cast<int>(SoundType::soundTypeSE);
+			m_selectNum = static_cast<int>(SoundItem::soundTypeSE);
 		}
 		isSelect = true;
 	}
-	else if (mouse.MouseSelect(m_soundChange[static_cast<int>(SoundType::soundTypeBack)].x,
-		m_soundChange[static_cast<int>(SoundType::soundTypeBack)].x + m_soundChange[static_cast<int>(SoundType::soundTypeBack)].fontSize* m_soundChange[static_cast<int>(SoundType::soundTypeBack)].nameNum,
-		m_soundChange[static_cast<int>(SoundType::soundTypeBack)].y, m_soundChange[static_cast<int>(SoundType::soundTypeBack)].y + m_soundChange[static_cast<int>(SoundType::soundTypeBack)].fontSize))
+	else if (mouse.MouseSelect(m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].x,
+		m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].x + m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].fontSize* m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].nameNum,
+		m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].y, m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].y + m_soundChange[static_cast<int>(SoundItem::soundTypeBack)].fontSize))
 	{
-		if (m_selectNum != static_cast<int>(SoundType::soundTypeBack))
+		if (m_selectNum != static_cast<int>(SoundItem::soundTypeBack))
 		{
-			m_selectNum = static_cast<int>(SoundType::soundTypeBack);
+			m_selectNum = static_cast<int>(SoundItem::soundTypeBack);
 		}
 		isSelect = true;
 	}
 
-	int num = static_cast<int>(SoundType::soundTypeMax);
+	int num = static_cast<int>(SoundItem::soundTypeMax);
 	for (int i = 0; i < num; i++)
 	{
 		if (i == m_selectNum)
@@ -138,17 +138,17 @@ void SoundSettingScene::NormalUpdate(Mouse& mouse)
 	{
 		switch (m_selectNum)
 		{
-		case static_cast<int>(SoundType::soundTypeBGM):
+		case static_cast<int>(SoundItem::soundTypeBGM):
 			SoundManager::GetInstance().Play(SoundId::Determinant);
-			m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].color = 0xffa000;
+			m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].color = 0xffa000;
 			m_updateFunc = &SoundSettingScene::BGMVolumeChange;
 			return;
-		case static_cast<int>(SoundType::soundTypeSE):
+		case static_cast<int>(SoundItem::soundTypeSE):
 			SoundManager::GetInstance().Play(SoundId::Determinant);
-			m_soundChange[static_cast<int>(SoundType::soundTypeSE)].color = 0xffa000;
+			m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].color = 0xffa000;
 			m_updateFunc = &SoundSettingScene::SEVolumeChange;
 			return;
-		case static_cast<int>(SoundType::soundTypeBack):
+		case static_cast<int>(SoundItem::soundTypeBack):
 			SoundManager::GetInstance().Play(SoundId::Back);
 			soundMgr.SaveSoundConfig();
 			m_manager.PopScene();
@@ -161,7 +161,7 @@ void SoundSettingScene::NormalUpdate(Mouse& mouse)
 	{
 		soundMgr.SaveSoundConfig();
 		SoundManager::GetInstance().Play(SoundId::Back);
-		m_selectNum = static_cast<int>(SoundType::soundTypeBack);
+		m_selectNum = static_cast<int>(SoundItem::soundTypeBack);
 		m_manager.PopScene();
 		return;
 	}
@@ -192,7 +192,7 @@ void SoundSettingScene::BGMVolumeChange(Mouse& mouse)
 	if (mouse.IsTrigger(Mouse::InputType::left) || mouse.IsTrigger(Mouse::InputType::right))
 	{
 		SoundManager::GetInstance().Play(SoundId::Back);
-		m_soundChange[static_cast<int>(SoundType::soundTypeBGM)].color = 0xaaffaa;
+		m_soundChange[static_cast<int>(SoundItem::soundTypeBGM)].color = 0xaaffaa;
 		m_updateFunc = &SoundSettingScene::NormalUpdate;
 		return;
 	}
@@ -224,7 +224,7 @@ void SoundSettingScene::SEVolumeChange(Mouse& mouse)
 	if (mouse.IsTrigger(Mouse::InputType::left) || mouse.IsTrigger(Mouse::InputType::right))
 	{
 		SoundManager::GetInstance().Play(SoundId::Back);
-		m_soundChange[static_cast<int>(SoundType::soundTypeSE)].color = 0xaaffaa;
+		m_soundChange[static_cast<int>(SoundItem::soundTypeSE)].color = 0xaaffaa;
 		m_updateFunc = &SoundSettingScene::NormalUpdate;
 		return;
 	}
@@ -233,27 +233,27 @@ void SoundSettingScene::SEVolumeChange(Mouse& mouse)
 void SoundSettingScene::WindowDraw()
 {
 	//角表示
-	int x = pw_start_x - 50 / 2;
-	int y = pw_start_y - 50 / 2;
+	int x = kWindowStartX - 50 / 2;
+	int y = kWindowStartY - 50 / 2;
 	DrawRectGraph(x, y,
 		0, 0, 50, 50, m_bg, true);//左上　50 y3,x9
-	DrawRectGraph(x + pw_width, y,
+	DrawRectGraph(x + kWindowWidth, y,
 		50 * 8, 0, 50, 50, m_bg, true);//右上
-	DrawRectGraph(x, y + pw_height,
+	DrawRectGraph(x, y + kWindowHeight,
 		0, 50 * 2, 50, 50, m_bg, true);//左下　50 y3,x9
-	DrawRectGraph(x + pw_width, y + pw_height,
+	DrawRectGraph(x + kWindowWidth, y + kWindowHeight,
 		50 * 8, 50 * 2, 50, 50, m_bg, true);//右下
 
 	//画像の左上、右下、グラフィックの左上からXサイズ、Yサイズ、表示する画像、透明
-	DrawRectExtendGraph(x + 50, y, x + pw_width, y + 50,
+	DrawRectExtendGraph(x + 50, y, x + kWindowWidth, y + 50,
 		50 * 2, 0, 50, 50, m_bg, true);//上
-	DrawRectExtendGraph(x, y + 50, x + 50, y + pw_height,
+	DrawRectExtendGraph(x, y + 50, x + 50, y + kWindowHeight,
 		0, 50 * 1, 50, 50, m_bg, true);//左
-	DrawRectExtendGraph(x + pw_width, y + 50, x + pw_width + 50, y + pw_height,
+	DrawRectExtendGraph(x + kWindowWidth, y + 50, x + kWindowWidth + 50, y + kWindowHeight,
 		50 * 8, 50, 50, 50, m_bg, true);// 右
-	DrawRectExtendGraph(x + 50, y + pw_height, x + pw_width, y + pw_height + 50,
+	DrawRectExtendGraph(x + 50, y + kWindowHeight, x + kWindowWidth, y + kWindowHeight + 50,
 		50 * 2, 50 * 2, 50, 50, m_bg, true);	// 下
-	DrawRectExtendGraph(x + 50, y + 50, x + pw_width, y + pw_height,
+	DrawRectExtendGraph(x + 50, y + 50, x + kWindowWidth, y + kWindowHeight,
 		50 * 3, 50 * 1, 50, 50, m_bg, true);	// ウインドウ内部
 }
 

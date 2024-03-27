@@ -12,13 +12,6 @@ class Mouse;//マウス
 /// </summary>
 class SceneManager
 {
-private:
-	//今実行中のシーンを切り替えていきたいので参照ではなくポインタとして宣言
-	std::deque<Scene*> m_scenes;
-	//ゲームを終了させる
-	bool m_isEnd = false;
-	//ゲーム画面モード
-	bool m_isWindouwMode;
 public:
 	/// <summary>
 	/// シーンの切り替えを行う
@@ -53,10 +46,32 @@ public:
 	/// </summary>
 	void End();
 
+	/// <summary>
+	/// ゲームを終了させる
+	/// </summary>
 	void SetIsEnd() { m_isEnd = true; }
+	/// <summary>
+	/// ゲームを終了させるかどうか
+	/// </summary>
+	/// <returns>true:終了する false:終了しない</returns>
 	bool GetIsEnd() const { return m_isEnd; }
 
+	/// <summary>
+	/// ウィンドウモードを取得
+	/// </summary>
+	/// <returns>　true:ウインドモード false:フルスクリーンモード</returns>
 	bool GetIsWindouMode()const { return m_isWindouwMode; }
+	/// <summary>
+	/// ウィンドウモードを変更する
+	/// </summary>
+	/// <param name="isWindou">　true:ウインドモード false:フルスクリーンモード</param>
 	void SetIsWindouMode(bool isWindou) { m_isWindouwMode = isWindou; }
+private:
+	//今実行中のシーンを切り替えていきたいので参照ではなくポインタとして宣言
+	std::deque<Scene*> m_scenes;
+	//ゲームを終了させる
+	bool m_isEnd = false;
+	//ゲーム画面モード
+	bool m_isWindouwMode;
 };
 
