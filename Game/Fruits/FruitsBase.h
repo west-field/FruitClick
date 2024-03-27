@@ -92,7 +92,7 @@ protected:
 	static constexpr int kAnimSpeed = 5;
 	int m_idxX ;//画像インデックス
 
-	float m_jump;//上に上がる
+	float m_upperPower;//上に上がる
 	float m_speed;//落ちていく速度
 
 	std::shared_ptr<HpBar> m_hp;//フルーツのHp

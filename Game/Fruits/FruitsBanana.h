@@ -1,6 +1,9 @@
 #pragma once
 #include "FruitsBase.h"
 
+/// <summary>
+/// ƒoƒiƒi
+/// </summary>
 class FruitsBanana : public FruitsBase
 {
 public:

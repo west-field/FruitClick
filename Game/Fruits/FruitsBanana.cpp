@@ -11,7 +11,7 @@ namespace
 	constexpr int kBananaMaxHp = 3;//フルーツの最大HP
 	constexpr int kBananaPoint = 5;//得点
 
-	constexpr float kJumpPower = -16.0f;
+	constexpr float kUpperPower = -16.0f;
 }
 
 FruitsBanana::FruitsBanana(Position2 pos, int handle):FruitsBase(pos,handle)
@@ -20,7 +20,7 @@ FruitsBanana::FruitsBanana(Position2 pos, int handle):FruitsBase(pos,handle)
 	m_vec.y = kSpeed;
 	m_hp->MaxHp(kBananaMaxHp);
 	
-	m_jump = kJumpPower;
+	m_upperPower = kUpperPower;
 	m_speed = kSpeed;
 	m_point = kBananaPoint;
 }
@@ -40,7 +40,6 @@ void FruitsBanana::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 #ifdef _DEBUG
 	m_rect.Draw(0x0000ff);
-	DrawFormatString(10, 0, 0xffffff, L"x%f,y%f", m_rect.center.x, m_rect.center.y);
 #endif
 }
 

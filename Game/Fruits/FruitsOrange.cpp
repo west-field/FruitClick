@@ -12,16 +12,16 @@ namespace
 	constexpr int kOrangeMaxHp = 3;//フルーツの最大HP
 	constexpr int kOrangePoint = 3;//得点
 
-	constexpr float kJumpPower = -16.0f;
+	constexpr float kUpperPower = -16.0f;
 }
 
-FruitsOrange::FruitsOrange(Position2 pos, int handle) : FruitsBase(pos, handle), m_angle(0.0f), m_frame(0)
+FruitsOrange::FruitsOrange(Position2 pos, int handle) : FruitsBase(pos, handle)
 {
 	m_rect.size = { kSizeW + 30,kSizeH + 30 };
 	m_vec.y = kSpeed;
 	m_hp->MaxHp(kOrangeMaxHp);
 
-	m_jump = kJumpPower;
+	m_upperPower = kUpperPower;
 	m_speed = kSpeed;
 	m_point = kOrangePoint;
 }
@@ -29,21 +29,6 @@ FruitsOrange::FruitsOrange(Position2 pos, int handle) : FruitsBase(pos, handle),
 FruitsOrange::~FruitsOrange()
 {
 	
-}
-
-void FruitsOrange::Update()
-{
-	if (m_frame++ > 5)
-	{
-		m_angle++;
-		m_frame = 0;
-	}
-	if (m_angle >= 360.0f)
-	{
-		m_angle = 0.0f;
-	}
-
-	FruitsBase::Update();
 }
 
 void FruitsOrange::Draw()
@@ -57,7 +42,6 @@ void FruitsOrange::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 #ifdef _DEBUG
 	m_rect.Draw(0x0000ff);
-	DrawFormatString(10, 0, 0xffffff, L"x%f,y%f", m_rect.center.x, m_rect.center.y);
 #endif
 }
 

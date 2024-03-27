@@ -12,7 +12,7 @@ namespace
 	constexpr int kPineappleMaxHp = 4;//フルーツの最大HP
 	constexpr int kPineapplePoint = 8;//得点
 
-	constexpr float kJumpPower = -16.0f;
+	constexpr float kUpperPower = -16.0f;//上方向への力
 }
 
 FruitsPineapple::FruitsPineapple(Position2 pos, int handle) : FruitsBase(pos, handle)
@@ -21,7 +21,7 @@ FruitsPineapple::FruitsPineapple(Position2 pos, int handle) : FruitsBase(pos, ha
 	m_vec.y = kSpeed;
 	m_hp->MaxHp(kPineappleMaxHp);
 	
-	m_jump = kJumpPower;
+	m_upperPower = kUpperPower;
 	m_speed = kSpeed;
 	m_point = kPineapplePoint;
 }
@@ -42,7 +42,6 @@ void FruitsPineapple::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 #ifdef _DEBUG
 	m_rect.Draw(0x0000ff);
-	DrawFormatString(10, 0, 0xffffff, L"x%f,y%f", m_rect.center.x, m_rect.center.y);
 #endif
 }
 

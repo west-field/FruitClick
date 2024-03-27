@@ -15,7 +15,7 @@ FruitsBase::FruitsBase(Position2 pos, int handle):
 	m_handle(-1), m_blend(0),
 	m_scale(0.0f), m_rect(), m_vec(),
 	m_isExist(true),m_flashingTimer(0),m_idxX(0),
-	m_jump(0),m_speed(0), m_isDestroy(false), m_point(0)
+	m_upperPower(0),m_speed(0), m_isDestroy(false), m_point(0)
 {
 	m_handle = handle;
 	m_scale = kScale;
@@ -29,13 +29,13 @@ FruitsBase::~FruitsBase()
 
 void FruitsBase::Update()
 {
-	m_jump += kGravity;
+	m_upperPower += kGravity;
 	//ã‚Éã‚ª‚é
-	if (m_jump >= m_speed * 2)
+	if (m_upperPower >= m_speed * 2)
 	{
-		m_jump = m_speed * 2;
+		m_upperPower = m_speed * 2;
 	}
-	m_rect.center.y += m_jump;
+	m_rect.center.y += m_upperPower;
 
 	if (m_flashingTimer-- <= 0)//UŒ‚‚ðŽó‚¯‚½‚Æ‚«
 	{
