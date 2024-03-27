@@ -78,7 +78,7 @@ void FruitsFactory::Draw()
 			num++;
 		}
 	}
-	DrawFormatString(100, 100, 0xffffff, L"fruits%d", num);
+	DrawFormatString(100, 100, 0xffffff, L"fruits%dŒÂ", num);
 #endif
 }
 

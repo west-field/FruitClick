@@ -9,6 +9,9 @@
 
 class FruitsBase;
 
+/// <summary>
+/// ƒtƒ‹[ƒcHê
+/// </summary>
 class FruitsFactory
 {
 public:
