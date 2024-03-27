@@ -8,15 +8,23 @@ class FruitsBase;
 class FruitsFactory;
 
 /// <summary>
-/// 表示させる
+/// スポナー基底クラス
 /// </summary>
 class Spawner
 {
 public:
 	Spawner(const Position2& pos,std::shared_ptr<FruitsBase> prototype,std::shared_ptr<FruitsFactory> factory);
 	virtual ~Spawner();
-	virtual std::shared_ptr<FruitsBase> Spawn() = 0;//フルーツ発生
-	virtual void Update() = 0;//更新
+	/// <summary>
+	/// フルーツ発生
+	/// </summary>
+	/// <returns>生成するフルーツ</returns>
+	virtual std::shared_ptr<FruitsBase> Spawn() = 0;
+	virtual void Update() = 0;
+	/// <summary>
+	/// スポナーがあるかどうか
+	/// </summary>
+	/// <returns>true:ある false:ない</returns>
 	bool IsExist() const;
 protected:
 	Position2 m_pos;//スポナー自身の座標
