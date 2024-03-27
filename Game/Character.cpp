@@ -35,7 +35,7 @@ Character::Character(int selectChar,Position2 pos):m_idxX(0),m_idxY(0)
 	};
 	CharacterLoad(name[selectChar]);
 
-	m_maxHp = kMaxHp;
+	int m_maxHp = kMaxHp;
 	m_moveSpeed = kCharMoveSpeed;
 	m_animSpeed = kCharAnimSpeed;
 	m_ultimateFrame = kUltimateFrame;

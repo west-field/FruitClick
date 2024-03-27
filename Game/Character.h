@@ -112,10 +112,9 @@ private:
 
 	std::shared_ptr<HpBar> m_hp;//HP
 
-	int m_maxHp;
-	float m_moveSpeed;
-	int m_animSpeed;
-	int m_ultimateFrame;
+	float m_moveSpeed;//移動スピード
+	int m_animSpeed;//アニメーションスピード
+	int m_ultimateFrame;//無敵時間
 
 };
 
