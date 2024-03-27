@@ -15,7 +15,6 @@
 #include "../Util/Mouse.h"
 
 #include "../Game/Character.h"
-#include "../Game/Stage.h"
 #include "../Game/FruitsFactory.h"
 #include "../Game/Fruits/FruitsBase.h"
 

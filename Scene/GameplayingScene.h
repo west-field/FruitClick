@@ -10,7 +10,6 @@
 class Character;//キャラ
 class FruitsFactory;//フルーツ工場
 class Spawner;//フルーツ発生器
-class Stage;//ステージ
 
 /// <summary>
 /// ゲーム中シーン

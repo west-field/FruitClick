@@ -175,7 +175,6 @@
     <ClInclude Include="Scene\SettingScene.h" />
     <ClInclude Include="Scene\SoundSettingScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
-    <ClInclude Include="Game\Stage.h" />
     <ClInclude Include="Game\Score.h" />
     <ClInclude Include="Util\DrawFunctions.h" />
     <ClInclude Include="Util\Geometry.h" />
@@ -210,7 +209,6 @@
     <ClCompile Include="Scene\SettingScene.cpp" />
     <ClCompile Include="Scene\SoundSettingScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
-    <ClCompile Include="Game\Stage.cpp" />
     <ClCompile Include="Game\Score.cpp" />
     <ClCompile Include="Util\DrawFunctions.cpp" />
     <ClCompile Include="Util\Geometry.cpp" />

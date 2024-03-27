@@ -120,9 +120,6 @@
     <ClInclude Include="Scene\TitleScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Stage.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Spawner.h">
       <Filter>Game\Spawner</Filter>
     </ClInclude>
@@ -220,9 +217,6 @@
     </ClCompile>
     <ClCompile Include="Scene\TitleScene.cpp">
       <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Stage.cpp">
-      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Game\Spawner.cpp">
       <Filter>Game\Spawner</Filter>
