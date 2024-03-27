@@ -37,8 +37,7 @@ private:
 	/// </summary>
 	/// <param name="id">サウンド名</param>
 	/// <param name="fileName">サウンドファイル名</param>
-	/// <returns>サウンドハンドル</returns>
-	int LoadSoundFile(SoundId id,const wchar_t* fileName);
+	void LoadSoundFile(SoundId id,const wchar_t* fileName);
 	
 	/// <summary>
 	/// サウンド情報のロード
@@ -47,7 +46,7 @@ private:
 
 	std::unordered_map<SoundId, int> m_nameAndHandleTable;//サウンドハンドル
 
-	//変更したサウンド情報をファイルに書き込む
+	//変更したサウンド情報をファイルに書き込むための構造体
 	struct SoundConfigInfo
 	{
 		unsigned short volumeSE;//0～255
@@ -56,8 +55,10 @@ private:
 
 	int m_volumeSE = 255;//初期SE音量
 	int m_volumeBGM = 255;//初期BGM音量
+
 public:
 	~SoundManager();
+
 	/// <summary>
 	/// SoundManager使用者はGetInstance()を通した参照からしか利用できない
 	/// </summary>
@@ -78,6 +79,7 @@ public:
 	/// </summary>
 	/// <param name="name">サウンド名</param>
 	void Play(SoundId id, int volume = 200);
+
 	/// <summary>
 	/// BGMを鳴らす
 	/// </summary>
@@ -89,14 +91,17 @@ public:
 	/// </summary>
 	/// <param name="volume">音量</param>
 	void SetSEVolume(int volume);
+
 	//SEの音量を取得する
 	int GetSEVolume()const;
+
 	/// <summary>
 	/// BGMの音量を設定する
 	/// </summary>
 	/// <param name="volume">音量</param>
 	/// <param name="soundH">サウンドハンドル</param>
 	void SetBGMVolume(int volume,int soundH);
+
 	//BGMの音量を取得する
 	int GetBGMVolume()const;
 

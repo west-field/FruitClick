@@ -1,5 +1,8 @@
 #pragma once
 
+/// <summary>
+/// İ’è‚Åg‚¤\‘¢‘Ì
+/// </summary>
 struct Element
 {
 	int x, y;//À•W

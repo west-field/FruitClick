@@ -10,6 +10,7 @@ namespace
 
 SoundManager::SoundManager()
 {
+	//サウンド情報のロード
 	LoadSoundConfig();
 
 	//サウンドハンドルを取得する
@@ -32,7 +33,7 @@ SoundManager::~SoundManager()
 {
 }
 
-int SoundManager::LoadSoundFile(SoundId id, const wchar_t* fileName)
+void SoundManager::LoadSoundFile(SoundId id, const wchar_t* fileName)
 {
 	//サウンドハンドルを取得する
 	//パスとデータ名を一つにする
@@ -42,14 +43,14 @@ int SoundManager::LoadSoundFile(SoundId id, const wchar_t* fileName)
 
 	assert(handle >= 0);
 	m_nameAndHandleTable[id] = handle;
-
-	return handle;
 }
 
 void SoundManager::LoadSoundConfig()
 {
 	//サウンド情報のロード
 	SoundConfigInfo conf = {};
+
+	//ファイルから情報を取得する
 	FILE* fp = nullptr;
 	fopen_s(&fp, kSoundConfigFilePath, "rb");
 
@@ -64,6 +65,7 @@ void SoundManager::LoadSoundConfig()
 
 void SoundManager::SaveSoundConfig()
 {
+	//サウンド情報のセーブ
 	SoundConfigInfo conf = {};
 	conf.volumeSE = m_volumeSE;
 	conf.volumeBGM = m_volumeBGM;
