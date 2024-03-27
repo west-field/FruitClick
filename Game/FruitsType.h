@@ -1,5 +1,8 @@
 #pragma once
 
+/// <summary>
+/// フルーツのタイプ
+/// </summary>
 enum class FruitsType
 {
 	Apple,//リンゴ
@@ -12,6 +15,9 @@ enum class FruitsType
 	Strawberry,//イチゴ
 };
 
+/// <summary>
+/// 挙動の種類
+/// </summary>
 enum class FruitsSpawnId
 {
 	AppleStraight,		//まっすぐ落ちるリンゴ

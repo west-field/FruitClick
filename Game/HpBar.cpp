@@ -102,11 +102,6 @@ void HpBar::Draw()
 			idxX * m_rect.size.w, idxY * m_rect.size.h,
 			m_rect.size.w, m_rect.size.h, kScale, 0.0f, handle, true, false);
 	}
-
-#ifdef _DEBUG
-	DrawFormatString(x, y, 0x000000, L"hp%d", m_Hp);
-	DrawFormatString(x, y + 20, 0x000000, L"x%d,y%d", idxX, idxY);
-#endif
 }
 
 void HpBar::Damage(int damage)

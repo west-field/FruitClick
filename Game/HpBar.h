@@ -69,12 +69,18 @@ private:
 	int m_heatFull;//ハートフル
 	int m_heatHalf;//ハートハーフ
 
+	/// <summary>
+	/// ハート画像のタイプ
+	/// </summary>
 	enum class HeatType
 	{
 		Full,
 		Half,
 	};
 
+	/// <summary>
+	/// ハート画像を一つ表示するために必要
+	/// </summary>
 	struct Heat
 	{
 		HeatType type;
