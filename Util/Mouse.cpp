@@ -22,6 +22,7 @@ Mouse::Mouse() :m_mouseLog(), m_rect{ {},{} }
 Mouse::~Mouse()
 {
 	DeleteGraph(m_mouseH);
+	DeleteGraph(m_ripplesH);
 }
 
 void Mouse::Update()

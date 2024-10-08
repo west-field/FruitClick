@@ -10,8 +10,8 @@ namespace Game
 	//ウィンドウ名
 	const wchar_t* const kTitleText = L"FruitClick";
 	//ウィンドウサイズ
-	constexpr int kScreenWidth = 640;//160*4;//1600;//16:
-	constexpr int kScreenHeight = 480; //90*4;//900;//9:
+	constexpr int kScreenWidth = 640;//16:
+	constexpr int kScreenHeight = 480;//9
 	//カラーモード
 	constexpr int kColorDepth = 32;	//32 or 16
 
